@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firm Level Economics — Course Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #f5f0e8;
+    --bg2:       #ede7d9;
+    --ink:       #1a1612;
+    --ink-dim:   #5a5047;
+    --ink-faint: #9a8f82;
+    --rule:      #d4c9b8;
+    --gold:      #b8860b;
+    --gold-lt:   #d4a017;
+    --gold-pale: #f0e4c0;
+    --red:       #8b2020;
+    --green:     #2d5a27;
+    --blue:      #1a3a5c;
+    --teal:      #1d5c54;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── PAPER TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 31px,
+        rgba(180,160,120,0.08) 31px,
+        rgba(180,160,120,0.08) 32px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 64px 60px 48px;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .header-left {}
+
+  .course-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .course-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  h1.course-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.8rem, 5.5vw, 5rem);
+    font-weight: 700;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  h1.course-title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold);
+  }
+
+  .course-subtitle {
+    margin-top: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-dim);
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .header-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+    line-height: 1.9;
+    text-align: right;
+  }
+
+  .progress-ring-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .progress-ring-wrap span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+  }
+
+  .ring-svg circle { transition: stroke-dashoffset 1s ease; }
+
+  /* ── INTRO BAND ── */
+  .intro-band {
+    position: relative;
+    z-index: 10;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 22px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .intro-band p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    font-weight: 300;
+    opacity: 0.85;
+    max-width: 680px;
+  }
+
+  .intro-stats {
+    display: flex;
+    gap: 32px;
+    flex-shrink: 0;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--gold-lt);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.4);
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* ── MAIN GRID ── */
+  main {
+    position: relative;
+    z-index: 10;
+    padding: 56px 60px 80px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px;
+    border: 2px solid var(--ink);
+  }
+
+  /* ── MODULE CARD ── */
+  .module-card {
+    position: relative;
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    padding: 32px 30px 28px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+    transition: background 0.25s, transform 0.2s;
+    cursor: pointer;
+    min-height: 240px;
+  }
+
+  /* BIG module number watermark */
+  .module-card .watermark {
+    position: absolute;
+    right: -10px;
+    bottom: -20px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px;
+    font-weight: 700;
+    color: rgba(26,22,18,0.04);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    transition: color 0.25s;
+  }
+
+  /* Active (Module 1) */
+  .module-card.active {
+    background: var(--ink);
+    color: var(--bg);
+    cursor: pointer;
+    border-color: var(--ink);
+  }
+
+  .module-card.active .watermark {
+    color: rgba(245,240,232,0.06);
+  }
+
+  .module-card.active:hover {
+    background: #2c251e;
+    transform: scale(1.01);
+    z-index: 5;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+
+  /* Locked */
+  .module-card.locked {
+    cursor: default;
+  }
+
+  .module-card.locked:hover {
+    background: var(--bg2);
+  }
+
+  /* ── CARD INNARDS ── */
+  .mod-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .mod-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .module-card.active .mod-num {
+    color: rgba(245,240,232,0.45);
+  }
+
+  .mod-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  .status-ready {
+    background: var(--gold-pale);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+  }
+
+  .module-card.active .status-ready {
+    background: rgba(212,160,23,0.15);
+    color: var(--gold-lt);
+    border-color: var(--gold-lt);
+  }
+
+  .status-soon {
+    background: transparent;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule);
+  }
+
+  .mod-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.45rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--ink);
+    margin-bottom: 10px;
+    flex: 1;
+  }
+
+  .module-card.active .mod-title { color: var(--bg); }
+
+  .mod-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--ink-dim);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .module-card.active .mod-desc { color: rgba(245,240,232,0.6); }
+
+  .mod-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+  }
+
+  .topic-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    color: var(--ink-faint);
+    background: rgba(255,255,255,0.4);
+  }
+
+  .module-card.active .topic-tag {
+    border-color: rgba(245,240,232,0.2);
+    color: rgba(245,240,232,0.5);
+    background: rgba(255,255,255,0.05);
+  }
+
+  .mod-arrow {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-lt);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .module-card.active:hover .mod-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .mod-arrow::after {
+    content: '→';
+    font-size: 16px;
+  }
+
+  /* locked overlay hint */
+  .lock-hint {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    font-size: 18px;
+    opacity: 0.15;
+  }
+
+  /* ── FEATURED MODULE (M1) — full-width top row ── */
+  .modules-grid .module-card.featured {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    min-height: 200px;
+    padding: 0;
+  }
+
+  .featured-left {
+    padding: 36px 40px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .featured-right {
+    width: 280px;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.04);
+    border-left: 1px solid rgba(245,240,232,0.12);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    padding: 32px;
+  }
+
+  .featured-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(245,240,232,0.55);
+    text-align: center;
+    line-height: 1.65;
+  }
+
+  .featured-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gold-lt);
+    color: var(--ink);
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .featured-cta:hover {
+    background: #e8b800;
+    transform: translateY(-2px);
+  }
+
+  .featured-cta::after { content: '→'; font-size: 15px; }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 10;
+    border-top: 2px solid var(--ink);
+    padding: 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--bg2);
+  }
+
+  footer p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--ink-faint);
+  }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 1px;
+  }
+
+  .legend-dot.ready { background: var(--ink); }
+  .legend-dot.soon { background: var(--rule); border: 1px solid var(--ink-faint); }
+
+  /* ── MODAL ── */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(26,22,18,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+
+  .modal-bg.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--bg);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    padding: 40px 44px;
+    max-width: 440px;
+    width: 90%;
+    transform: translateY(20px);
+    transition: transform 0.25s;
+    position: relative;
+  }
+
+  .modal-bg.show .modal { transform: translateY(0); }
+
+  .modal-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 14px;
+  }
+
+  .modal h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .modal p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--ink-dim);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 20px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--ink-faint);
+    line-height: 1;
+  }
+
+  .modal-close:hover { color: var(--ink); }
+
+  .modal-note {
+    background: var(--bg2);
+    border-left: 3px solid var(--rule);
+    padding: 14px 18px;
+    border-radius: 0 4px 4px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    line-height: 1.65;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 860px) {
+    header, .intro-band, main, footer {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    .modules-grid .module-card.featured {
+      flex-direction: column;
+    }
+
+    .featured-right {
+      width: 100%;
+      border-left: none;
+      border-top: 1px solid rgba(245,240,232,0.12);
+    }
+
+    .intro-stats { gap: 20px; }
+  }
+
+  @media (max-width: 560px) {
+    .modules-grid {
+      grid-template-columns: 1fr;
+    }
+    h1.course-title { font-size: 2.4rem; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .module-card {
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .module-card:nth-child(1) { animation-delay: 0.05s; }
+  .module-card:nth-child(2) { animation-delay: 0.10s; }
+  .module-card:nth-child(3) { animation-delay: 0.15s; }
+  .module-card:nth-child(4) { animation-delay: 0.20s; }
+  .module-card:nth-child(5) { animation-delay: 0.25s; }
+  .module-card:nth-child(6) { animation-delay: 0.30s; }
+  .module-card:nth-child(7) { animation-delay: 0.35s; }
+  .module-card:nth-child(8) { animation-delay: 0.40s; }
+  .module-card:nth-child(9) { animation-delay: 0.45s; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- HEADER -->
+<!-- ══════════════════════════════════════════════ -->
+<header>
+  <div class="header-left">
+    <p class="course-eyebrow">Gies College of Business · University of Illinois</p>
+    <h1 class="course-title">Firm-Level<br><em>Economics</em></h1>
+    <p class="course-subtitle">Consumer &amp; Producer Behavior — Prof. Larry DeBrock</p>
+  </div>
+  <div class="header-right">
+    <div class="header-meta">
+      <span>COURSERA · MICROECONOMICS</span><br>
+      <span>8 MODULES · SELF-PACED</span><br>
+      <span>STUDY NOTES &amp; QUICK REFERENCE</span>
+    </div>
+    <div class="progress-ring-wrap">
+      <span>2 / 8 COMPLETE</span>
+      <svg width="44" height="44" viewBox="0 0 44 44" class="ring-svg">
+        <circle cx="22" cy="22" r="18" fill="none" stroke="var(--rule)" stroke-width="3"/>
+        <circle cx="22" cy="22" r="18" fill="none" stroke="var(--gold)" stroke-width="3"
+          stroke-dasharray="113.1" stroke-dashoffset="99"
+          stroke-linecap="round" transform="rotate(-90 22 22)"/>
+        <text x="22" y="26" text-anchor="middle" font-family="JetBrains Mono, monospace"
+          font-size="9" fill="var(--gold)" font-weight="500">25%</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- INTRO BAND -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="intro-band">
+  <div style="flex: 1; max-width: 720px;">
+    <p style="margin-bottom: 8px;">"Economics is the science that studies the allocation of scarce goods and services — who produces what, and who gets to buy it."</p>
+    <p style="font-size: 0.95rem; opacity: 0.7; border-left: 2px solid var(--gold-lt); padding-left: 16px;">"Price will use its magic to get some people out, get more people in — to solve the scarcity issue."</p>
+  </div>
+  <div class="intro-stats">
+    <div class="stat">
+      <span class="stat-num">8</span>
+      <span class="stat-label">Modules</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">2</span>
+      <span class="stat-label">Ready</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">6</span>
+      <span class="stat-label">Upcoming</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- MAIN -->
+<!-- ══════════════════════════════════════════════ -->
+<main>
+  <p class="section-label">Course Modules</p>
+
+  <div class="modules-grid">
+
+    <!-- ── MODULE 1 (Featured / Active) ── -->
+    <a class="module-card active" href="econ_module1_notes.html">
+      <div class="mod-header">
+        <span class="mod-num">Module 01</span>
+        <span class="mod-status status-ready">Notes Ready</span>
+      </div>
+      <div class="mod-title">Scarcity, Allocations<br>&amp; Markets</div>
+      <div class="mod-desc">The foundational framework of microeconomics — why scarcity exists, how markets use prices to ration goods, and how supply and demand reach equilibrium.</div>
+      <div class="mod-topics">
+        <span class="topic-tag">Scarcity</span>
+        <span class="topic-tag">Allocation Mechanisms</span>
+        <span class="topic-tag">Opportunity Cost</span>
+        <span class="topic-tag">Demand Curves</span>
+        <span class="topic-tag">Supply Curves</span>
+        <span class="topic-tag">Market Equilibrium</span>
+        <span class="topic-tag">Surplus &amp; Shortage</span>
+      </div>
+      <div class="mod-arrow">Open Notes</div>
+      <span class="watermark">1</span>
+    </a>
+
+    <!-- ── MODULE 2 ── -->
+    <a class="module-card active" href="module2_notes.html">
+      <div class="mod-header">
+        <span class="mod-num">Module 02</span>
+        <span class="mod-status status-ready">Notes Ready</span>
+      </div>
+      <div class="mod-title">Government Intervention in Markets</div>
+      <div class="mod-desc">Taxes, subsidies, price controls, and their effects on market outcomes.</div>
+      <div class="mod-topics">
+        <span class="topic-tag">Price Ceilings</span>
+        <span class="topic-tag">Price Floors</span>
+        <span class="topic-tag">Taxation</span>
+        <span class="topic-tag">Deadweight Loss</span>
+        <span class="topic-tag">Subsidies</span>
+      </div>
+      <div class="mod-arrow">Open Notes</div>
+      <span class="watermark">2</span>
+    </a>
+
+    <!-- ── MODULE 3 ── -->
+    <div class="module-card locked" onclick="showModal(3, 'Firms, Production &amp; Cost', 'Inside the black box of the firm — production functions, short-run vs long-run costs, economies of scale, and how firms decide how much to produce.')">
+      <div class="mod-header">
+        <span class="mod-num">Module 03</span>
+        <span class="mod-status status-soon">Coming Soon</span>
+      </div>
+      <div class="mod-title">Firms, Production &amp; Cost</div>
+      <div class="mod-desc">Production functions, cost curves, and the economic logic of firm operations.</div>
+      <div class="mod-topics">
+        <span class="topic-tag">Production Function</span>
+        <span class="topic-tag">Marginal Cost</span>
+        <span class="topic-tag">Fixed vs Variable</span>
+        <span class="topic-tag">Economies of Scale</span>
+        <span class="topic-tag">Long-Run Costs</span>
+      </div>
+      <span class="lock-hint">🔒</span>
+      <span class="watermark">3</span>
+    </div>
+
+    <!-- ── MODULE 4 ── -->
+    <div class="module-card locked" onclick="showModal(4, 'Firm Behavior', 'How firms maximize profit — the profit function, marginal revenue vs marginal cost, and the output decision rule that applies across all market structures.')">
+      <div class="mod-header">
+        <span class="mod-num">Module 04</span>
+        <span class="mod-status status-soon">Coming Soon</span>
+      </div>
+      <div class="mod-title">Firm Behavior</div>
+      <div class="mod-desc">Profit maximization, output decisions, and the firm's objective function.</div>
+      <div class="mod-topics">
+        <span class="topic-tag">Profit Maximization</span>
+        <span class="topic-tag">Marginal Revenue</span>
+        <span class="topic-tag">MR = MC Rule</span>
+        <span class="topic-tag">Revenue Curves</span>
+        <span class="topic-tag">Shut-Down Rule</span>
+      </div>
+      <span class="lock-hint">🔒</span>
+      <span class="watermark">4</span>
+    </div>
+
+    <!-- ── MODULE 5 ── -->
+    <div class="module-card locked" onclick="showModal(5, 'Perfect Competition', 'The benchmark market structure — many buyers and sellers, identical products, free entry and exit. Long-run equilibrium, zero economic profit, and efficient resource allocation.')">
+      <div class="mod-header">
+        <span class="mod-num">Module 05</span>
+        <span class="mod-status status-soon">Coming Soon</span>
+      </div>
+      <div class="mod-title">Perfect Competition</div>
+      <div class="mod-desc">The benchmark market structure — efficiency, zero profit in the long run, and free entry.</div>
+      <div class="mod-topics">
+        <span class="topic-tag">Price Takers</span>
+        <span class="topic-tag">Long-Run Equilibrium</span>
+        <span class="topic-tag">Zero Economic Profit</span>
+        <span class="topic-tag">Efficiency</span>
+        <span class="topic-tag">Market Entry/Exit</span>
+      </div>
+      <span class="lock-hint">🔒</span>
+      <span class="watermark">5</span>
+    </div>
+
+    <!-- ── MODULE 6 ── -->
+    <div class="module-card locked" onclick="showModal(6, 'Monopoly Markets &amp; Efficiency', 'When a single firm dominates — monopoly pricing, market power, deadweight loss, and the welfare implications of concentrated markets. Natural monopoly and regulation.')">
+      <div class="mod-header">
+        <span class="mod-num">Module 06</span>
+        <span class="mod-status status-soon">Coming Soon</span>
+      </div>
+      <div class="mod-title">Monopoly Markets &amp; Efficiency</div>
+      <div class="mod-desc">Market power, monopoly pricing, deadweight loss, and welfare implications.</div>
+      <div class="mod-topics">
+        <span class="topic-tag">Market Power</span>
+        <span class="topic-tag">Price Maker</span>
+        <span class="topic-tag">Deadweight Loss</span>
+        <span class="topic-tag">Natural Monopoly</span>
+        <span class="topic-tag">Price Discrimination</span>
+      </div>
+      <span class="lock-hint">🔒</span>
+      <span class="watermark">6</span>
+    </div>
+
+    <!-- ── MODULE 7 ── -->
+    <div class="module-card locked" onclick="showModal(7, 'Oligopoly &amp; Game Theory', 'Markets with a few powerful firms — strategic interdependence, Nash equilibrium, the prisoner\'s dilemma, cartels, and repeated games. Where microeconomics meets strategy.')">
+      <div class="mod-header">
+        <span class="mod-num">Module 07</span>
+        <span class="mod-status status-soon">Coming Soon</span>
+      </div>
+      <div class="mod-title">Oligopoly &amp; Game Theory</div>
+      <div class="mod-desc">Strategic interdependence, Nash equilibrium, and the prisoner's dilemma.</div>
+      <div class="mod-topics">
+        <span class="topic-tag">Nash Equilibrium</span>
+        <span class="topic-tag">Prisoner's Dilemma</span>
+        <span class="topic-tag">Cournot Model</span>
+        <span class="topic-tag">Collusion</span>
+        <span class="topic-tag">Strategic Behavior</span>
+      </div>
+      <span class="lock-hint">🔒</span>
+      <span class="watermark">7</span>
+    </div>
+
+    <!-- ── MODULE 8 ── -->
+    <div class="module-card locked" onclick="showModal(8, 'Market Failures', 'When markets don\'t deliver efficient outcomes — externalities, public goods, information asymmetry, and the economic case for government intervention. Connecting the course full circle.')">
+      <div class="mod-header">
+        <span class="mod-num">Module 08</span>
+        <span class="mod-status status-soon">Coming Soon</span>
+      </div>
+      <div class="mod-title">Market Failures</div>
+      <div class="mod-desc">Externalities, public goods, information asymmetry — when markets break down.</div>
+      <div class="mod-topics">
+        <span class="topic-tag">Externalities</span>
+        <span class="topic-tag">Public Goods</span>
+        <span class="topic-tag">Info Asymmetry</span>
+        <span class="topic-tag">Adverse Selection</span>
+        <span class="topic-tag">Moral Hazard</span>
+      </div>
+      <span class="lock-hint">🔒</span>
+      <span class="watermark">8</span>
+    </div>
+
+  </div><!-- /modules-grid -->
+</main>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ══════════════════════════════════════════════ -->
+<footer>
+  <p>© 2020 LARRY DEBROCK · GIES COLLEGE OF BUSINESS · UNIVERSITY OF ILLINOIS AT URBANA-CHAMPAIGN</p>
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot ready"></div>
+      Notes Available
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot soon"></div>
+      Placeholder
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- MODAL -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="modal-bg" id="modalBg" onclick="closeModal(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal(null, true)">×</button>
+    <p class="modal-tag">Module <span id="mNum"></span> · Coming Soon</p>
+    <h3 id="mTitle"></h3>
+    <p id="mDesc"></p>
+    <div class="modal-note">
+      📋 &nbsp;Notes for this module haven't been added yet. As you work through the course, drop your notes into this slot and link it from the index — just like Module 1.
+    </div>
+  </div>
+</div>
+
+<script>
+  function showModal(num, title, desc) {
+    document.getElementById('mNum').textContent = String(num).padStart(2,'0');
+    document.getElementById('mTitle').textContent = title.replace(/&amp;/g, '&');
+    document.getElementById('mDesc').textContent = desc.replace(/&amp;/g, '&').replace(/\\'/g, "'");
+    document.getElementById('modalBg').classList.add('show');
+  }
+
+  function closeModal(e, force) {
+    if (force || (e && e.target === document.getElementById('modalBg'))) {
+      document.getElementById('modalBg').classList.remove('show');
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal(null, true);
+  });
+</script>
+</body>
+</html>
