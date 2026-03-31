@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firm Level Economics — Module 1 Quick Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #151820;
+    --surface2: #1c2030;
+    --border: #252a3a;
+    --gold: #e8c86a;
+    --gold-dim: #9a813e;
+    --teal: #4ecdc4;
+    --coral: #ff6b6b;
+    --lavender: #a8b4ff;
+    --text: #e8eaf0;
+    --text-dim: #7a8099;
+    --text-muted: #4a5068;
+    --accent: #e8c86a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── GRAIN OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 60px 40px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .hero-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    color: var(--text-dim);
+    font-size: 15px;
+    font-weight: 300;
+    margin-bottom: 32px;
+  }
+
+  /* ─── NAV TABS ─── */
+  .nav-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 32px 40px 0;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 50;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+
+  .tab-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    transition: all 0.2s;
+    position: relative;
+    bottom: -1px;
+  }
+
+  .tab-btn:hover { color: var(--text); border-color: var(--border); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-color: var(--border);
+    border-bottom-color: var(--bg);
+    background: var(--bg);
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .card:hover { border-color: var(--gold-dim); transform: translateY(-1px); }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  .card p {
+    color: var(--text-dim);
+    font-size: 14.5px;
+    line-height: 1.75;
+  }
+
+  /* ─── QUOTE BLOCKS ─── */
+  .quote-block {
+    background: var(--surface2);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+
+  .quote-block p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  .quote-block cite {
+    display: block;
+    margin-top: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--gold-dim);
+    font-style: normal;
+  }
+
+  /* ─── KEY TERM ─── */
+  .key-term {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(232, 200, 106, 0.08);
+    border: 1px solid rgba(232, 200, 106, 0.25);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    margin: 3px 3px 3px 0;
+  }
+
+  /* ─── CONCEPT GRID ─── */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .concept-grid { grid-template-columns: 1fr; }
+    .hero, .nav-tabs, .content { padding-left: 20px; padding-right: 20px; }
+    .hero h1 { font-size: 2rem; }
+  }
+
+  .concept-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 22px;
+    transition: all 0.2s;
+  }
+
+  .concept-card:hover { border-color: var(--teal); }
+
+  .concept-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .concept-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--teal);
+    margin-bottom: 8px;
+  }
+
+  .concept-card p {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+
+  /* ─── ACCORDION ─── */
+  .accordion {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .accordion-btn {
+    width: 100%;
+    background: var(--surface);
+    border: none;
+    color: var(--text);
+    padding: 18px 24px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+
+  .accordion-btn:hover { background: var(--surface2); }
+
+  .accordion-btn .arrow {
+    color: var(--gold);
+    font-size: 18px;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+
+  .accordion-btn.open .arrow { transform: rotate(180deg); }
+
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: var(--surface2);
+  }
+
+  .accordion-body.open { max-height: 800px; }
+
+  .accordion-body-inner {
+    padding: 20px 24px;
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.75;
+  }
+
+  /* ─── EXAMPLE BOXES ─── */
+  .example-box {
+    background: rgba(78, 205, 196, 0.07);
+    border: 1px solid rgba(78, 205, 196, 0.2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+  }
+
+  .example-box .ex-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .example-box p {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  /* ─── GRAPH VISUAL ─── */
+  .graph-wrapper {
+    background: var(--surface2);
+    border-radius: 12px;
+    padding: 28px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ─── TABLE ─── */
+  .price-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 20px 0;
+  }
+
+  .price-table th {
+    background: var(--surface2);
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .price-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  .price-table tr:last-child td { border-bottom: none; }
+  .price-table tr:hover td { background: var(--surface2); color: var(--text); }
+  .price-table .highlight { color: var(--coral); font-weight: 600; }
+  .price-table .low { color: var(--teal); font-weight: 600; }
+
+  /* ─── FLASH CARDS ─── */
+  .flashcard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .flashcard {
+    height: 160px;
+    perspective: 1000px;
+    cursor: pointer;
+  }
+
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+  }
+
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .flashcard-front {
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+
+  .flashcard-back {
+    background: var(--surface2);
+    border: 1px solid var(--gold-dim);
+    transform: rotateY(180deg);
+  }
+
+  .flashcard-front p {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .flashcard-front small {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .flashcard-back p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.65;
+    text-align: center;
+  }
+
+  /* ─── SECTION HEADINGS ─── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .section-sub {
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 36px;
+  }
+
+  /* ─── JARGON PILLS ─── */
+  .jargon-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+
+  .jargon-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: var(--lavender);
+    cursor: default;
+    transition: all 0.2s;
+  }
+
+  .jargon-pill:hover {
+    background: rgba(168, 180, 255, 0.1);
+    border-color: var(--lavender);
+    color: var(--text);
+  }
+
+  /* ─── CHECKLIST ─── */
+  .checklist {
+    list-style: none;
+  }
+
+  .checklist li {
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    line-height: 1.6;
+  }
+
+  .checklist li::before {
+    content: '→';
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .checklist li:last-child { border-bottom: none; }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 32px 0;
+  }
+
+  /* ─── SEARCH TAB BUTTON ─── */
+  .search-tab-btn {
+    margin-left: auto;
+    color: var(--text-muted) !important;
+    border-color: transparent !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px !important;
+    letter-spacing: 0.05em !important;
+  }
+  .search-tab-btn:hover { color: var(--gold) !important; background: none !important; }
+
+  /* ─── SEARCH OVERLAY ─── */
+  .search-overlay {
+    position: fixed; inset: 0;
+    background: rgba(13,15,20,0.88);
+    backdrop-filter: blur(8px);
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 80px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .search-overlay.open { opacity: 1; pointer-events: all; }
+
+  .search-box {
+    width: min(680px, 90vw);
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    transform: translateY(-16px);
+    transition: transform 0.25s;
+  }
+  .search-overlay.open .search-box { transform: translateY(0); }
+
+  .search-input-wrap {
+    display: flex;
+    align-items: center;
+    padding: 18px 22px;
+    gap: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-icon-lbl {
+    color: var(--gold-dim);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  #searchInput {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px;
+    color: var(--text);
+    caret-color: var(--gold);
+  }
+  #searchInput::placeholder { color: var(--text-muted); }
+
+  .search-close {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+  }
+  .search-close:hover { color: var(--text); border-color: var(--text-muted); }
+
+  .search-results {
+    max-height: 460px;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+
+  .search-result-item {
+    padding: 14px 22px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .search-result-item:last-child { border-bottom: none; }
+  .search-result-item:hover, .search-result-item.focused { background: var(--surface2); }
+
+  .sr-tab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 5px;
+  }
+
+  .sr-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .sr-snippet {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .sr-snippet mark, .sr-title mark {
+    background: rgba(232,200,106,0.25);
+    color: var(--gold);
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  .search-empty {
+    padding: 40px 22px;
+    text-align: center;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .search-hint {
+    padding: 14px 22px;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border);
+  }
+  .search-hint span {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .search-hint kbd {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+  }
+
+  /* ─── SUBSTITUTES-SPECIFIC ─── */
+  .sub-type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (max-width: 700px) { .sub-type-grid { grid-template-columns: 1fr; } }
+
+  .sub-card {
+    border-radius: 10px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .sub-card.substitute {
+    background: rgba(255,107,107,0.07);
+    border: 1px solid rgba(255,107,107,0.25);
+  }
+  .sub-card.complement {
+    background: rgba(168,180,255,0.07);
+    border: 1px solid rgba(168,180,255,0.25);
+  }
+  .sub-card h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+  .sub-card.substitute h3 { color: var(--coral); }
+  .sub-card.complement h3 { color: var(--lavender); }
+  .sub-card p { font-size: 13.5px; color: var(--text-dim); line-height: 1.65; }
+  .sub-card .sub-icon { font-size: 26px; margin-bottom: 10px; display: block; }
+
+  .effect-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+  .effect-table th {
+    background: var(--surface2);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .effect-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .effect-table tr:last-child td { border-bottom: none; }
+  .effect-table tr:hover td { background: var(--surface2); color: var(--text); }
+  .up { color: var(--coral); font-weight: 600; }
+  .down { color: var(--teal); font-weight: 600; }
+  .neutral { color: var(--gold-dim); }
+
+  /* ─── SCROLL TO TOP ─── */
+  .top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    color: var(--gold);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .top-btn.visible { opacity: 1; pointer-events: all; }
+  .top-btn:hover { background: var(--gold); color: var(--bg); transform: scale(1.1); }
+
+  /* ─── TIMELINE ─── */
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 28px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--bg);
+  }
+
+  .timeline-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--gold-dim);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .timeline-item h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .timeline-item p {
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+
+  /* ─── SEARCH BAR ─── */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 32px;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px 12px 44px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus { border-color: var(--gold-dim); }
+  .search-wrap input::placeholder { color: var(--text-muted); }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  /* ─── HIGHLIGHTED SEARCH ─── */
+  mark { background: rgba(232,200,106,0.25); color: var(--gold); border-radius: 2px; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section.active .card,
+  .section.active .flashcard,
+  .section.active .accordion {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .section.active .card:nth-child(2) { animation-delay: 0.05s; }
+  .section.active .card:nth-child(3) { animation-delay: 0.1s; }
+  .section.active .card:nth-child(4) { animation-delay: 0.15s; }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--gold);
+    z-index: 999;
+    transition: width 0.1s;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="hero">
+  <p class="hero-label">Prof. Larry DeBrock · Gies College of Business · University of Illinois</p>
+  <h1>Firm-Level <em>Economics</em><br>Module 1 Quick Reference</h1>
+  <p class="hero-sub">Consumer &amp; Producer Behavior — Interactive Study Notes</p>
+  <div class="jargon-row">
+    <span class="jargon-pill">Scarcity</span>
+    <span class="jargon-pill">Opportunity Cost</span>
+    <span class="jargon-pill">Demand Curve</span>
+    <span class="jargon-pill">Supply Curve</span>
+    <span class="jargon-pill">Equilibrium</span>
+    <span class="jargon-pill">Allocation Mechanism</span>
+    <span class="jargon-pill">Substitutes &amp; Complements</span>
+    <span class="jargon-pill">Price Theory</span>
+  </div>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" data-tab="overview">Overview</button>
+  <button class="tab-btn" data-tab="scarcity">1-1 Scarcity</button>
+  <button class="tab-btn" data-tab="opp-cost">1-2 Opp. Cost</button>
+  <button class="tab-btn" data-tab="demand">1-3 Demand</button>
+  <button class="tab-btn" data-tab="supply">1-4 Supply</button>
+  <button class="tab-btn" data-tab="equilibrium">1-5 Equilibrium</button>
+  <button class="tab-btn" data-tab="substitutes">1-6 Substitutes</button>
+  <button class="tab-btn" data-tab="flashcards">Flashcards</button>
+  <button class="tab-btn search-tab-btn" id="searchTabBtn" onclick="openSearch()" title="Search notes (Ctrl+K)">⌕ Search</button>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- OVERVIEW TAB -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="content">
+
+  <div class="section active" id="tab-overview">
+    <h2 class="section-title">What This Module Covers</h2>
+    <p class="section-sub">A bird's-eye view of Module 1 — from scarcity to supply &amp; demand equilibrium.</p>
+
+    <div class="card">
+      <span class="card-tag">Core Premise</span>
+      <h2>The Fundamental Problem: Scarcity</h2>
+      <p>Economics is the science that studies the <strong style="color:var(--text)">allocation of scarce goods and services</strong>. Scarcity isn't just about rare paintings — economists believe <em>everything</em> is scarce, including clean air and fresh water. Scarcity means <em>"there's not enough to go around."</em> This single fact forces every society to adopt some <strong style="color:var(--text)">allocation mechanism</strong> — a rule for deciding who gets what.</p>
+      <div class="quote-block">
+        <p>"Economists believe that there's really nothing that we have on this planet that everybody can have all they want of it any time they want."</p>
+        <cite>— Prof. Larry DeBrock</cite>
+      </div>
+    </div>
+
+    <div class="concept-grid">
+      <div class="concept-card">
+        <span class="concept-icon">⚖️</span>
+        <h3>Allocation Mechanisms</h3>
+        <p>How do we decide who gets scarce goods? Options include command economies (a king/government decides), markets (prices decide), or queuing (standing in line). Western economies rely primarily on <strong>markets + prices</strong>.</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-icon">💰</span>
+        <h3>Prices as Rationing Devices</h3>
+        <p>Prices aren't just numbers — they are <strong>rationing tools</strong>. High price → fewer buyers → less demand. Low price → more buyers → more competition for supply. They automatically balance supply and demand.</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-icon">🔄</span>
+        <h3>Opportunity Cost</h3>
+        <p>Every choice means forgoing the next best alternative. Even "free" things have an opportunity cost. A firm that earns $3M must ask: could it earn more doing something else?</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-icon">📊</span>
+        <h3>Market Equilibrium</h3>
+        <p>The price where quantity demanded = quantity supplied. At equilibrium, there's <strong>no tendency for change</strong>. External shocks shift curves and force markets toward a new equilibrium.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Module Roadmap</span>
+      <h2>Topics in Order</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <p class="timeline-label">Lesson 1-1.1</p>
+          <h4>Scarcity &amp; Its Implications</h4>
+          <p>Why scarcity exists, the RAM price story from 1990, allocation mechanisms, queuing vs pricing (Duke basketball example).</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-label">Lesson 1-1.2</p>
+          <h4>Opportunity Cost</h4>
+          <p>The concept of "next best foregone alternative," the $5 bill prop, Milton Friedman's "no free lunch," and implicit vs explicit costs.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-label">Lesson 1-1.3</p>
+          <h4>Demand Curves</h4>
+          <p>Locus of points, downward slope, why economists use linear demand, equilibrium basics introduced.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-label">Lesson 1-2.1–1-2.2</p>
+          <h4>More on Demand</h4>
+          <p>Real-world demand estimation (loyalty cards, big data), jargon: "change in demand" vs "change in quantity demanded."</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-label">Lesson 1-2.3</p>
+          <h4>Supply Curves</h4>
+          <p>Upward-sloping supply, why more output costs more, change in supply vs change in quantity supplied, drought example.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-label">Lesson 1-2.4</p>
+          <h4>Movements to New Equilibrium</h4>
+          <p>Proof by contradiction, surplus vs shortage, orange juice freeze example — full supply-shock walkthrough.</p>
+        </div>
+        <div class="timeline-item">
+          <p class="timeline-label">Lesson 1-6</p>
+          <h4>Substitutes &amp; Related Goods</h4>
+          <p>Substitute vs complement goods, cross-price elasticity, substitutes in production, how substitution shocks ripple through demand, supply, and equilibrium — with combined case studies.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- SCARCITY TAB -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="section" id="tab-scarcity">
+    <h2 class="section-title">Scarcity &amp; Allocation</h2>
+    <p class="section-sub">Lesson 1-1.1 — The foundational problem of all economics.</p>
+
+    <div class="card">
+      <span class="card-tag">Definition</span>
+      <h2>Scarcity</h2>
+      <p>Scarcity = <strong style="color:var(--text)">"Not enough to go around."</strong> Something is scarce when not everyone who wants it can have as much as they want at zero cost. Economists believe <em>everything</em> is scarce — even clean air (catalytic converters exist for a reason) and fresh water (aquifers are depleting).</p>
+      <div style="margin-top:18px">
+        <span class="key-term">Not Enough → Someone Decides</span>
+        <span class="key-term">→ Allocation Mechanism</span>
+        <span class="key-term">→ Markets / Prices (Western Economies)</span>
+      </div>
+    </div>
+
+    <div class="example-box">
+      <span class="ex-label">Real-World Example · 1990 RAM Prices</span>
+      <p>In September 1990, a 4 MB RAM chip cost <strong style="color:var(--coral)">$2,299–$2,599</strong>. Today, a chip 128× more powerful (512 MB) sells for <strong style="color:var(--teal)">$4.59</strong>. No government bureau ordered cheaper chips — entrepreneurs flocked to Silicon Valley, competition grew, prices fell. <em>Markets at work.</em></p>
+    </div>
+
+    <div class="price-table-wrap card" style="padding:0;overflow:auto">
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Expand to 8 MB (4 MB board)</th>
+            <th>Expand to 16 MB</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Compaq Computer Corp.</td><td class="highlight">$2,599</td><td class="highlight">$6,597</td></tr>
+          <tr><td>Pliceon Inc.</td><td>$2,299</td><td>$6,097</td></tr>
+          <tr><td>Amkly Systems Inc.</td><td>$1,495</td><td>$4,345</td></tr>
+          <tr><td>South Coast Electronics</td><td class="low">$1,100</td><td class="low">$2,620</td></tr>
+          <tr><td colspan="3" style="font-style:italic;color:var(--text-muted);font-size:12px;padding:12px 16px;">Today: 512 MB (128× more powerful) → $4.59 (Newegg)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Allocation Mechanisms</span>
+      <h2>How Societies Decide "Who Gets What"</h2>
+      <ul class="checklist">
+        <li><strong style="color:var(--text)">Command Economy</strong> — The king or government decides who gets apartments, cars, meat rations. (Historical / Soviet-era example)</li>
+        <li><strong style="color:var(--text)">Markets + Prices</strong> — "Western economies." Prices drift up when goods are scarce → some buyers exit → more producers enter → equilibrium restores itself.</li>
+        <li><strong style="color:var(--text)">Queuing</strong> — When prices are set to $0, people stand in line instead. Allocation by time cost rather than money cost.</li>
+      </ul>
+    </div>
+
+    <div class="example-box">
+      <span class="ex-label">Real-World Example · Duke Basketball (Krzyzewskiville)</span>
+      <p>Duke's Cameron Indoor Stadium holds &lt;10,000 seats — the smallest arena in Division I basketball. Student tickets are priced at <strong style="color:var(--coral)">$0</strong>. Result? Students camp in tents for <strong>4+ weeks</strong> in a designated area called "Krzyzewskiville." The allocation mechanism shifted from prices to queuing — but scarcity didn't disappear, it just manifested as wasted time. <em>"You can't wish away scarcity."</em></p>
+    </div>
+
+    <div class="quote-block">
+      <p>"Price will use its magic to try and get some people out, get more people in, to solve the scarcity issue."</p>
+      <cite>— Prof. DeBrock</cite>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- OPPORTUNITY COST TAB -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="section" id="tab-opp-cost">
+    <h2 class="section-title">Opportunity Cost</h2>
+    <p class="section-sub">Lesson 1-1.2 — Perhaps the single most important concept in this course.</p>
+
+    <div class="card">
+      <span class="card-tag">Definition</span>
+      <h2>Opportunity Cost</h2>
+      <p>Opportunity cost = <strong style="color:var(--text)">the value of the next best foregone alternative.</strong> Every action you take means you are <em>not</em> doing something else. That "something else" is your opportunity cost. It applies to time, money, resources — everything.</p>
+    </div>
+
+    <div class="quote-block">
+      <p>"There's no such thing as a free lunch."</p>
+      <cite>— Milton Friedman (Nobel Prize Winner)</cite>
+    </div>
+
+    <div class="concept-grid">
+      <div class="concept-card">
+        <span class="concept-icon">💵</span>
+        <h3>The $5 Bill</h3>
+        <p>A $5 bill has no intrinsic use (you can't eat it), but it embodies the value of everything you <em>could</em> exchange it for. Spending it on coffee means you gave up lunch, or an Uber ride. Every purchase forecloses other purchases.</p>
+      </div>
+      <div class="concept-card">
+        <span class="concept-icon">🚗</span>
+        <h3>The Car Story (Cornell, 1975)</h3>
+        <p>A law student couldn't afford a car. His brother bought one with savings. DeBrock's point: the brother also paid interest — <em>implicit</em> opportunity cost (lost interest on savings). Explicit vs implicit costs are both real.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Application to Firms</span>
+      <h2>Why Good Managers Ask the Right Question</h2>
+      <p>An accountant says: <em>"Boss, we made $3 million profit this quarter!"</em></p>
+      <p style="margin-top:14px">A good economist-minded manager immediately asks: <strong style="color:var(--gold)">"But what could I have made if I deployed these assets differently? Could I earn $4 million making Twinkies instead?"</strong></p>
+      <p style="margin-top:14px;color:var(--text-dim)">This is why opportunity cost drives decisions about which industries firms enter or exit. Profitability is always relative to alternatives.</p>
+      <ul class="checklist" style="margin-top:18px">
+        <li>Accounting profit ignores opportunity cost.</li>
+        <li>Economic profit = accounting profit minus opportunity cost.</li>
+        <li>Firms exit industries where economic profit is negative (better alternatives exist).</li>
+      </ul>
+    </div>
+
+    <div class="example-box">
+      <span class="ex-label">Insight</span>
+      <p>Watching this video has an opportunity cost too — you could be binge-watching <em>Friends</em> or sitting at a coffee shop. Every moment spent doing one thing is a moment not spent doing the next best thing.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- DEMAND TAB -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="section" id="tab-demand">
+    <h2 class="section-title">Demand Curves</h2>
+    <p class="section-sub">Lessons 1-1.3 &amp; 1-2.1–1-2.2 — The buyer side of every market.</p>
+
+    <div class="card">
+      <span class="card-tag">Definition</span>
+      <h2>The Demand Curve</h2>
+      <p>A demand curve is a <strong style="color:var(--text)">locus of points showing how much consumers wish to purchase at different prices</strong>. Written as Q = f(P). It is <strong>downward sloping</strong> — as price rises, quantity demanded falls. As price falls, quantity demanded rises.</p>
+      <p style="margin-top:12px;color:var(--text-muted);font-size:13px;">Note: Technically, this is the <em>inverse</em> demand curve (price on Y-axis, quantity on X), but economists have used this convention since Alfred Marshall's foundational treatise.</p>
+    </div>
+
+    <div class="graph-wrapper">
+      <svg width="320" height="260" viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axes -->
+        <line x1="50" y1="220" x2="290" y2="220" stroke="#252a3a" stroke-width="1.5"/>
+        <line x1="50" y1="20" x2="50" y2="220" stroke="#252a3a" stroke-width="1.5"/>
+        <!-- Axis labels -->
+        <text x="160" y="248" fill="#7a8099" font-size="12" font-family="IBM Plex Mono" text-anchor="middle">Q (Quantity)</text>
+        <text x="18" y="120" fill="#7a8099" font-size="12" font-family="IBM Plex Mono" text-anchor="middle" transform="rotate(-90 18 120)">P (Price)</text>
+        <!-- Demand curve -->
+        <line x1="70" y1="40" x2="270" y2="200" stroke="#e8c86a" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="275" y="200" fill="#e8c86a" font-size="13" font-family="Playfair Display">D₀</text>
+        <!-- Points -->
+        <circle cx="110" cy="72" r="5" fill="#ff6b6b"/>
+        <circle cx="170" cy="120" r="5" fill="#4ecdc4"/>
+        <circle cx="230" cy="168" r="5" fill="#a8b4ff"/>
+        <!-- Dashed lines -->
+        <line x1="50" y1="72" x2="110" y2="72" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="110" y1="72" x2="110" y2="220" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="50" y1="168" x2="230" y2="168" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="230" y1="168" x2="230" y2="220" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Labels -->
+        <text x="40" y="76" fill="#ff6b6b" font-size="11" text-anchor="end" font-family="IBM Plex Mono">P₂</text>
+        <text x="40" y="124" fill="#4ecdc4" font-size="11" text-anchor="end" font-family="IBM Plex Mono">P₀</text>
+        <text x="40" y="172" fill="#a8b4ff" font-size="11" text-anchor="end" font-family="IBM Plex Mono">P₁</text>
+        <text x="107" y="234" fill="#ff6b6b" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">Q₂</text>
+        <text x="170" y="234" fill="#4ecdc4" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">Q₀</text>
+        <text x="230" y="234" fill="#a8b4ff" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">Q₁</text>
+        <!-- Greek labels -->
+        <text x="94" y="66" fill="#ff6b6b" font-size="13" font-family="Playfair Display">γ</text>
+        <text x="174" y="114" fill="#4ecdc4" font-size="13" font-family="Playfair Display">α</text>
+        <text x="234" y="162" fill="#a8b4ff" font-size="13" font-family="Playfair Display">β</text>
+        <!-- Arrow annotation -->
+        <text x="158" y="16" fill="#7a8099" font-size="10" text-anchor="middle" font-family="DM Sans">↓ price → ↑ quantity demanded</text>
+      </svg>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-btn" onclick="toggleAccordion(this)">
+        Why is the demand curve downward sloping? <span class="arrow">▾</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          When price rises, each purchase requires giving up more "green sheets of paper" — forgoing more alternatives (opportunity cost). At higher prices, some consumers find the opportunity cost too high and exit the market. At lower prices, new buyers enter and existing buyers purchase more. This is the <strong>Law of Demand</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-btn" onclick="toggleAccordion(this)">
+        Why do economists use linear demand curves? <span class="arrow">▾</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          Real demand curves are likely nonlinear (curved). But linear curves give the same intuition and are far more tractable mathematically. Finding the intersection of two straight lines is simple algebra. Nonlinear functions require quadratic solutions. Since the intuition is identical, linearity wins for pedagogy — even PhD programs use linear curves.
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-btn" onclick="toggleAccordion(this)">
+        Where do real demand curves come from? <span class="arrow">▾</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          Firms estimate demand from data. Grocery loyalty card programs track every purchase — when prices change, the data reveals how quantity responds. Combined with census data (average household composition by zip code), property values (Zillow data), and purchase history, firms build enormous datasets. Statisticians then use econometric techniques to estimate the demand function for each product.
+          <div class="example-box" style="margin-top:16px">
+            <span class="ex-label">Example</span>
+            <p>Prof. DeBrock's grocery store loyalty card tracks that when mayonnaise goes on sale, he buys more — but when Johnnie Walker Red Label Scotch rises in price, he doesn't cut back. Different price elasticities for different products, all captured in the data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="card">
+      <span class="card-tag">Critical Jargon — Don't Mix These Up!</span>
+      <h2>Change in Demand vs. Change in Quantity Demanded</h2>
+      <div class="concept-grid" style="margin-top:16px">
+        <div class="concept-card" style="border-color:rgba(78,205,196,0.3)">
+          <span class="concept-icon">⬅️➡️</span>
+          <h3 style="color:var(--teal)">Change in Demand</h3>
+          <p>The <strong>entire demand curve shifts</strong>. Caused by: changes in tastes, income, prices of related goods, consumer expectations. E.g., a government study showing tomatoes prevent heart disease → whole curve shifts right (increase in demand).</p>
+        </div>
+        <div class="concept-card" style="border-color:rgba(255,107,107,0.3)">
+          <span class="concept-icon">↕️</span>
+          <h3 style="color:var(--coral)">Change in Quantity Demanded</h3>
+          <p>Movement <strong>along a static demand curve</strong> due to a price change only. E.g., gasoline tax raises price → consumers buy less gas. The curve didn't shift — consumers just moved to a different point on the same curve.</p>
+        </div>
+      </div>
+      <div class="example-box" style="margin-top:8px">
+        <span class="ex-label">Exam Trap</span>
+        <p>If you're asked "what happens if gasoline taxes rise?" — the correct answer is a <strong>decrease in quantity demanded</strong> (movement along the curve), NOT a "decrease in demand" (shift). The gas itself hasn't changed; only its price did.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- SUPPLY TAB -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="section" id="tab-supply">
+    <h2 class="section-title">Supply Curves</h2>
+    <p class="section-sub">Lesson 1-2.3 — The seller side of every market.</p>
+
+    <div class="card">
+      <span class="card-tag">Definition</span>
+      <h2>The Supply Curve</h2>
+      <p>Supply = <strong style="color:var(--text)">how much firms are willing to sell at different possible prices</strong>. Written as Q = h(P). It is <strong>upward sloping</strong> — higher prices induce firms to supply more. Why? Because producing more output is progressively more expensive (hiring more workers, overtime pay, etc.), so firms need higher prices to justify greater output.</p>
+    </div>
+
+    <div class="graph-wrapper">
+      <svg width="320" height="260" viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axes -->
+        <line x1="50" y1="220" x2="290" y2="220" stroke="#252a3a" stroke-width="1.5"/>
+        <line x1="50" y1="20" x2="50" y2="220" stroke="#252a3a" stroke-width="1.5"/>
+        <!-- Axis labels -->
+        <text x="160" y="248" fill="#7a8099" font-size="12" font-family="IBM Plex Mono" text-anchor="middle">Q (Quantity)</text>
+        <text x="18" y="120" fill="#7a8099" font-size="12" font-family="IBM Plex Mono" text-anchor="middle" transform="rotate(-90 18 120)">P (Price)</text>
+        <!-- Supply curve S0 -->
+        <line x1="70" y1="200" x2="260" y2="50" stroke="#4ecdc4" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="264" y="48" fill="#4ecdc4" font-size="13" font-family="Playfair Display">S₀</text>
+        <!-- Supply curve S1 (shifted left - drought) -->
+        <line x1="100" y1="200" x2="285" y2="50" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="6,4" stroke-linecap="round"/>
+        <text x="288" y="48" fill="#ff6b6b" font-size="13" font-family="Playfair Display">S₁</text>
+        <!-- Arrow between curves -->
+        <text x="182" y="120" fill="#ff6b6b" font-size="18">←</text>
+        <!-- Points on S0 -->
+        <circle cx="148" cy="145" r="5" fill="#4ecdc4"/>
+        <circle cx="200" cy="100" r="5" fill="#a8b4ff"/>
+        <!-- Dashed lines -->
+        <line x1="50" y1="145" x2="148" y2="145" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="148" y1="145" x2="148" y2="220" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="50" y1="100" x2="200" y2="100" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="200" y1="100" x2="200" y2="220" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Labels -->
+        <text x="40" y="149" fill="#4ecdc4" font-size="11" text-anchor="end" font-family="IBM Plex Mono">P₀</text>
+        <text x="40" y="104" fill="#a8b4ff" font-size="11" text-anchor="end" font-family="IBM Plex Mono">P₁</text>
+        <text x="148" y="234" fill="#4ecdc4" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">Q₀</text>
+        <text x="200" y="234" fill="#a8b4ff" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">Q₁</text>
+        <!-- Annotation -->
+        <text x="185" y="138" fill="#ff6b6b" font-size="9" text-anchor="middle" font-family="DM Sans">drought shifts</text>
+        <text x="185" y="148" fill="#ff6b6b" font-size="9" text-anchor="middle" font-family="DM Sans">supply left</text>
+      </svg>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Critical Jargon — Mirrors Demand!</span>
+      <h2>Change in Supply vs. Change in Quantity Supplied</h2>
+      <div class="concept-grid" style="margin-top:16px">
+        <div class="concept-card" style="border-color:rgba(255,107,107,0.3)">
+          <span class="concept-icon">⬅️➡️</span>
+          <h3 style="color:var(--coral)">Change in Supply</h3>
+          <p>The <strong>whole supply curve shifts</strong>. Caused by: input cost changes, technology improvements, weather events, new firms entering/exiting. E.g., a drought shifts the corn supply curve to the left — less corn at every possible price.</p>
+        </div>
+        <div class="concept-card" style="border-color:rgba(78,205,196,0.3)">
+          <span class="concept-icon">↕️</span>
+          <h3 style="color:var(--teal)">Change in Quantity Supplied</h3>
+          <p>Movement <strong>along a static supply curve</strong> due to a price change only. E.g., price drops from P₀ to P₁ → firms supply less (Q₁ &lt; Q₀). Same supply conditions; different point on the curve.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="example-box">
+      <span class="ex-label">Real-World Example · Corn Drought</span>
+      <p>A big drought hits. Corn farmers can no longer supply the same quantities they could before. At the original price P₀, they can only put Q₁ on the market (less than before). The entire supply curve shifts <strong>left/back</strong> toward the price axis. This is a <em>change in supply</em>, not a change in quantity supplied. To restore equilibrium, price must rise.</p>
+    </div>
+
+    <div class="accordion">
+      <button class="accordion-btn" onclick="toggleAccordion(this)">
+        Why does the supply curve slope upward? <span class="arrow">▾</span>
+      </button>
+      <div class="accordion-body">
+        <div class="accordion-body-inner">
+          Producing more output costs progressively more. Firms must hire extra workers (often at overtime rates), use less efficient equipment, acquire additional inputs. These escalating costs mean firms need <strong>higher prices</strong> to justify putting more on the market. Eventually, supply curves connect to full cost curves — production functions, marginal costs — which are developed in later modules.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- EQUILIBRIUM TAB -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="section" id="tab-equilibrium">
+    <h2 class="section-title">Market Equilibrium</h2>
+    <p class="section-sub">Lesson 1-2.4 — Where supply meets demand, and what happens when things change.</p>
+
+    <div class="card">
+      <span class="card-tag">Definition</span>
+      <h2>Equilibrium</h2>
+      <p>Equilibrium = <strong style="color:var(--text)">"No tendency for change."</strong> In a market, equilibrium is the price P* and quantity Q* where quantity demanded = quantity supplied. Both buyers and sellers are satisfied; neither group has any incentive to push prices higher or lower.</p>
+    </div>
+
+    <div class="graph-wrapper">
+      <svg width="340" height="280" viewBox="0 0 340 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Axes -->
+        <line x1="50" y1="240" x2="310" y2="240" stroke="#252a3a" stroke-width="1.5"/>
+        <line x1="50" y1="20" x2="50" y2="240" stroke="#252a3a" stroke-width="1.5"/>
+        <text x="180" y="265" fill="#7a8099" font-size="12" font-family="IBM Plex Mono" text-anchor="middle">Q (Quantity)</text>
+        <text x="18" y="130" fill="#7a8099" font-size="12" font-family="IBM Plex Mono" text-anchor="middle" transform="rotate(-90 18 130)">P (Price)</text>
+        <!-- Demand curve -->
+        <line x1="70" y1="50" x2="290" y2="220" stroke="#e8c86a" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="295" y="220" fill="#e8c86a" font-size="13" font-family="Playfair Display">D₀</text>
+        <!-- Supply curve -->
+        <line x1="70" y1="220" x2="280" y2="60" stroke="#4ecdc4" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="284" y="58" fill="#4ecdc4" font-size="13" font-family="Playfair Display">S₀</text>
+        <!-- Equilibrium point -->
+        <circle cx="177" cy="136" r="7" fill="#e8c86a" opacity="0.9"/>
+        <circle cx="177" cy="136" r="12" fill="none" stroke="#e8c86a" stroke-width="1" opacity="0.4"/>
+        <text x="186" y="128" fill="#e8c86a" font-size="12" font-family="Playfair Display">E</text>
+        <!-- Dashed lines to axes -->
+        <line x1="50" y1="136" x2="177" y2="136" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="177" y1="136" x2="177" y2="240" stroke="#3a3f55" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="40" y="140" fill="#e8c86a" font-size="11" text-anchor="end" font-family="IBM Plex Mono">Pₑ</text>
+        <text x="177" y="255" fill="#e8c86a" font-size="11" text-anchor="middle" font-family="IBM Plex Mono">Qₑ</text>
+        <!-- Surplus label -->
+        <text x="240" y="90" fill="#ff6b6b" font-size="11" font-family="DM Sans">SURPLUS</text>
+        <text x="240" y="103" fill="#ff6b6b" font-size="10" font-family="DM Sans">(price too high)</text>
+        <!-- Shortage label -->
+        <text x="90" y="200" fill="#a8b4ff" font-size="11" font-family="DM Sans">SHORTAGE</text>
+        <text x="90" y="213" fill="#a8b4ff" font-size="10" font-family="DM Sans">(price too low)</text>
+      </svg>
+    </div>
+
+    <div class="concept-grid">
+      <div class="concept-card" style="border-color:rgba(255,107,107,0.3)">
+        <span class="concept-icon">📦</span>
+        <h3 style="color:var(--coral)">Surplus (Price Too High)</h3>
+        <p>Firms produce more than consumers want to buy. Unsold goods pile up. Rational response: firms lower prices to attract buyers and reduce production. Price drifts <strong>down</strong> toward equilibrium.</p>
+      </div>
+      <div class="concept-card" style="border-color:rgba(168,180,255,0.3)">
+        <span class="concept-icon">🏃</span>
+        <h3 style="color:var(--lavender)">Shortage (Price Too Low)</h3>
+        <p>Consumers want more than firms are willing to supply. Buyers bid up the price. At higher prices, more firms supply more output and some buyers exit. Price drifts <strong>up</strong> toward equilibrium.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Proof Method</span>
+      <h2>Proof by Contradiction</h2>
+      <p>To prove that Pₑ is the only equilibrium price, assume any other price and show it creates either a surplus or shortage — meaning there IS a tendency to change. Therefore no other price can be an equilibrium.</p>
+      <ul class="checklist" style="margin-top:16px">
+        <li>Any price <strong>above Pₑ</strong> → surplus → price falls back to Pₑ</li>
+        <li>Any price <strong>below Pₑ</strong> → shortage → price rises back to Pₑ</li>
+        <li>Only at <strong>Pₑ</strong> is there no tendency for change → it is THE equilibrium</li>
+      </ul>
+    </div>
+
+    <div class="example-box">
+      <span class="ex-label">Real-World Example · Florida Orange Juice Freeze</span>
+      <p>Ice covers Florida orange groves. Florida represents ~⅓ of US OJ supply. Supply curve shifts sharply <strong>left</strong>. At the old price P₀, consumers still want Q₀ OJ — but now only a fraction is available → <strong>shortage</strong>. Consumers bid up the price. Some exit the market ("back to Diet Coke"). Remaining suppliers divert whole oranges into juice production. A new, higher-price equilibrium forms. A trained analyst sees the frost on TV and immediately knows: <em>"Supply curve shifted left — OJ price is going up."</em></p>
+    </div>
+
+    <div class="quote-block">
+      <p>"You can't just wish away scarcity. You have to put some mechanism in place — who makes the call."</p>
+      <cite>— Prof. DeBrock</cite>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">The Big Picture</span>
+      <h2>Reporter vs. Analyst</h2>
+      <p>A <em>reporter</em> tells you what happened: <em>"The frost ruined the oranges."</em> An <em>analyst</em> understands the mechanism: the supply curve shifted left, creating a shortage, which caused prices to rise, inducing new supply and reduced demand, settling at a new equilibrium with higher price and lower quantity.</p>
+      <p style="margin-top:12px;color:var(--text-dim)">This course's goal is to turn you into the analyst — someone who can predict the direction of price and quantity changes before the market settles.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- SUBSTITUTES TAB -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="section" id="tab-substitutes">
+    <h2 class="section-title">Substitutes, Complements &amp; Market Effects</h2>
+    <p class="section-sub">Lesson 1-6 — How related goods ripple through demand, supply, and equilibrium.</p>
+
+    <!-- TYPE DEFINITIONS -->
+    <div class="sub-type-grid">
+      <div class="sub-card substitute">
+        <span class="sub-icon">🔁</span>
+        <h3>Substitute Goods</h3>
+        <p>Two goods are <strong>substitutes</strong> when they satisfy the same need and can be used in place of each other. When the price of Good A rises, consumers switch to Good B — increasing demand for B. The demand curves of substitutes move in <em>opposite directions</em> in response to price changes.</p>
+        <p style="margin-top:10px"><strong style="color:var(--coral)">Cross-price effect is positive:</strong> ↑ Price of A → ↑ Demand for B</p>
+      </div>
+      <div class="sub-card complement">
+        <span class="sub-icon">🔗</span>
+        <h3>Complement Goods</h3>
+        <p>Two goods are <strong>complements</strong> when they are consumed <em>together</em> — one has little value without the other. When the price of Good A rises, demand for both A and its complement B falls. The demand curves of complements move in the <em>same direction</em>.</p>
+        <p style="margin-top:10px"><strong style="color:var(--lavender)">Cross-price effect is negative:</strong> ↑ Price of A → ↓ Demand for B</p>
+      </div>
+    </div>
+
+    <!-- EXAMPLES -->
+    <div class="card">
+      <span class="card-tag">Real-World Examples</span>
+      <h2>Recognising Substitutes vs. Complements</h2>
+      <table class="effect-table">
+        <thead>
+          <tr>
+            <th>Good A</th>
+            <th>Good B</th>
+            <th>Relationship</th>
+            <th>Why?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Butter</td><td>Margarine</td><td style="color:var(--coral);font-weight:600">Substitutes</td><td>Both spread on toast; consumers switch when one gets pricier</td></tr>
+          <tr><td>Orange Juice</td><td>Apple Juice</td><td style="color:var(--coral);font-weight:600">Substitutes</td><td>Both are breakfast drinks satisfying the same thirst</td></tr>
+          <tr><td>Pepsi</td><td>Coca-Cola</td><td style="color:var(--coral);font-weight:600">Substitutes</td><td>Classic rivals — a Pepsi price hike boosts Coke demand</td></tr>
+          <tr><td>Gasoline</td><td>Cars</td><td style="color:var(--lavender);font-weight:600">Complements</td><td>Cars are useless without fuel; high gas prices depress car sales</td></tr>
+          <tr><td>Coffee</td><td>Coffee Creamer</td><td style="color:var(--lavender);font-weight:600">Complements</td><td>Consumed together; a coffee price spike hurts creamer sales too</td></tr>
+          <tr><td>Hot Dogs</td><td>Hot Dog Buns</td><td style="color:var(--lavender);font-weight:600">Complements</td><td>Near-perfect complements — nearly always bought together</td></tr>
+          <tr><td>Streaming Services</td><td>DVD Rentals</td><td style="color:var(--coral);font-weight:600">Substitutes</td><td>Rise of Netflix dramatically shifted demand away from DVDs</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- IMPACT ON DEMAND -->
+    <div class="card">
+      <span class="card-tag">Effect on Demand</span>
+      <h2>How Substitutes &amp; Complements Shift the Demand Curve</h2>
+      <p>A substitute or complement relationship means one good's price change becomes a <strong>non-price determinant</strong> of the other's demand — it shifts the entire demand curve (a "change in demand," not a "change in quantity demanded").</p>
+
+      <div class="graph-wrapper" style="gap:40px; flex-wrap:wrap;">
+        <!-- SUBSTITUTE GRAPH -->
+        <div style="text-align:center">
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;color:var(--coral);text-transform:uppercase;margin-bottom:10px">Substitute: ↑ Price of Pepsi → Demand for Coke</p>
+          <svg width="240" height="210" viewBox="0 0 240 210" xmlns="http://www.w3.org/2000/svg">
+            <line x1="36" y1="180" x2="220" y2="180" stroke="#252a3a" stroke-width="1.5"/>
+            <line x1="36" y1="16" x2="36" y2="180" stroke="#252a3a" stroke-width="1.5"/>
+            <text x="128" y="200" fill="#7a8099" font-size="10" font-family="IBM Plex Mono" text-anchor="middle">Q (Coke)</text>
+            <text x="14" y="98" fill="#7a8099" font-size="10" font-family="IBM Plex Mono" text-anchor="middle" transform="rotate(-90 14 98)">P</text>
+            <!-- Original D0 -->
+            <line x1="55" y1="30" x2="190" y2="165" stroke="#7a8099" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <text x="194" y="165" fill="#7a8099" font-size="11" font-family="Playfair Display">D₀</text>
+            <!-- New D1 shifted RIGHT -->
+            <line x1="85" y1="30" x2="218" y2="163" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round"/>
+            <text x="222" y="163" fill="#ff6b6b" font-size="11" font-family="Playfair Display">D₁</text>
+            <!-- Arrow showing shift -->
+            <text x="130" y="78" fill="#ff6b6b" font-size="18">→</text>
+            <text x="118" y="95" fill="#ff6b6b" font-size="9" font-family="DM Sans" text-anchor="middle">demand</text>
+            <text x="118" y="107" fill="#ff6b6b" font-size="9" font-family="DM Sans" text-anchor="middle">increases</text>
+          </svg>
+        </div>
+        <!-- COMPLEMENT GRAPH -->
+        <div style="text-align:center">
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.15em;color:var(--lavender);text-transform:uppercase;margin-bottom:10px">Complement: ↑ Price of Coffee → Demand for Creamer</p>
+          <svg width="240" height="210" viewBox="0 0 240 210" xmlns="http://www.w3.org/2000/svg">
+            <line x1="36" y1="180" x2="220" y2="180" stroke="#252a3a" stroke-width="1.5"/>
+            <line x1="36" y1="16" x2="36" y2="180" stroke="#252a3a" stroke-width="1.5"/>
+            <text x="128" y="200" fill="#7a8099" font-size="10" font-family="IBM Plex Mono" text-anchor="middle">Q (Creamer)</text>
+            <text x="14" y="98" fill="#7a8099" font-size="10" font-family="IBM Plex Mono" text-anchor="middle" transform="rotate(-90 14 98)">P</text>
+            <!-- Original D0 -->
+            <line x1="85" y1="30" x2="218" y2="163" stroke="#7a8099" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <text x="222" y="163" fill="#7a8099" font-size="11" font-family="Playfair Display">D₀</text>
+            <!-- New D1 shifted LEFT -->
+            <line x1="55" y1="30" x2="190" y2="165" stroke="#a8b4ff" stroke-width="2.5" stroke-linecap="round"/>
+            <text x="194" y="165" fill="#a8b4ff" font-size="11" font-family="Playfair Display">D₁</text>
+            <!-- Arrow showing shift -->
+            <text x="115" y="78" fill="#a8b4ff" font-size="18">←</text>
+            <text x="115" y="95" fill="#a8b4ff" font-size="9" font-family="DM Sans" text-anchor="middle">demand</text>
+            <text x="115" y="107" fill="#a8b4ff" font-size="9" font-family="DM Sans" text-anchor="middle">decreases</text>
+          </svg>
+        </div>
+      </div>
+
+      <ul class="checklist" style="margin-top:8px">
+        <li><strong style="color:var(--coral)">Substitutes:</strong> ↑ Price of Good A → whole demand curve for Good B shifts <strong>RIGHT</strong> (increase in demand). New equilibrium: higher price and higher quantity for B.</li>
+        <li><strong style="color:var(--lavender)">Complements:</strong> ↑ Price of Good A → whole demand curve for Good B shifts <strong>LEFT</strong> (decrease in demand). New equilibrium: lower price and lower quantity for B.</li>
+        <li>These are <em>shifts</em> in the demand curve, not movements along it — triggered by the price of a <em>related</em> good, not the good's own price.</li>
+      </ul>
+    </div>
+
+    <!-- IMPACT ON SUPPLY -->
+    <div class="card">
+      <span class="card-tag">Effect on Supply</span>
+      <h2>How Substitutes in Production Shift the Supply Curve</h2>
+      <p>On the supply side, <strong>substitutes in production</strong> occur when firms can use the same resources to make different goods. If the price of Good A rises, profit-seeking firms divert resources toward A — reducing the supply of Good B.</p>
+      <div class="example-box">
+        <span class="ex-label">Example · Corn &amp; Soybeans</span>
+        <p>A farmer has 1,000 acres. Both corn and soybeans can grow on the same land. If corn prices spike (say, due to a drought elsewhere), the farmer shifts acreage to corn → <strong>supply of soybeans shifts LEFT</strong>. Soybean price rises even though nothing directly happened to soybeans. This is "substitution in production" — resources flow toward the higher-return crop.</p>
+      </div>
+      <div class="example-box">
+        <span class="ex-label">Example · Orange Juice vs. Whole Oranges</span>
+        <p>From Prof. DeBrock's OJ example: when OJ prices rise, Florida suppliers divert whole oranges toward juice production — <strong>supply of whole oranges shifts left</strong>, pushing up the price of whole oranges too. The same physical resource (oranges) produces two market goods that compete for it.</p>
+      </div>
+      <ul class="checklist" style="margin-top:4px">
+        <li><strong style="color:var(--coral)">Substitutes in production:</strong> ↑ Price of Good A → firms redirect inputs → supply of Good B shifts <strong>LEFT</strong> → B's price rises.</li>
+        <li><strong style="color:var(--teal)">Complements in production (joint products):</strong> Goods produced together (e.g., beef and leather). ↑ Price of beef → more cattle raised → more leather as a byproduct → supply of leather shifts <strong>RIGHT</strong> → leather price falls.</li>
+      </ul>
+    </div>
+
+    <!-- EQUILIBRIUM EFFECTS TABLE -->
+    <div class="card">
+      <span class="card-tag">Full Equilibrium Impact Reference</span>
+      <h2>Chain Reactions: From One Market to Another</h2>
+      <p style="margin-bottom:16px">This table traces how a single price change propagates across related markets to a new equilibrium.</p>
+      <table class="effect-table">
+        <thead>
+          <tr>
+            <th>Trigger Event</th>
+            <th>Relationship</th>
+            <th>Curve Shift</th>
+            <th>New Price (B)</th>
+            <th>New Qty (B)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>↑ Price of Pepsi</td>
+            <td style="color:var(--coral)">Substitutes (demand)</td>
+            <td>Demand for Coke → <span class="up">RIGHT ↗</span></td>
+            <td class="up">↑ Higher</td>
+            <td class="up">↑ Higher</td>
+          </tr>
+          <tr>
+            <td>↓ Price of Pepsi</td>
+            <td style="color:var(--coral)">Substitutes (demand)</td>
+            <td>Demand for Coke → <span class="down">LEFT ↙</span></td>
+            <td class="down">↓ Lower</td>
+            <td class="down">↓ Lower</td>
+          </tr>
+          <tr>
+            <td>↑ Price of Coffee</td>
+            <td style="color:var(--lavender)">Complements (demand)</td>
+            <td>Demand for Creamer → <span class="down">LEFT ↙</span></td>
+            <td class="down">↓ Lower</td>
+            <td class="down">↓ Lower</td>
+          </tr>
+          <tr>
+            <td>↓ Price of Coffee</td>
+            <td style="color:var(--lavender)">Complements (demand)</td>
+            <td>Demand for Creamer → <span class="up">RIGHT ↗</span></td>
+            <td class="up">↑ Higher</td>
+            <td class="up">↑ Higher</td>
+          </tr>
+          <tr>
+            <td>↑ Price of Corn</td>
+            <td style="color:var(--coral)">Sub. in production</td>
+            <td>Supply of Soybeans → <span class="down">LEFT ↙</span></td>
+            <td class="up">↑ Higher</td>
+            <td class="down">↓ Lower</td>
+          </tr>
+          <tr>
+            <td>↑ Price of Beef</td>
+            <td style="color:var(--teal)">Joint product</td>
+            <td>Supply of Leather → <span class="up">RIGHT ↗</span></td>
+            <td class="down">↓ Lower</td>
+            <td class="up">↑ Higher</td>
+          </tr>
+          <tr>
+            <td>↑ Price of Gas (Cars+Gas)</td>
+            <td style="color:var(--lavender)">Complements (demand)</td>
+            <td>Demand for Cars → <span class="down">LEFT ↙</span></td>
+            <td class="down">↓ Lower</td>
+            <td class="down">↓ Lower</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- EQUILIBRIUM GRAPH — SUBSTITUTE SHOCK -->
+    <div class="card">
+      <span class="card-tag">Visualising the New Equilibrium</span>
+      <h2>Step-by-Step: Substitute Shock (Pepsi Price Rises → Coke Market)</h2>
+      <div class="graph-wrapper">
+        <svg width="340" height="280" viewBox="0 0 340 280" xmlns="http://www.w3.org/2000/svg">
+          <line x1="50" y1="245" x2="315" y2="245" stroke="#252a3a" stroke-width="1.5"/>
+          <line x1="50" y1="20" x2="50" y2="245" stroke="#252a3a" stroke-width="1.5"/>
+          <text x="182" y="266" fill="#7a8099" font-size="11" font-family="IBM Plex Mono" text-anchor="middle">Q (Coke)</text>
+          <text x="17" y="132" fill="#7a8099" font-size="11" font-family="IBM Plex Mono" text-anchor="middle" transform="rotate(-90 17 132)">P (Price)</text>
+          <!-- Supply curve S0 -->
+          <line x1="65" y1="228" x2="265" y2="60" stroke="#4ecdc4" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="269" y="58" fill="#4ecdc4" font-size="13" font-family="Playfair Display">S₀</text>
+          <!-- Original demand D0 (dashed) -->
+          <line x1="68" y1="55" x2="255" y2="228" stroke="#7a8099" stroke-width="1.5" stroke-dasharray="6,4"/>
+          <text x="258" y="228" fill="#7a8099" font-size="13" font-family="Playfair Display">D₀</text>
+          <!-- New demand D1 (solid, shifted right) -->
+          <line x1="108" y1="55" x2="295" y2="228" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="298" y="228" fill="#ff6b6b" font-size="13" font-family="Playfair Display">D₁</text>
+          <!-- Original equilibrium E0 -->
+          <circle cx="162" cy="143" r="5" fill="#7a8099"/>
+          <text x="148" y="136" fill="#7a8099" font-size="11" font-family="Playfair Display">E₀</text>
+          <!-- New equilibrium E1 -->
+          <circle cx="197" cy="110" r="7" fill="#ff6b6b" opacity="0.9"/>
+          <circle cx="197" cy="110" r="12" fill="none" stroke="#ff6b6b" stroke-width="1" opacity="0.35"/>
+          <text x="205" y="103" fill="#ff6b6b" font-size="11" font-family="Playfair Display">E₁</text>
+          <!-- Dashed from E0 -->
+          <line x1="50" y1="143" x2="162" y2="143" stroke="#3a3f55" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="162" y1="143" x2="162" y2="245" stroke="#3a3f55" stroke-width="1" stroke-dasharray="3,3"/>
+          <!-- Dashed from E1 -->
+          <line x1="50" y1="110" x2="197" y2="110" stroke="#ff6b6b" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+          <line x1="197" y1="110" x2="197" y2="245" stroke="#ff6b6b" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
+          <!-- Labels -->
+          <text x="40" y="147" fill="#7a8099" font-size="10" text-anchor="end" font-family="IBM Plex Mono">P₀</text>
+          <text x="40" y="114" fill="#ff6b6b" font-size="10" text-anchor="end" font-family="IBM Plex Mono">P₁</text>
+          <text x="162" y="260" fill="#7a8099" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">Q₀</text>
+          <text x="197" y="260" fill="#ff6b6b" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">Q₁</text>
+          <!-- Shift arrow -->
+          <text x="178" y="180" fill="#ff6b6b" font-size="16">→</text>
+          <text x="178" y="195" fill="#ff6b6b" font-size="9" font-family="DM Sans">D shifts right</text>
+        </svg>
+      </div>
+      <ul class="checklist">
+        <li><strong style="color:var(--gold)">Step 1:</strong> Pepsi price rises → consumers switch away from Pepsi toward Coke.</li>
+        <li><strong style="color:var(--gold)">Step 2:</strong> Demand for Coke shifts right (D₀ → D₁). At the old price P₀, more Coke is demanded than supplied → <strong>shortage</strong>.</li>
+        <li><strong style="color:var(--gold)">Step 3:</strong> Coke's price is bid up. Suppliers respond by producing more Coke.</li>
+        <li><strong style="color:var(--gold)">Step 4:</strong> New equilibrium E₁ forms at <strong>higher price P₁ and higher quantity Q₁</strong>. Both price and quantity rise when a substitute's price rises.</li>
+      </ul>
+    </div>
+
+    <!-- KEY INSIGHT -->
+    <div class="quote-block">
+      <p>"When there's not very much to go around, price drifts up so that more and more people say, 'I'm out of that game' — until you get just enough people still willing to be in that market."</p>
+      <cite>— Prof. DeBrock (the same logic applies when people leave a substitute market and flood into yours)</cite>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Exam Quick-Reference</span>
+      <h2>The 4 Rules to Memorise</h2>
+      <ul class="checklist">
+        <li><strong style="color:var(--coral)">Substitutes — Price of A rises:</strong> Demand for B <strong>increases</strong> (curve right) → B's price ↑, B's quantity ↑</li>
+        <li><strong style="color:var(--coral)">Substitutes — Price of A falls:</strong> Demand for B <strong>decreases</strong> (curve left) → B's price ↓, B's quantity ↓</li>
+        <li><strong style="color:var(--lavender)">Complements — Price of A rises:</strong> Demand for B <strong>decreases</strong> (curve left) → B's price ↓, B's quantity ↓</li>
+        <li><strong style="color:var(--lavender)">Complements — Price of A falls:</strong> Demand for B <strong>increases</strong> (curve right) → B's price ↑, B's quantity ↑</li>
+      </ul>
+      <div class="example-box" style="margin-top:16px">
+        <span class="ex-label">Memory Hook</span>
+        <p><strong style="color:var(--coral)">Substitutes = Same direction</strong> as the price change hits your good (both price and quantity rise together in the benefiting good). <strong style="color:var(--lavender)">Complements = Opposite direction</strong> — when your partner's price rises, your demand falls.</p>
+      </div>
+    </div>
+
+    <!-- NEW FLASHCARDS for Substitutes -->
+    <hr class="divider">
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:16px">Quick-Check: Substitutes &amp; Complements</h3>
+    <div class="flashcard-grid">
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front"><p>What are substitute goods?</p><small>CLICK TO REVEAL</small></div>
+          <div class="flashcard-back"><p>Goods that <strong>satisfy the same need</strong> and can replace each other. ↑ Price of A → ↑ Demand for B. Cross-price effect is <em>positive</em>.</p></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front"><p>What are complement goods?</p><small>CLICK TO REVEAL</small></div>
+          <div class="flashcard-back"><p>Goods <strong>consumed together</strong>. ↑ Price of A → ↓ Demand for B. Cross-price effect is <em>negative</em>. e.g. Cars &amp; Gasoline.</p></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front"><p>Pepsi price rises. What happens to the Coke market equilibrium?</p><small>CLICK TO REVEAL</small></div>
+          <div class="flashcard-back"><p>Demand for Coke shifts <strong>right</strong>. New equilibrium: <strong>higher price AND higher quantity</strong> for Coke.</p></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front"><p>Coffee price rises sharply. What happens to creamer?</p><small>CLICK TO REVEAL</small></div>
+          <div class="flashcard-back"><p>Complements: people buy less coffee → also buy less creamer. Demand for creamer shifts <strong>left</strong>. New equilibrium: <strong>lower price AND lower quantity</strong>.</p></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front"><p>What is a "substitute in production"?</p><small>CLICK TO REVEAL</small></div>
+          <div class="flashcard-back"><p>When the <strong>same resources</strong> can make two different goods. ↑ Price of Good A → firms shift inputs to A → supply of Good B shifts <strong>left</strong> → B's price rises.</p></div>
+        </div>
+      </div>
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front"><p>Corn prices spike. What happens to the soybean market?</p><small>CLICK TO REVEAL</small></div>
+          <div class="flashcard-back"><p>Corn &amp; soybeans compete for farmland (substitutes in production). Farmers shift to corn → soybean <strong>supply shifts left</strong> → soybean price <strong>rises</strong>, quantity <strong>falls</strong>.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- FLASHCARDS TAB -->
+  <!-- ══════════════════════════════════════════════ -->
+  <div class="section" id="tab-flashcards">
+    <h2 class="section-title">Flashcards</h2>
+    <p class="section-sub">Click each card to reveal the answer.</p>
+
+    <div class="flashcard-grid">
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>What is the definition of scarcity?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p>"Not enough to go around" — more demand than supply exists at zero price. Economists believe everything is scarce.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>What is opportunity cost?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p>The value of the <strong>next best foregone alternative</strong>. Every choice forecloses other options — those forgone options are your opportunity cost.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>What is an allocation mechanism?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p>A rule used to decide <strong>who gets what</strong> when there isn't enough for everyone. Examples: prices (markets), government command, queuing.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>What does the demand curve show?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p>A locus of points showing <strong>how much consumers wish to purchase at different prices</strong>. Q = f(P). Always downward sloping.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>"Change in Demand" vs "Change in Quantity Demanded" — what's the difference?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p><strong>Change in Demand</strong> = entire curve shifts (new tastes/income). <strong>Change in Quantity Demanded</strong> = movement along the existing curve due to a price change.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>What does equilibrium mean in a market?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p><strong>"No tendency for change."</strong> The price where quantity demanded exactly equals quantity supplied. Both buyers and sellers are satisfied.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>What happens when price is above equilibrium?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p><strong>Surplus</strong> — firms produce more than consumers want. Unsold goods pile up. Firms lower prices and reduce output → price falls back to Pₑ.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>What happens when price is below equilibrium?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p><strong>Shortage</strong> — consumers want more than firms supply. Buyers bid price up. More firms supply, some buyers exit → price rises to Pₑ.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>Why does the supply curve slope upward?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p>Producing more output costs progressively more (extra workers, overtime, etc.). Firms need <strong>higher prices</strong> to justify supplying greater quantities.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>Milton Friedman's most famous economic quote?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p>"There's no such thing as a <strong>free lunch</strong>." — Even if someone else pays money, you still pay with your time (opportunity cost).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>What is queuing as an allocation mechanism?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p>When price is set to $0, scarcity is rationed by <strong>waiting in line</strong>. Time replaces money as the cost. Duke basketball is a prime example (Krzyzewskiville).</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flashcard" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-inner">
+          <div class="flashcard-front">
+            <p>What does "proof by contradiction" prove about equilibrium?</p>
+            <small>CLICK TO REVEAL</small>
+          </div>
+          <div class="flashcard-back">
+            <p>Any price other than Pₑ creates surplus or shortage (tendency to change) → cannot be equilibrium. Therefore, only <strong>Pₑ</strong> is a true equilibrium.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end .content -->
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SEARCH OVERLAY -->
+<!-- ══════════════════════════════════════════════ -->
+
+    <div class="card">
+      <span class="card-tag">Core Concept</span>
+      <h2>What Is a Substitute?</h2>
+      <p>Two goods are <strong style="color:var(--text)">substitutes</strong> when an increase in the price of one causes an increase in the demand for the other. Consumers switch from the more expensive good to the relatively cheaper alternative. Formally, goods X and Y are substitutes when the <strong style="color:var(--gold)">cross-price elasticity of demand is positive</strong> — raising the price of X raises the quantity demanded of Y.</p>
+      <div style="margin-top:18px">
+        <span class="key-term">↑ Price of X → ↑ Demand for Y</span>
+        <span class="key-term">Cross-Price Elasticity &gt; 0</span>
+        <span class="key-term">Demand Curve for Y Shifts Right</span>
+      </div>
+    </div>
+
+    <div class="sub-type-grid">
+      <div class="sub-card substitute">
+        <span class="sub-icon">🔄</span>
+        <h3>Substitutes</h3>
+        <p>Goods that can replace each other in consumption. When the price of one rises, consumers shift toward the other. The demand curve for the substitute <strong>shifts right</strong>.</p>
+        <div style="margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--coral);letter-spacing:0.1em">
+          Examples → Butter / Margarine · Pepsi / Coke · Tea / Coffee · OJ / Apple Juice · Beef / Chicken · Gas car / EV
+        </div>
+      </div>
+      <div class="sub-card complement">
+        <span class="sub-icon">🔗</span>
+        <h3>Complements</h3>
+        <p>Goods consumed together. When the price of one rises, demand for both falls. The demand curve for the complement <strong>shifts left</strong>.</p>
+        <div style="margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--lavender);letter-spacing:0.1em">
+          Examples → Coffee / Cream · Cars / Gasoline · Printers / Ink · Peanut Butter / Jelly · Smartphones / Apps
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Effect on Demand</span>
+      <h2>How Substitutes Shift the Demand Curve</h2>
+      <p>A substitute good affects the <em>position</em> of the demand curve — not movement along it. This is a <strong style="color:var(--gold)">change in demand</strong> (curve shifts), not a change in quantity demanded (movement along curve).</p>
+
+      <div class="graph-wrapper" style="margin-top:20px">
+        <svg width="460" height="260" viewBox="0 0 460 260" xmlns="http://www.w3.org/2000/svg">
+          <!-- LEFT PANEL: Substitute Good X -->
+          <text x="112" y="16" fill="#9a813e" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">GOOD X (Substitute — price rises)</text>
+          <line x1="36" y1="230" x2="196" y2="230" stroke="#252a3a" stroke-width="1.5"/>
+          <line x1="36" y1="30" x2="36" y2="230" stroke="#252a3a" stroke-width="1.5"/>
+          <text x="116" y="248" fill="#4a5068" font-size="10" font-family="IBM Plex Mono" text-anchor="middle">Q</text>
+          <text x="18" y="130" fill="#4a5068" font-size="10" font-family="IBM Plex Mono" text-anchor="middle" transform="rotate(-90 18 130)">P</text>
+          <!-- Demand X original -->
+          <line x1="55" y1="55" x2="185" y2="210" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round"/>
+          <text x="188" y="210" fill="#ff6b6b" font-size="11" font-family="Playfair Display">Dx</text>
+          <!-- Price arrow going up on X -->
+          <line x1="36" y1="130" x2="36" y2="80" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrowR)"/>
+          <text x="40" y="108" fill="#ff6b6b" font-size="10" font-family="IBM Plex Mono">↑Px</text>
+          <!-- Equilibrium point moves up on X -->
+          <circle cx="107" cy="130" r="4" fill="#ff6b6b" opacity="0.5"/>
+          <circle cx="88" cy="108" r="4" fill="#ff6b6b"/>
+
+          <!-- DIVIDER -->
+          <line x1="228" y1="20" x2="228" y2="250" stroke="#252a3a" stroke-width="1" stroke-dasharray="4,4"/>
+          <text x="228" y="138" fill="#e8c86a" font-size="20" text-anchor="middle">→</text>
+
+          <!-- RIGHT PANEL: Good Y demand shift -->
+          <text x="346" y="16" fill="#9a813e" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">GOOD Y (demand increases)</text>
+          <line x1="248" y1="230" x2="440" y2="230" stroke="#252a3a" stroke-width="1.5"/>
+          <line x1="248" y1="30" x2="248" y2="230" stroke="#252a3a" stroke-width="1.5"/>
+          <text x="344" y="248" fill="#4a5068" font-size="10" font-family="IBM Plex Mono" text-anchor="middle">Q</text>
+          <text x="232" y="130" fill="#4a5068" font-size="10" font-family="IBM Plex Mono" text-anchor="middle" transform="rotate(-90 232 130)">P</text>
+          <!-- Original demand Y -->
+          <line x1="265" y1="60" x2="395" y2="215" stroke="#7a8099" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+          <text x="398" y="215" fill="#7a8099" font-size="11" font-family="Playfair Display">D₀</text>
+          <!-- New demand Y (shifted right) -->
+          <line x1="300" y1="60" x2="430" y2="215" stroke="#e8c86a" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="433" y="215" fill="#e8c86a" font-size="11" font-family="Playfair Display">D₁</text>
+          <!-- Shift arrow -->
+          <line x1="330" y1="140" x2="358" y2="140" stroke="#e8c86a" stroke-width="1.5" marker-end="url(#arrowG)"/>
+          <!-- Old equilibrium -->
+          <circle cx="315" cy="138" r="4" fill="#7a8099" opacity="0.5"/>
+          <!-- New equilibrium -->
+          <circle cx="345" cy="138" r="4" fill="#e8c86a"/>
+          <!-- Dashes to new eq -->
+          <line x1="248" y1="138" x2="345" y2="138" stroke="#3a3f55" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="345" y1="138" x2="345" y2="230" stroke="#3a3f55" stroke-width="1" stroke-dasharray="3,3"/>
+          <text x="244" y="142" fill="#e8c86a" font-size="9" text-anchor="end" font-family="IBM Plex Mono">P₁</text>
+          <text x="314" y="244" fill="#7a8099" font-size="9" text-anchor="middle" font-family="IBM Plex Mono">Q₀</text>
+          <text x="345" y="244" fill="#e8c86a" font-size="9" text-anchor="middle" font-family="IBM Plex Mono">Q₁</text>
+
+          <defs>
+            <marker id="arrowR" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#ff6b6b"/>
+            </marker>
+            <marker id="arrowG" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#e8c86a"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <p style="margin-top:8px;font-size:13px;color:var(--text-muted);text-align:center;font-family:'IBM Plex Mono',monospace;letter-spacing:0.08em">When Px rises → consumers substitute toward Y → D₀ shifts right to D₁ → both Py and Qy rise at new equilibrium</p>
+    </div>
+
+    <hr class="divider">
+
+    <div class="card">
+      <span class="card-tag">Substitution Effects — Full Reference Table</span>
+      <h2>What Happens to Demand, Supply &amp; Equilibrium</h2>
+      <table class="effect-table">
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Effect on Demand (Y)</th>
+            <th>Curve Shift</th>
+            <th>New Equilibrium Price</th>
+            <th>New Equilibrium Qty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Price of substitute X <strong>rises</strong></td>
+            <td>Demand for Y <span class="up">increases</span></td>
+            <td>D shifts <span class="up">right →</span></td>
+            <td><span class="up">↑ Higher</span></td>
+            <td><span class="up">↑ Higher</span></td>
+          </tr>
+          <tr>
+            <td>Price of substitute X <strong>falls</strong></td>
+            <td>Demand for Y <span class="down">decreases</span></td>
+            <td>D shifts <span class="down">left ←</span></td>
+            <td><span class="down">↓ Lower</span></td>
+            <td><span class="down">↓ Lower</span></td>
+          </tr>
+          <tr>
+            <td>Price of complement Z <strong>rises</strong></td>
+            <td>Demand for Y <span class="down">decreases</span></td>
+            <td>D shifts <span class="down">left ←</span></td>
+            <td><span class="down">↓ Lower</span></td>
+            <td><span class="down">↓ Lower</span></td>
+          </tr>
+          <tr>
+            <td>Price of complement Z <strong>falls</strong></td>
+            <td>Demand for Y <span class="up">increases</span></td>
+            <td>D shifts <span class="up">right →</span></td>
+            <td><span class="up">↑ Higher</span></td>
+            <td><span class="up">↑ Higher</span></td>
+          </tr>
+          <tr>
+            <td>New substitute enters market</td>
+            <td>Demand for Y <span class="down">decreases</span></td>
+            <td>D shifts <span class="down">left ←</span></td>
+            <td><span class="down">↓ Lower</span></td>
+            <td><span class="down">↓ Lower</span></td>
+          </tr>
+          <tr>
+            <td>Substitute X becomes unavailable</td>
+            <td>Demand for Y <span class="up">increases</span></td>
+            <td>D shifts <span class="up">right →</span></td>
+            <td><span class="up">↑ Higher</span></td>
+            <td><span class="up">↑ Higher</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:12.5px;color:var(--text-muted);margin-top:8px;font-style:italic">* Supply curve unchanged in all demand-shift scenarios. These effects assume ceteris paribus — all other things equal.</p>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Effect on Supply</span>
+      <h2>Substitutes in Production</h2>
+      <p>Substitution also operates on the <strong style="color:var(--text)">supply side</strong>. When firms can produce multiple goods using the same inputs or machinery, those goods are <strong style="color:var(--gold)">substitutes in production</strong>. A higher price for one good pulls resources away from the other.</p>
+      <ul class="checklist" style="margin-top:16px">
+        <li><strong style="color:var(--text)">Wheat vs. Corn</strong> — A farmer with fixed land can grow either. If wheat prices rise sharply, the farmer switches land to wheat → supply of corn falls → corn supply curve shifts left → corn price rises.</li>
+        <li><strong style="color:var(--text)">Beef vs. Leather</strong> — Both come from cattle. Higher beef demand increases cattle slaughter → more hides available → leather supply increases → leather price falls.</li>
+        <li><strong style="color:var(--text)">Oil refineries</strong> — Can produce different proportions of gasoline, diesel, jet fuel. Price changes in one fuel redirect refinery output, affecting supply of all others.</li>
+      </ul>
+      <table class="effect-table" style="margin-top:20px">
+        <thead>
+          <tr>
+            <th>Scenario (Supply Side)</th>
+            <th>Effect on Supply of Y</th>
+            <th>Curve Shift</th>
+            <th>New Price of Y</th>
+            <th>New Qty of Y</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Price of production substitute X <strong>rises</strong></td>
+            <td>Firms shift to X → supply of Y <span class="down">falls</span></td>
+            <td>S shifts <span class="down">left ←</span></td>
+            <td><span class="up">↑ Higher</span></td>
+            <td><span class="down">↓ Lower</span></td>
+          </tr>
+          <tr>
+            <td>Price of production substitute X <strong>falls</strong></td>
+            <td>Firms shift from X → supply of Y <span class="up">rises</span></td>
+            <td>S shifts <span class="up">right →</span></td>
+            <td><span class="down">↓ Lower</span></td>
+            <td><span class="up">↑ Higher</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Combined Effects — Both Sides Move</span>
+      <h2>When Substitution Shocks Both Demand &amp; Supply</h2>
+      <p>Some real-world events trigger simultaneous substitution on both the demand <em>and</em> supply sides. The final equilibrium outcome depends on the <strong style="color:var(--gold)">relative magnitudes</strong> of the shifts.</p>
+      <div class="example-box" style="margin-top:18px">
+        <span class="ex-label">Case Study · Chicken vs. Beef</span>
+        <p>A disease outbreak decimates the beef supply (supply shifts left → beef price rises sharply). Consumers substitute toward chicken (chicken demand shifts right). Simultaneously, chicken farmers who also raise beef redirect land and feed toward chickens (supply of chicken shifts right). Net result: chicken quantity rises substantially. Price effect on chicken is ambiguous — depends on whether the demand shift or supply shift dominates. This is why analysts need actual data on curve slopes to make precise predictions.</p>
+      </div>
+      <div class="example-box" style="margin-top:12px">
+        <span class="ex-label">Case Study · Coffee vs. Tea</span>
+        <p>A drought destroys coffee harvests → coffee supply falls → coffee price surges. Tea demand spikes (substitute). Tea farmers earn more and expand cultivation (supply shifts right over time). Short run: tea price rises moderately. Long run: as new tea supply comes online, price settles near — but above — the original level. Classic short-run vs. long-run substitution dynamic.</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="card">
+      <span class="card-tag">Equilibrium Analysis — Step by Step</span>
+      <h2>How to Analyze a Substitute Shock</h2>
+      <ul class="checklist">
+        <li><strong style="color:var(--text)">Step 1 — Identify the shock.</strong> What changed? (e.g., price of substitute rose, a substitute became unavailable, a new substitute entered the market)</li>
+        <li><strong style="color:var(--text)">Step 2 — Determine if it's a demand or supply shifter.</strong> Consumer substitution → demand curve of related good shifts. Firm's production substitution → supply curve of related good shifts.</li>
+        <li><strong style="color:var(--text)">Step 3 — Determine direction of shift.</strong> Substitute price up → demand for Y increases (right shift). Substitute price down → demand for Y decreases (left shift).</li>
+        <li><strong style="color:var(--text)">Step 4 — Find the new equilibrium.</strong> With only a demand shift: both price and quantity move in the same direction as the shift. With only a supply shift: price and quantity move in opposite directions.</li>
+        <li><strong style="color:var(--text)">Step 5 — Check for secondary effects.</strong> Does the new price of Y trigger further substitution with other goods? Real markets have chains of substitution that ripple outward.</li>
+      </ul>
+    </div>
+
+    <div class="quote-block">
+      <p>"When lots of people start supplying something it will bring the price down — and that's the fundamental story of substitution at work in competitive markets."</p>
+      <cite>— Prof. DeBrock (adapted from Silicon Valley / RAM example)</cite>
+    </div>
+
+    <div class="card">
+      <span class="card-tag">Key Jargon</span>
+      <h2>Terms to Know</h2>
+      <div style="margin-top:14px">
+        <span class="key-term">Substitute Goods</span>
+        <span class="key-term">Complement Goods</span>
+        <span class="key-term">Cross-Price Elasticity</span>
+        <span class="key-term">Substitutes in Production</span>
+        <span class="key-term">Change in Demand</span>
+        <span class="key-term">Demand Shifter</span>
+        <span class="key-term">Supply Shifter</span>
+        <span class="key-term">Ceteris Paribus</span>
+      </div>
+    </div>
+
+</div><!-- end .content -->
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SEARCH OVERLAY -->
+<!-- ══════════════════════════════════════════════ -->
+<div class="search-overlay" id="searchOverlay" onclick="handleOverlayClick(event)">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <span class="search-icon-lbl">⌕</span>
+      <input type="text" id="searchInput" placeholder="Search notes, concepts, examples…" autocomplete="off" spellcheck="false"/>
+      <button class="search-close" onclick="closeSearch()">ESC</button>
+    </div>
+    <div class="search-results" id="searchResults">
+      <div class="search-empty">Start typing to search across all notes…</div>
+    </div>
+    <div class="search-hint">
+      <span><kbd>↑↓</kbd> Navigate</span>
+      <span><kbd>Enter</kbd> Open section</span>
+      <span><kbd>Esc</kbd> Close</span>
+    </div>
+  </div>
+</div>
+
+<button class="top-btn" id="topBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  // ── TAB SWITCHING ──────────────────────────────
+  document.querySelectorAll('.tab-btn:not(.search-tab-btn)').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // ── ACCORDION ──────────────────────────────────
+  function toggleAccordion(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.classList.contains('open');
+    btn.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  }
+
+  // ── PROGRESS BAR ───────────────────────────────
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progressBar').style.width = (scrolled / total * 100) + '%';
+    document.getElementById('topBtn').classList.toggle('visible', scrolled > 400);
+  });
+
+  // ── SEARCH INDEX ───────────────────────────────
+  // Pre-built index of searchable content across all tabs
+  const SEARCH_INDEX = [
+    // OVERVIEW
+    { tab: 'overview', section: 'Overview', title: 'Course Overview', body: 'Firm level economics consumer producer behavior scarcity allocation mechanism markets prices rationing equilibrium supply demand module roadmap' },
+    { tab: 'overview', section: 'Overview', title: 'Core Premise — Scarcity', body: 'Economics science studies allocation scarce goods services. Scarcity not enough to go around. Everything is scarce including clean air fresh water. Allocation mechanism rule who gets what.' },
+    { tab: 'overview', section: 'Overview', title: 'Allocation Mechanisms', body: 'Command economy king government decides. Markets prices western economies. Queuing standing in line. Prices rationing devices.' },
+    { tab: 'overview', section: 'Overview', title: 'Prices as Rationing Devices', body: 'Prices rationing tools. High price fewer buyers less demand. Low price more buyers competition. Automatically balance supply and demand.' },
+    { tab: 'overview', section: 'Overview', title: 'Module Roadmap — All Lessons', body: 'Lesson 1-1.1 scarcity implications RAM price. 1-1.2 opportunity cost next best foregone alternative. 1-1.3 demand curves downward slope. 1-2.1 demand estimation big data loyalty cards. 1-2.2 change in demand vs quantity demanded. 1-2.3 supply curves upward slope. 1-2.4 equilibrium proof contradiction surplus shortage orange juice.' },
+
+    // SCARCITY
+    { tab: 'scarcity', section: 'Scarcity', title: 'Definition of Scarcity', body: 'Scarcity not enough to go around. Something scarce when not everyone who wants it can have as much as they want at zero cost. Economists believe everything is scarce including clean air catalytic converters aquifers depleting.' },
+    { tab: 'scarcity', section: 'Scarcity', title: 'RAM Price Example — 1990 vs Today', body: '1990 RAM chip 4 megabyte cost 2299 to 2599 dollars. Today 512 megabyte chip 4.59 dollars. 128 times more powerful dirt cheap. Silicon Valley entrepreneurs competition price fell markets at work. Info World magazine September 1990 Compaq third-party manufacturers.' },
+    { tab: 'scarcity', section: 'Scarcity', title: 'Allocation Mechanisms — Command vs Markets vs Queuing', body: 'Command economy king government decides apartments cars meat rations. Markets prices western economies. Queuing price set zero people stand in line. Duke basketball Cameron Indoor Krzyzewskiville tents four weeks.' },
+    { tab: 'scarcity', section: 'Scarcity', title: 'Duke Basketball — Queuing Example', body: 'Duke Cameron Indoor Stadium smallest arena Division I basketball less than 10000 seats. Student tickets priced zero. Students camp tents four weeks Krzyzewskiville. Cannot wish away scarcity time replaces money.' },
+    { tab: 'scarcity', section: 'Scarcity', title: 'Price as Rationing — Magic of Prices', body: 'Price will use its magic to get some people out get more people in to solve the scarcity issue. Products scarce price drifts up consumers say not worth it. Higher price attracts more producers.' },
+
+    // OPPORTUNITY COST
+    { tab: 'opp-cost', section: 'Opportunity Cost', title: 'Definition of Opportunity Cost', body: 'Opportunity cost value of next best foregone alternative. Every action means not doing something else. Applies to time money resources everything. Formal definition next best foregone alternative.' },
+    { tab: 'opp-cost', section: 'Opportunity Cost', title: 'Milton Friedman — No Free Lunch', body: 'There is no such thing as a free lunch. Even if someone pays for your lunch you pay with your time opportunity cost. Nobel Prize winner Milton Friedman famous phrase.' },
+    { tab: 'opp-cost', section: 'Opportunity Cost', title: 'The $5 Bill Prop', body: 'Five dollar bill no intrinsic value cannot eat it but embodies value of everything you can exchange it for. Spending on coffee means giving up lunch or Uber ride. Every purchase forecloses other purchases.' },
+    { tab: 'opp-cost', section: 'Opportunity Cost', title: 'Cornell Car Story — Implicit vs Explicit Cost', body: 'Cornell law school 1975 friend could not afford car. Brother bought car with savings. Implicit opportunity cost lost interest on savings. Explicit vs implicit costs both real. Same interest paid differently.' },
+    { tab: 'opp-cost', section: 'Opportunity Cost', title: 'Opportunity Cost for Firms', body: 'Accountant reports 3 million profit. Good manager asks what could I have made doing something else. Liquidate assets make Twinkies instead. Economic profit vs accounting profit. Firms exit industries where opportunity cost exceeds profit.' },
+
+    // DEMAND
+    { tab: 'demand', section: 'Demand', title: 'Demand Curve Definition', body: 'Demand curve locus of points showing how much consumers wish to purchase at different prices. Q equals f of P. Downward sloping. Inverse relationship between price and quantity. Alfred Marshall convention price on vertical axis quantity on horizontal.' },
+    { tab: 'demand', section: 'Demand', title: 'Law of Demand — Why Downward Slope', body: 'When price rises each purchase requires giving up more green sheets of paper forgoing more alternatives opportunity cost. At higher prices some consumers exit market. At lower prices new buyers enter existing buyers purchase more.' },
+    { tab: 'demand', section: 'Demand', title: 'Why Linear Demand Curves', body: 'Real demand curves likely nonlinear curved. But linear curves give same intuition far more tractable mathematically. Finding intersection of two straight lines is simple algebra. Nonlinear functions require quadratic solutions. Even PhD programs use linear curves.' },
+    { tab: 'demand', section: 'Demand', title: 'Real-World Demand — Big Data & Loyalty Cards', body: 'Grocery loyalty card programs track every purchase. When prices change data reveals how quantity responds. Combined with census data property values Zillow purchase history firms build enormous datasets. Statisticians use econometric techniques estimate demand function. Mayonnaise sale Larry buys more. Johnnie Walker Red Label price rises no cutback. Different price elasticities.' },
+    { tab: 'demand', section: 'Demand', title: 'Bell Curve — Demand Under Uncertainty', body: 'Normal distribution bell curve captures relative probability of quantity demanded at a quoted price. Firms do not know for sure how many people will buy. Best estimate is mean of normal distribution. Expected demand curve connects the expected points at each price.' },
+    { tab: 'demand', section: 'Demand', title: 'Change in Demand vs Change in Quantity Demanded', body: 'Change in demand entire demand curve shifts. Caused by changes in tastes income prices of related goods consumer expectations. Tomatoes government study heart disease curve shifts right increase in demand. Change in quantity demanded movement along static demand curve due to price change only. Gasoline tax raises price consumers buy less gas curve did not shift movement along.' },
+    { tab: 'demand', section: 'Demand', title: 'Tomatoes — Demand Shift Example', body: 'Government releases study consumption of more tomatoes significantly reduces probability of heart disease. At any quoted price consumers want more today than yesterday. Demand curve shifts right increase in demand. Not a change in quantity demanded.' },
+    { tab: 'demand', section: 'Demand', title: 'Gasoline Tax — Movement Along Curve', body: 'Gasoline tax raises price movement along static demand curve. Nothing changed underlying quality of gasoline. If price of gasoline goes up people cuss swear but still fill car because they have to get to work soccer practice. Some carpooling switching bicycle but not much. Gasoline demand curve steep inelastic.' },
+
+    // SUPPLY
+    { tab: 'supply', section: 'Supply', title: 'Supply Curve Definition', body: 'Supply how much firms are willing to sell at different possible prices. Q equals h of P. Upward sloping. Higher prices induce firms to supply more. Producing more output progressively more expensive. Firms need higher prices to justify greater output.' },
+    { tab: 'supply', section: 'Supply', title: 'Why Supply Curve Slopes Upward', body: 'Producing more output costs progressively more. Hiring extra workers overtime pay additional inputs. If firms want more on market have to hire extra workers costs more money. Therefore firms need higher price to supply greater quantities.' },
+    { tab: 'supply', section: 'Supply', title: 'Change in Supply vs Change in Quantity Supplied', body: 'Change in supply whole supply curve shifts. Drought corn supply shifts left. Change in quantity supplied movement along static supply curve due to price change. Price drops firms supply less Q1 less than Q0 same supply conditions different point on curve.' },
+    { tab: 'supply', section: 'Supply', title: 'Corn Drought — Supply Shift Example', body: 'Big drought hits corn farmers can no longer supply same quantities. At original price P0 they can only put Q1 on market less than before. Entire supply curve shifts left toward price axis. Change in supply not change in quantity supplied. To restore equilibrium price must rise.' },
+
+    // EQUILIBRIUM
+    { tab: 'equilibrium', section: 'Equilibrium', title: 'Definition of Equilibrium', body: 'Equilibrium no tendency for change. Market equilibrium price P star and quantity Q star where quantity demanded equals quantity supplied. Both buyers and sellers satisfied no incentive to push prices higher or lower. Ball bearing in cereal bowl at rest.' },
+    { tab: 'equilibrium', section: 'Equilibrium', title: 'Proof by Contradiction', body: 'To prove Pe is only equilibrium price assume any other price show it creates surplus or shortage meaning there is tendency to change. Therefore no other price can be equilibrium. Any price above Pe surplus price falls back. Any price below Pe shortage price rises back.' },
+    { tab: 'equilibrium', section: 'Equilibrium', title: 'Surplus — Price Too High', body: 'Surplus firms produce more than consumers want to buy. Unsold goods pile up. Firms lower prices reduce production. Price drifts down toward equilibrium. Out of equilibrium situation too much produced compared to what people want buy.' },
+    { tab: 'equilibrium', section: 'Equilibrium', title: 'Shortage — Price Too Low', body: 'Shortage consumers want more than firms are willing to supply. Buyers bid up the price. At higher prices more firms supply more output some buyers exit. Price drifts up toward equilibrium.' },
+    { tab: 'equilibrium', section: 'Equilibrium', title: 'Orange Juice Freeze — Supply Shock Example', body: 'Ice covers Florida orange groves. Florida one third of US OJ supply. Supply curve shifts sharply left. At old price consumers still want Q0 OJ but only fraction available shortage. Consumers bid up price. Some exit market back to Diet Coke. Remaining suppliers divert whole oranges into juice production. New higher price equilibrium forms. Analyst sees frost on TV knows supply curve shifted left OJ price going up.' },
+    { tab: 'equilibrium', section: 'Equilibrium', title: 'Reporter vs Analyst', body: 'Reporter tells you what happened frost ruined the oranges. Analyst understands mechanism supply curve shifted left creating shortage caused prices to rise inducing new supply reduced demand settling at new equilibrium higher price lower quantity. Course goal turn you into the analyst.' },
+
+    // SUBSTITUTES
+    { tab: 'substitutes', section: 'Substitutes', title: 'What Is a Substitute Good?', body: 'Two goods are substitutes when increase in price of one causes increase in demand for the other. Consumers switch from more expensive good to relatively cheaper alternative. Cross-price elasticity of demand is positive. Raising price of X raises quantity demanded of Y. Demand curve shifts right.' },
+    { tab: 'substitutes', section: 'Substitutes', title: 'Substitute Goods — Examples', body: 'Butter and margarine. Pepsi and Coke. Tea and coffee. Orange juice and apple juice. Beef and chicken. Gas car and electric vehicle EV. Substitutes can replace each other in consumption.' },
+    { tab: 'substitutes', section: 'Substitutes', title: 'Complement Goods', body: 'Goods consumed together. When price of one rises demand for both falls. Demand curve for complement shifts left. Examples coffee and cream. Cars and gasoline. Printers and ink. Peanut butter and jelly. Smartphones and apps. Cross-price elasticity of demand is negative.' },
+    { tab: 'substitutes', section: 'Substitutes', title: 'How Substitutes Shift the Demand Curve', body: 'Substitute good affects position of demand curve not movement along it. Change in demand not change in quantity demanded. Entire curve shifts. Price of substitute rises demand for good Y increases D shifts right. Price of substitute falls demand for Y decreases D shifts left.' },
+    { tab: 'substitutes', section: 'Substitutes', title: 'Substitution Effects Reference Table', body: 'Price of substitute X rises demand for Y increases D shifts right price up quantity up. Price of substitute X falls demand for Y decreases D shifts left price down quantity down. Price of complement Z rises demand for Y decreases D shifts left price down quantity down. Price of complement Z falls demand for Y increases D shifts right price up quantity up. New substitute enters demand for Y decreases. Substitute becomes unavailable demand for Y increases.' },
+    { tab: 'substitutes', section: 'Substitutes', title: 'Substitutes in Production', body: 'Supply side substitution. Firms can produce multiple goods using same inputs or machinery. Substitutes in production. Higher price for one good pulls resources away from other. Wheat vs corn farmer fixed land. Beef vs leather cattle hides. Oil refineries gasoline diesel jet fuel. Price of production substitute X rises firms shift supply of Y falls S shifts left price up quantity down.' },
+    { tab: 'substitutes', section: 'Substitutes', title: 'Chicken vs Beef — Combined Shock', body: 'Disease outbreak decimates beef supply. Supply shifts left beef price rises sharply. Consumers substitute toward chicken demand shifts right. Chicken farmers redirect land feed toward chickens supply of chicken shifts right. Net result chicken quantity rises. Price effect on chicken ambiguous depends on relative magnitudes of demand and supply shifts.' },
+    { tab: 'substitutes', section: 'Substitutes', title: 'Coffee vs Tea — Short Run vs Long Run', body: 'Drought destroys coffee harvests. Coffee supply falls price surges. Tea demand spikes substitute. Tea farmers earn more expand cultivation supply shifts right over time. Short run tea price rises moderately. Long run as new tea supply comes online price settles near but above original level. Short-run vs long-run substitution dynamic.' },
+    { tab: 'substitutes', section: 'Substitutes', title: 'How to Analyze a Substitute Shock — 5 Steps', body: 'Step 1 identify the shock price of substitute rose unavailable new substitute entered. Step 2 determine demand or supply shifter consumer substitution demand curve. Firm production substitution supply curve. Step 3 determine direction of shift. Step 4 find new equilibrium demand shift both price and quantity same direction. Supply shift price and quantity opposite directions. Step 5 check secondary effects chains of substitution.' },
+    { tab: 'substitutes', section: 'Substitutes', title: 'Key Jargon — Substitutes', body: 'Substitute goods complement goods cross-price elasticity substitutes in production change in demand demand shifter supply shifter ceteris paribus all other things equal.' },
+
+    // FLASHCARDS
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Scarcity', body: 'Definition of scarcity not enough to go around more demand than supply exists at zero price economists believe everything is scarce.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Opportunity Cost', body: 'Opportunity cost value of next best foregone alternative every choice forecloses other options those forgone options are opportunity cost.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Allocation Mechanism', body: 'Rule used to decide who gets what when not enough for everyone examples prices markets government command queuing.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Demand Curve', body: 'Locus of points showing how much consumers wish to purchase at different prices Q equals f P always downward sloping.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Change in Demand vs Quantity Demanded', body: 'Change in demand entire curve shifts new tastes income. Change in quantity demanded movement along existing curve due to price change.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Equilibrium', body: 'No tendency for change the price where quantity demanded exactly equals quantity supplied both buyers and sellers satisfied.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Surplus', body: 'Firms produce more than consumers want unsold goods pile up firms lower prices reduce output price falls back to Pe.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Shortage', body: 'Consumers want more than firms supply buyers bid price up more firms supply some buyers exit price rises to Pe.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Supply Curve Slope', body: 'Producing more output costs progressively more extra workers overtime firms need higher prices to justify supplying greater quantities.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Free Lunch', body: 'Milton Friedman there is no such thing as a free lunch even if someone else pays money you still pay with your time opportunity cost.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Queuing', body: 'When price is set to zero scarcity is rationed by waiting in line time replaces money as the cost Duke basketball Krzyzewskiville.' },
+    { tab: 'flashcards', section: 'Flashcards', title: 'Flashcard — Proof by Contradiction', body: 'Any price other than Pe creates surplus or shortage tendency to change cannot be equilibrium therefore only Pe is true equilibrium.' },
+  ];
+
+  let focusedIndex = -1;
+
+  function highlight(text, query) {
+    if (!query) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return text.replace(new RegExp(`(${escaped})`, 'gi'), '<mark>$1</mark>');
+  }
+
+  function doSearch(query) {
+    const resultsEl = document.getElementById('searchResults');
+    query = query.trim();
+    focusedIndex = -1;
+
+    if (!query) {
+      resultsEl.innerHTML = '<div class="search-empty">Start typing to search across all notes…</div>';
+      return;
+    }
+
+    const q = query.toLowerCase();
+    const words = q.split(/\s+/).filter(Boolean);
+
+    const scored = SEARCH_INDEX.map(item => {
+      const haystack = (item.title + ' ' + item.body).toLowerCase();
+      let score = 0;
+      words.forEach(w => {
+        if (item.title.toLowerCase().includes(w)) score += 3;
+        if (item.body.toLowerCase().includes(w)) score += 1;
+      });
+      return { ...item, score };
+    }).filter(i => i.score > 0).sort((a, b) => b.score - a.score).slice(0, 12);
+
+    if (!scored.length) {
+      resultsEl.innerHTML = `<div class="search-empty">No results for "<strong>${query}</strong>"</div>`;
+      return;
+    }
+
+    resultsEl.innerHTML = scored.map((item, idx) => {
+      const snipSource = item.body.length > 140 ? item.body.slice(0, 140) + '…' : item.body;
+      return `
+        <div class="search-result-item" data-tab="${item.tab}" data-idx="${idx}"
+             onmousedown="goToResult('${item.tab}')">
+          <div class="sr-tab">${item.section}</div>
+          <div class="sr-title">${highlight(item.title, query)}</div>
+          <div class="sr-snippet">${highlight(snipSource, query)}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function goToResult(tab) {
+    closeSearch();
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    const targetBtn = document.querySelector(`.tab-btn[data-tab="${tab}"]`);
+    if (targetBtn) targetBtn.classList.add('active');
+    const targetSection = document.getElementById('tab-' + tab);
+    if (targetSection) targetSection.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openSearch() {
+    document.getElementById('searchOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('searchInput').focus(), 50);
+  }
+
+  function closeSearch() {
+    document.getElementById('searchOverlay').classList.remove('open');
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchResults').innerHTML = '<div class="search-empty">Start typing to search across all notes…</div>';
+    focusedIndex = -1;
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('searchOverlay')) closeSearch();
+  }
+
+  // Keyboard navigation within results
+  document.getElementById('searchInput').addEventListener('input', e => doSearch(e.target.value));
+  document.getElementById('searchInput').addEventListener('keydown', e => {
+    const items = document.querySelectorAll('.search-result-item');
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      focusedIndex = Math.min(focusedIndex + 1, items.length - 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      focusedIndex = Math.max(focusedIndex - 1, 0);
+    } else if (e.key === 'Enter' && focusedIndex >= 0) {
+      const item = items[focusedIndex];
+      if (item) goToResult(item.dataset.tab);
+    } else if (e.key === 'Escape') {
+      closeSearch();
+    }
+    items.forEach((el, i) => el.classList.toggle('focused', i === focusedIndex));
+    if (items[focusedIndex]) items[focusedIndex].scrollIntoView({ block: 'nearest' });
+  });
+
+  // Global keyboard shortcut Ctrl+K / Cmd+K
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+    if (e.key === 'Escape') closeSearch();
+  });
+</script>
+</body>
+</html>

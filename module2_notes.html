@@ -62,6 +62,22 @@
     font-weight: 600;
     margin-bottom: 6px;
   }
+  .sidebar-search {
+    padding: 0 12px 20px;
+  }
+  .sidebar-search input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: white;
+    font-size: 12px;
+    outline: none;
+  }
+  .sidebar-search input:focus {
+    border-color: var(--amber);
+  }
   .sidebar-logo h1 {
     font-family: 'Playfair Display', serif;
     color: white;
@@ -519,6 +535,9 @@
   <div class="sidebar-logo">
     <div class="course-tag">Module 2</div>
     <h1>Firm Level Economics</h1>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" id="sidebarSearch" placeholder="Search topics...">
   </div>
   <nav>
     <div class="nav-section" style="margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px;">
@@ -1366,6 +1385,16 @@
     });
   }, { threshold: 0.3 });
   sections.forEach(s => observer.observe(s));
+
+  // Search functionality
+  document.getElementById('sidebarSearch').addEventListener('input', function(e) {
+    const term = e.target.value.toLowerCase();
+    const blocks = document.querySelectorAll('.content-block, .callout, .diagram-wrap, .lesson-section');
+    blocks.forEach(block => {
+      const text = block.innerText.toLowerCase();
+      block.style.display = text.includes(term) || term === '' ? '' : 'none';
+    });
+  });
 </script>
 </body>
 </html>

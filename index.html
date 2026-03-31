@@ -139,6 +139,28 @@
 
   .ring-svg circle { transition: stroke-dashoffset 1s ease; }
 
+  /* ── SEARCH ── */
+  .search-container {
+    margin-bottom: 32px;
+    max-width: 400px;
+  }
+
+  #moduleSearch {
+    width: 100%;
+    padding: 12px 18px;
+    background: var(--bg2);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+    outline: none;
+  }
+
+  #moduleSearch::placeholder {
+    color: var(--ink-faint);
+  }
+
   /* ── INTRO BAND ── */
   .intro-band {
     position: relative;
@@ -677,14 +699,14 @@
       <span>STUDY NOTES &amp; QUICK REFERENCE</span>
     </div>
     <div class="progress-ring-wrap">
-      <span>2 / 8 COMPLETE</span>
+      <span>3 / 8 COMPLETE</span>
       <svg width="44" height="44" viewBox="0 0 44 44" class="ring-svg">
         <circle cx="22" cy="22" r="18" fill="none" stroke="var(--rule)" stroke-width="3"/>
         <circle cx="22" cy="22" r="18" fill="none" stroke="var(--gold)" stroke-width="3"
-          stroke-dasharray="113.1" stroke-dashoffset="99"
+          stroke-dasharray="113.1" stroke-dashoffset="70.7"
           stroke-linecap="round" transform="rotate(-90 22 22)"/>
         <text x="22" y="26" text-anchor="middle" font-family="JetBrains Mono, monospace"
-          font-size="9" fill="var(--gold)" font-weight="500">25%</text>
+          font-size="9" fill="var(--gold)" font-weight="500">37%</text>
       </svg>
     </div>
   </div>
@@ -704,11 +726,11 @@
       <span class="stat-label">Modules</span>
     </div>
     <div class="stat">
-      <span class="stat-num">2</span>
+      <span class="stat-num">3</span>
       <span class="stat-label">Ready</span>
     </div>
     <div class="stat">
-      <span class="stat-num">6</span>
+      <span class="stat-num">5</span>
       <span class="stat-label">Upcoming</span>
     </div>
   </div>
@@ -718,12 +740,17 @@
 <!-- MAIN -->
 <!-- ══════════════════════════════════════════════ -->
 <main>
-  <p class="section-label">Course Modules</p>
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 20px; margin-bottom: 8px;">
+    <p class="section-label" style="margin-bottom: 0; flex: 1;">Course Modules</p>
+    <div class="search-container">
+      <input type="text" id="moduleSearch" placeholder="FILTER TOPICS OR MODULES...">
+    </div>
+  </div>
 
   <div class="modules-grid">
 
     <!-- ── MODULE 1 (Featured / Active) ── -->
-    <a class="module-card active" href="econ_module1_notes.html">
+    <a class="module-card active" href="module1_notes.html">
       <div class="mod-header">
         <span class="mod-num">Module 01</span>
         <span class="mod-status status-ready">Notes Ready</span>
@@ -763,10 +790,10 @@
     </a>
 
     <!-- ── MODULE 3 ── -->
-    <div class="module-card locked" onclick="showModal(3, 'Firms, Production &amp; Cost', 'Inside the black box of the firm — production functions, short-run vs long-run costs, economies of scale, and how firms decide how much to produce.')">
+    <a class="module-card active" href="module3_firms_production_costs.html">
       <div class="mod-header">
         <span class="mod-num">Module 03</span>
-        <span class="mod-status status-soon">Coming Soon</span>
+        <span class="mod-status status-ready">Notes Ready</span>
       </div>
       <div class="mod-title">Firms, Production &amp; Cost</div>
       <div class="mod-desc">Production functions, cost curves, and the economic logic of firm operations.</div>
@@ -777,9 +804,9 @@
         <span class="topic-tag">Economies of Scale</span>
         <span class="topic-tag">Long-Run Costs</span>
       </div>
-      <span class="lock-hint">🔒</span>
+      <div class="mod-arrow">Open Notes</div>
       <span class="watermark">3</span>
-    </div>
+    </a>
 
     <!-- ── MODULE 4 ── -->
     <div class="module-card locked" onclick="showModal(4, 'Firm Behavior', 'How firms maximize profit — the profit function, marginal revenue vs marginal cost, and the output decision rule that applies across all market structures.')">
@@ -927,6 +954,15 @@
 
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeModal(null, true);
+  });
+
+  document.getElementById('moduleSearch').addEventListener('input', function(e) {
+    const term = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.module-card');
+    cards.forEach(card => {
+      const text = card.innerText.toLowerCase();
+      card.style.display = text.includes(term) ? '' : 'none';
+    });
   });
 </script>
 </body>
