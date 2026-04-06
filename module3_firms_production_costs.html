@@ -7,528 +7,273 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1a1209;
-    --paper: #faf7f2;
-    --paper2: #f2ede3;
-    --amber: #c87941;
-    --amber-light: #e8a86a;
-    --amber-pale: #fdf0e0;
-    --teal: #2d6e6e;
-    --teal-light: #4a9e9e;
-    --teal-pale: #e8f5f5;
-    --red: #b84040;
-    --red-pale: #faeaea;
-    --rule: #d4c9b5;
+    --bg:       #0f0e0b;
+    --bg2:      #181510;
+    --bg3:      #1f1c16;
+    --bg4:      #272320;
+    --border:   #2e2a24;
+    --border2:  #3d3830;
+    --text:     #e8e0d0;
+    --text2:    #a09278;
+    --text3:    #5c5245;
+    --amber:    #d4884a;
+    --amber2:   #f0a96a;
+    --amber3:   #7a3e18;
+    --teal:     #3a9e8f;
+    --teal2:    #58c4b2;
+    --teal3:    #1a4f48;
+    --red:      #c05040;
+    --red2:     #e07060;
+    --red3:     #5a1e18;
     --mono: 'IBM Plex Mono', monospace;
     --serif: 'Playfair Display', serif;
     --sans: 'DM Sans', sans-serif;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* ── LIGHT THEME ── */
+  [data-theme="light"] {
+    --bg:       #faf7f2;
+    --bg2:      #f2ede3;
+    --bg3:      #ede5d8;
+    --bg4:      #e5dccb;
+    --border:   #d4c9b5;
+    --border2:  #c0b49e;
+    --text:     #1a1209;
+    --text2:    #4a3c28;
+    --text3:    #9a8878;
+    --amber:    #b8621a;
+    --amber2:   #d4884a;
+    --amber3:   #f0d4b8;
+    --teal:     #1e6e62;
+    --teal2:    #2a9080;
+    --teal3:    #c0e8e0;
+    --red:      #a03028;
+    --red2:     #c04838;
+    --red3:     #f8d8d4;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 300; font-size: 15px; line-height: 1.75; min-height: 100vh; }
 
-  body {
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-weight: 300;
-    font-size: 16px;
-    line-height: 1.7;
-    min-height: 100vh;
-  }
+  /* HEADER */
+  header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 3.5rem 2rem 3rem; position: relative; overflow: hidden; }
+  header::before { content:''; position:absolute; top:-80px; right:-80px; width:400px; height:400px; border-radius:50%; background:radial-gradient(circle,rgba(212,136,74,.12) 0%,transparent 65%); pointer-events:none; }
+  header::after { content:''; position:absolute; bottom:-60px; left:35%; width:250px; height:250px; border-radius:50%; background:radial-gradient(circle,rgba(58,158,143,.07) 0%,transparent 65%); pointer-events:none; }
+  .header-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+  .module-badge { display:inline-flex; align-items:center; gap:.5rem; font-family:var(--mono); font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--amber); border:1px solid var(--amber3); background:rgba(212,136,74,.06); padding:.25rem .8rem; border-radius:2px; margin-bottom:1.25rem; }
+  .module-badge::before { content:'●'; font-size:.45rem; opacity:.7; }
+  header h1 { font-family:var(--serif); font-size:clamp(2.2rem,5.5vw,3.8rem); font-weight:900; line-height:1.07; letter-spacing:-.02em; margin-bottom:.75rem; }
+  header h1 em { color:var(--amber); font-style:italic; }
+  .header-sub { font-size:.92rem; color:var(--text2); max-width:560px; line-height:1.65; margin-top:.5rem; }
+  .header-meta { display:flex; gap:2.5rem; margin-top:2.5rem; padding-top:1.75rem; border-top:1px solid var(--border); flex-wrap:wrap; }
+  .meta-item { display:flex; flex-direction:column; gap:.15rem; }
+  .meta-label { font-family:var(--mono); font-size:.6rem; letter-spacing:.15em; text-transform:uppercase; color:var(--text3); }
+  .meta-value { font-family:var(--mono); font-size:.78rem; color:var(--amber2); }
 
-  /* ─── HEADER ─── */
-  header {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 3rem 2rem 2.5rem;
-    position: relative;
-    overflow: hidden;
-  }
-  header::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -60px;
-    width: 320px; height: 320px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(200,121,65,.18) 0%, transparent 70%);
-  }
-  .header-inner { max-width: 900px; margin: 0 auto; position: relative; }
-  .module-badge {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: .72rem;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: var(--amber-light);
-    border: 1px solid rgba(200,121,65,.4);
-    padding: .25rem .75rem;
-    border-radius: 2px;
-    margin-bottom: 1rem;
-  }
-  header h1 {
-    font-family: var(--serif);
-    font-size: clamp(2rem, 5vw, 3.4rem);
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: .5rem;
-    letter-spacing: -.01em;
-  }
-  header h1 em { color: var(--amber-light); font-style: italic; }
-  .header-sub {
-    font-size: .95rem;
-    color: rgba(250,247,242,.6);
-    max-width: 540px;
-    margin-top: .75rem;
-  }
-  .header-meta {
+  /* LAYOUT */
+  .page { max-width: 960px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+  /* OBJECTIVES */
+  .objectives-card { background:var(--bg2); border:1px solid var(--border); border-radius:3px; padding:2rem 2.5rem; margin:2.5rem 0; position:relative; overflow:hidden; }
+  .objectives-card::before { content:'OBJECTIVES'; position:absolute; right:-10px; top:50%; transform:translateY(-50%) rotate(90deg); font-family:var(--serif); font-size:5rem; font-weight:900; color:rgba(212,136,74,.04); pointer-events:none; letter-spacing:-.02em; white-space:nowrap; }
+  .objectives-label { font-family:var(--mono); font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:var(--amber); margin-bottom:1.25rem; display:flex; align-items:center; gap:.5rem; }
+  .objectives-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  .objectives-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:.85rem; }
+  .obj-item { display:flex; gap:.75rem; align-items:flex-start; font-size:.86rem; line-height:1.55; color:var(--text2); }
+  .obj-num { font-family:var(--mono); font-size:.62rem; color:var(--amber); background:rgba(212,136,74,.1); border:1px solid var(--amber3); border-radius:2px; padding:.1rem .4rem; flex-shrink:0; margin-top:.12rem; }
+
+  /* TABS */
+  .section-nav { display:flex; gap:0; margin:2rem 0 0; border-bottom:1px solid var(--border); }
+  .section-nav button { font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; padding:.75rem 1.4rem; border:none; border-bottom:2px solid transparent; background:transparent; color:var(--text3); cursor:pointer; transition:all .2s; margin-bottom:-1px; }
+  .section-nav button:hover { color:var(--text2); }
+  .section-nav button.active { color:var(--amber); border-bottom-color:var(--amber); }
+
+  /* SECTIONS */
+  .lesson-section { display:none; padding-top:2rem; }
+  .lesson-section.active { display:block; }
+  .section-header { margin-bottom:1.75rem; }
+  .section-label { font-family:var(--mono); font-size:.65rem; letter-spacing:.18em; color:var(--teal); text-transform:uppercase; margin-bottom:.4rem; }
+  .section-header h2 { font-family:var(--serif); font-size:clamp(1.5rem,3vw,2.2rem); font-weight:700; line-height:1.15; color:var(--text); }
+
+  /* LESSON CARDS */
+  .lesson-card { background:var(--bg2); border:1px solid var(--border); border-radius:3px; margin-bottom:1rem; overflow:hidden; transition:border-color .2s; }
+  .lesson-card:hover { border-color:var(--border2); }
+  .lesson-header { display:flex; align-items:center; gap:1rem; padding:1rem 1.4rem; cursor:pointer; user-select:none; transition:background .15s; }
+  .lesson-header:hover { background:var(--bg3); }
+  .lesson-header.open { background:var(--bg3); border-bottom:1px solid var(--border); }
+  .lesson-num { font-family:var(--mono); font-size:.62rem; color:var(--amber); background:rgba(212,136,74,.1); border:1px solid var(--amber3); padding:.18rem .5rem; border-radius:2px; flex-shrink:0; white-space:nowrap; letter-spacing:.04em; }
+  .lesson-title { font-family:var(--sans); font-weight:500; font-size:.92rem; flex:1; color:var(--text); }
+  .lesson-toggle { font-size:1rem; color:var(--text3); transition:transform .25s; flex-shrink:0; }
+  .lesson-header.open .lesson-toggle { transform:rotate(90deg); color:var(--amber); }
+  .lesson-body { display:none; padding:1.5rem; }
+  .lesson-body.open { display:block; }
+  .lesson-body p { font-size:.9rem; color:var(--text2); margin-bottom:1rem; line-height:1.75; }
+  .lesson-body p:last-child { margin-bottom:0; }
+  .lesson-body strong { color:var(--text); font-weight:500; }
+  .lesson-body em { color:var(--amber2); font-style:italic; }
+
+  /* CALLOUTS */
+  .callout { border-left:2px solid var(--amber); background:rgba(212,136,74,.07); padding:.9rem 1.25rem; border-radius:0 3px 3px 0; margin:1.25rem 0; }
+  .callout.teal { border-left-color:var(--teal); background:rgba(58,158,143,.07); }
+  .callout.red { border-left-color:var(--red); background:rgba(192,80,64,.07); }
+  .callout-label { font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--amber); font-weight:500; margin-bottom:.35rem; }
+  .callout.teal .callout-label { color:var(--teal2); }
+  .callout.red .callout-label { color:var(--red2); }
+  .callout p { font-size:.87rem; line-height:1.65; color:var(--text2); margin:0 !important; }
+  .callout p strong { color:var(--text); }
+
+  /* FORMULA */
+  .formula-box { background:var(--bg); border:1px solid var(--border); border-left:2px solid var(--amber3); border-radius:0 3px 3px 0; padding:1.1rem 1.5rem; margin:1.25rem 0; font-family:var(--mono); }
+  .formula-box .formula-label { font-size:.6rem; color:var(--text3); letter-spacing:.18em; text-transform:uppercase; display:block; margin-bottom:.5rem; }
+  .formula-box .formula { color:var(--amber2); font-size:.95rem; line-height:2; display:block; }
+  .formula-box .formula-note { font-size:.72rem; color:var(--text3); margin-top:.5rem; display:block; line-height:1.6; }
+
+  /* TABLE */
+  .data-table-wrap { overflow-x:auto; margin:1.25rem 0; border-radius:3px; border:1px solid var(--border); }
+  table { width:100%; border-collapse:collapse; font-size:.83rem; }
+  thead th { background:var(--bg); color:var(--text3); font-family:var(--mono); font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; padding:.65rem 1rem; text-align:left; border-bottom:1px solid var(--border); }
+  tbody tr { border-bottom:1px solid var(--border); }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:var(--bg3); }
+  tbody td { padding:.65rem 1rem; color:var(--text2); }
+  tbody td:first-child { font-family:var(--mono); font-size:.78rem; color:var(--amber); }
+  .badge-full, .badge-limited { display:inline-block; font-family:var(--mono); font-size:.6rem; letter-spacing:.08em; padding:.12rem .45rem; border-radius:2px; text-transform:uppercase; }
+  .badge-full { background:rgba(192,80,64,.15); color:var(--red2); border:1px solid var(--red3); }
+  .badge-limited { background:rgba(58,158,143,.12); color:var(--teal2); border:1px solid var(--teal3); }
+
+  /* DEF GRID */
+  .def-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem; margin:1.25rem 0; }
+  .def-card { border:1px solid var(--border); border-radius:3px; padding:1rem 1.1rem; background:var(--bg3); }
+  .def-card .term { font-family:var(--mono); font-size:.68rem; color:var(--teal2); letter-spacing:.08em; margin-bottom:.4rem; display:block; text-transform:uppercase; }
+  .def-card .definition { font-size:.82rem; line-height:1.55; color:var(--text2); }
+  .def-card .definition strong { color:var(--text); font-weight:500; }
+  .def-card .definition em { color:var(--amber2); }
+
+  /* GRAPH */
+  .graph-wrap { background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:1.25rem 1rem 1rem; margin:1.5rem 0; overflow:hidden; }
+  .graph-title { font-family:var(--mono); font-size:.65rem; letter-spacing:.14em; text-transform:uppercase; color:var(--amber); margin-bottom:.75rem; display:flex; align-items:center; gap:.6rem; }
+  .graph-title::after { content:''; flex:1; height:1px; background:var(--border); }
+  svg { display:block; width:100%; }
+  .graph-legend { display:flex; flex-wrap:wrap; gap:1rem; margin-top:.75rem; padding-top:.75rem; border-top:1px solid var(--border); }
+  .legend-item { display:flex; align-items:center; gap:.5rem; font-family:var(--mono); font-size:.65rem; color:var(--text2); }
+  .legend-swatch { width:20px; height:2.5px; border-radius:1px; }
+
+  ul.lesson-list { font-size:.88rem; color:var(--text2); line-height:1.85; padding-left:1.5rem; margin:.75rem 0; }
+  ul.lesson-list li strong { color:var(--text); font-weight:500; }
+  ul.lesson-list li em { color:var(--amber2); }
+
+  /* QUIZ */
+  .quiz-wrap { background:var(--bg2); border:1px solid var(--border); border-radius:3px; padding:1.75rem; margin-bottom:1rem; }
+  .quiz-progress-wrap { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+  .quiz-progress-track { flex:1; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .quiz-progress-fill { height:100%; background:var(--amber); border-radius:2px; transition:width .4s ease; }
+  .quiz-progress-text { font-family:var(--mono); font-size:.68rem; color:var(--text3); white-space:nowrap; }
+  .quiz-meta { font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--amber); margin-bottom:1rem; }
+  .quiz-q { font-family:var(--serif); font-size:1.05rem; font-weight:700; color:var(--text); margin-bottom:1.25rem; line-height:1.4; }
+  .quiz-options { display:flex; flex-direction:column; gap:.5rem; }
+  .quiz-opt { display:flex; align-items:flex-start; gap:.85rem; padding:.75rem 1.1rem; background:var(--bg3); border:1px solid var(--border); border-radius:3px; cursor:pointer; font-size:.87rem; color:var(--text2); transition:all .15s; line-height:1.5; }
+  .quiz-opt:hover { border-color:var(--border2); background:var(--bg4); color:var(--text); }
+  .quiz-opt.correct { background:rgba(58,158,143,.12); border-color:var(--teal3); color:var(--teal2); }
+  .quiz-opt.wrong { background:rgba(192,80,64,.12); border-color:var(--red3); color:var(--red2); }
+  .quiz-opt-key { font-family:var(--mono); font-size:.65rem; color:var(--amber); flex-shrink:0; margin-top:.1rem; background:rgba(212,136,74,.1); border:1px solid var(--amber3); border-radius:2px; padding:.05rem .35rem; }
+  .quiz-feedback { margin-top:1.1rem; font-size:.85rem; padding:.85rem 1.1rem; border-radius:3px; display:none; line-height:1.6; color:var(--text2); }
+  .quiz-feedback.show { display:block; }
+  .quiz-feedback.ok { background:rgba(58,158,143,.1); border:1px solid var(--teal3); }
+  .quiz-feedback.no { background:rgba(192,80,64,.1); border:1px solid var(--red3); }
+  .quiz-feedback strong { color:var(--text); }
+  .quiz-next-btn { margin-top:1.1rem; font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; padding:.55rem 1.3rem; background:var(--amber); color:var(--bg); border:none; border-radius:2px; cursor:pointer; display:none; font-weight:500; transition:background .15s; }
+  .quiz-next-btn:hover { background:var(--amber2); }
+  .quiz-next-btn.show { display:inline-block; }
+
+  /* THEME TOGGLE */
+  .theme-toggle {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 999;
     display: flex;
-    gap: 2rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(250,247,242,.12);
-    flex-wrap: wrap;
-  }
-  .header-meta span {
-    font-family: var(--mono);
-    font-size: .75rem;
-    color: rgba(250,247,242,.5);
-    letter-spacing: .08em;
-  }
-  .header-meta strong { color: var(--amber-light); font-weight: 500; }
-
-  /* ─── LAYOUT ─── */
-  .page { max-width: 960px; margin: 0 auto; padding: 0 1.5rem 4rem; }
-
-  /* ─── OBJECTIVES ─── */
-  .objectives-card {
-    background: var(--ink);
-    color: var(--paper);
-    border-radius: 4px;
-    padding: 2rem 2.5rem;
-    margin: 2.5rem 0;
-    position: relative;
-    overflow: hidden;
-  }
-  .objectives-card::after {
-    content: 'Goals';
-    position: absolute;
-    right: 1.5rem; top: 1rem;
-    font-family: var(--serif);
-    font-size: 5rem;
-    font-weight: 900;
-    color: rgba(255,255,255,.04);
-    pointer-events: none;
-    line-height: 1;
-  }
-  .objectives-card h2 {
-    font-family: var(--serif);
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--amber-light);
-    margin-bottom: 1.25rem;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    font-size: .8rem;
-  }
-  .objectives-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: .85rem;
-  }
-  .obj-item {
-    display: flex;
-    gap: .75rem;
-    align-items: flex-start;
-    font-size: .88rem;
-    line-height: 1.5;
-    color: rgba(250,247,242,.8);
-  }
-  .obj-num {
-    font-family: var(--mono);
-    font-size: .7rem;
-    color: var(--amber);
-    background: rgba(200,121,65,.15);
-    border: 1px solid rgba(200,121,65,.3);
-    border-radius: 2px;
-    padding: .1rem .4rem;
-    flex-shrink: 0;
-    margin-top: .12rem;
-  }
-
-  /* ─── SECTION NAVIGATION ─── */
-  .section-nav {
-    display: flex;
+    align-items: center;
     gap: .5rem;
-    flex-wrap: wrap;
-    margin: 2rem 0 1rem;
-  }
-  .section-nav button {
-    font-family: var(--mono);
-    font-size: .72rem;
-    letter-spacing: .06em;
-    padding: .4rem 1rem;
-    border: 1px solid var(--rule);
-    background: var(--paper2);
-    color: var(--ink);
-    border-radius: 2px;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 100px;
+    padding: .3rem .3rem .3rem .75rem;
     cursor: pointer;
-    transition: all .15s;
-    opacity: .7;
-  }
-  .section-nav button:hover, .section-nav button.active {
-    background: var(--ink);
-    color: var(--paper);
-    border-color: var(--ink);
-    opacity: 1;
-  }
-
-  /* ─── LESSON SECTIONS ─── */
-  .lesson-section { display: none; }
-  .lesson-section.active { display: block; }
-
-  .section-header {
-    border-top: 3px solid var(--ink);
-    padding-top: 1.5rem;
-    margin-top: .5rem;
-    margin-bottom: 2rem;
-  }
-  .section-header .section-label {
     font-family: var(--mono);
-    font-size: .7rem;
-    letter-spacing: .15em;
-    color: var(--amber);
+    font-size: .65rem;
+    letter-spacing: .1em;
+    color: var(--text3);
     text-transform: uppercase;
-    margin-bottom: .4rem;
-  }
-  .section-header h2 {
-    font-family: var(--serif);
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    font-weight: 700;
-    line-height: 1.2;
-  }
-
-  /* ─── LESSON CARDS ─── */
-  .lesson-card {
-    background: white;
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    margin-bottom: 1.25rem;
-    overflow: hidden;
-    transition: box-shadow .2s;
-  }
-  .lesson-card:hover { box-shadow: 0 4px 20px rgba(26,18,9,.08); }
-
-  .lesson-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.1rem 1.5rem;
-    cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0,0,0,.25);
+    transition: background .25s, border-color .25s, box-shadow .25s, color .25s;
     user-select: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color .2s, background .2s;
   }
-  .lesson-header:hover { background: var(--paper); }
-  .lesson-header.open { border-bottom-color: var(--rule); background: var(--paper2); }
-
-  .lesson-num {
-    font-family: var(--mono);
-    font-size: .68rem;
-    color: var(--amber);
-    background: var(--amber-pale);
-    border: 1px solid rgba(200,121,65,.25);
-    padding: .2rem .55rem;
-    border-radius: 2px;
-    flex-shrink: 0;
-    white-space: nowrap;
-  }
-  .lesson-title {
-    font-family: var(--sans);
-    font-weight: 500;
-    font-size: .95rem;
-    flex: 1;
-  }
-  .lesson-toggle {
-    font-size: 1.1rem;
-    color: var(--amber);
-    transition: transform .25s;
+  .theme-toggle:hover { border-color: var(--amber); color: var(--amber); box-shadow: 0 2px 16px rgba(0,0,0,.35); }
+  .theme-toggle-pill {
+    width: 32px;
+    height: 20px;
+    border-radius: 100px;
+    background: var(--border2);
+    position: relative;
+    transition: background .25s;
     flex-shrink: 0;
   }
-  .lesson-header.open .lesson-toggle { transform: rotate(90deg); }
-
-  .lesson-body {
-    display: none;
-    padding: 1.5rem;
+  [data-theme="light"] .theme-toggle-pill { background: var(--amber); }
+  .theme-toggle-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text3);
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .25s;
   }
-  .lesson-body.open { display: block; }
-
-  .lesson-body p {
-    font-size: .93rem;
-    color: #3a3020;
-    margin-bottom: 1rem;
-    line-height: 1.75;
-  }
-  .lesson-body p:last-child { margin-bottom: 0; }
-
-  /* ─── KEY CONCEPT CALLOUTS ─── */
-  .callout {
-    border-left: 3px solid var(--amber);
-    background: var(--amber-pale);
-    padding: .9rem 1.2rem;
-    border-radius: 0 4px 4px 0;
-    margin: 1.2rem 0;
-  }
-  .callout.teal {
-    border-left-color: var(--teal);
-    background: var(--teal-pale);
-  }
-  .callout.red {
-    border-left-color: var(--red);
-    background: var(--red-pale);
-  }
-  .callout-label {
-    font-family: var(--mono);
-    font-size: .68rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--amber);
-    font-weight: 500;
-    margin-bottom: .3rem;
-  }
-  .callout.teal .callout-label { color: var(--teal); }
-  .callout.red .callout-label { color: var(--red); }
-  .callout p {
-    font-size: .88rem;
-    line-height: 1.6;
-    color: var(--ink);
-    margin: 0 !important;
-  }
-
-  /* ─── FORMULA BOX ─── */
-  .formula-box {
-    background: var(--ink);
-    color: var(--paper);
-    border-radius: 4px;
-    padding: 1.1rem 1.5rem;
-    margin: 1.2rem 0;
-    font-family: var(--mono);
+  [data-theme="light"] .theme-toggle-knob { transform: translateX(12px); background: white; }
+  .toggle-icon {
     font-size: .9rem;
-    line-height: 1.9;
+    line-height: 1;
+    transition: opacity .2s;
   }
-  .formula-box .formula-label {
-    font-size: .65rem;
-    color: var(--amber-light);
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: .4rem;
-  }
-  .formula-box .formula { color: var(--amber-light); font-size: 1rem; }
+  .toggle-icon.moon { opacity: 1; }
+  .toggle-icon.sun  { opacity: 0; position: absolute; }
+  [data-theme="light"] .toggle-icon.moon { opacity: 0; }
+  [data-theme="light"] .toggle-icon.sun  { opacity: 1; position: static; }
 
-  /* ─── DATA TABLE ─── */
-  .data-table-wrap { overflow-x: auto; margin: 1.25rem 0; }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: .85rem;
-  }
-  thead th {
-    background: var(--ink);
-    color: var(--paper);
-    font-family: var(--mono);
-    font-size: .7rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    padding: .6rem 1rem;
-    text-align: left;
-  }
-  tbody tr:nth-child(odd) { background: var(--paper2); }
-  tbody td {
-    padding: .6rem 1rem;
-    border-bottom: 1px solid var(--rule);
-    color: #3a3020;
-  }
-  tbody td:first-child { font-family: var(--mono); font-size: .8rem; color: var(--amber); }
-  .badge-full, .badge-limited {
-    display: inline-block;
-    font-family: var(--mono);
-    font-size: .65rem;
-    letter-spacing: .08em;
-    padding: .15rem .5rem;
-    border-radius: 2px;
-    text-transform: uppercase;
-  }
-  .badge-full { background: var(--red-pale); color: var(--red); border: 1px solid rgba(184,64,64,.25); }
-  .badge-limited { background: var(--teal-pale); color: var(--teal); border: 1px solid rgba(45,110,110,.25); }
+  /* Smooth theme transitions */
+  *, *::before, *::after { transition: background-color .25s, border-color .25s, color .2s; }
+  svg *, polyline, path, line, circle, rect, text { transition: none !important; }
 
-  /* ─── INTERACTIVE CHART ─── */
-  .chart-container {
-    background: white;
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    padding: 1.5rem;
-    margin: 1.25rem 0;
-  }
-  .chart-title {
-    font-family: var(--mono);
-    font-size: .7rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 1rem;
-  }
-  canvas { display: block; width: 100% !important; }
+  footer { border-top:1px solid var(--border); padding:1.5rem; text-align:center; font-family:var(--mono); font-size:.65rem; color:var(--text3); letter-spacing:.08em; }
 
-  /* ─── DEFINITION GRID ─── */
-  .def-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    margin: 1.25rem 0;
-  }
-  .def-card {
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    padding: 1rem 1.1rem;
-    background: white;
-  }
-  .def-card .term {
-    font-family: var(--mono);
-    font-size: .75rem;
-    color: var(--teal);
-    letter-spacing: .06em;
-    margin-bottom: .35rem;
-    display: block;
-    text-transform: uppercase;
-  }
-  .def-card .definition {
-    font-size: .83rem;
-    line-height: 1.55;
-    color: #3a3020;
-  }
-
-  /* ─── QUIZ ─── */
-  .quiz-wrap {
-    background: var(--paper2);
-    border: 1px solid var(--rule);
-    border-radius: 4px;
-    padding: 1.5rem;
-    margin-top: 2rem;
-  }
-  .quiz-label {
-    font-family: var(--mono);
-    font-size: .7rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--teal);
-    margin-bottom: 1rem;
-  }
-  .quiz-q {
-    font-family: var(--serif);
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    line-height: 1.4;
-  }
-  .quiz-options { display: flex; flex-direction: column; gap: .5rem; }
-  .quiz-opt {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    padding: .65rem 1rem;
-    background: white;
-    border: 1px solid var(--rule);
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: .88rem;
-    transition: all .15s;
-  }
-  .quiz-opt:hover { border-color: var(--amber); }
-  .quiz-opt.correct { background: var(--teal-pale); border-color: var(--teal); color: var(--teal); }
-  .quiz-opt.wrong { background: var(--red-pale); border-color: var(--red); color: var(--red); }
-  .quiz-opt span { font-family: var(--mono); font-size: .7rem; color: var(--amber); flex-shrink: 0; }
-  .quiz-feedback {
-    margin-top: 1rem;
-    font-size: .85rem;
-    padding: .75rem 1rem;
-    border-radius: 3px;
-    display: none;
-    line-height: 1.55;
-  }
-  .quiz-feedback.show { display: block; }
-  .quiz-feedback.ok { background: var(--teal-pale); border: 1px solid var(--teal); color: var(--teal); }
-  .quiz-feedback.no { background: var(--red-pale); border: 1px solid var(--red); color: var(--red); }
-  .quiz-next {
-    margin-top: 1rem;
-    font-family: var(--mono);
-    font-size: .75rem;
-    letter-spacing: .08em;
-    padding: .5rem 1.2rem;
-    background: var(--ink);
-    color: var(--paper);
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    display: none;
-  }
-  .quiz-next.show { display: inline-block; }
-
-  /* ─── PROGRESS BAR ─── */
-  .progress-bar-wrap {
-    margin: 1.5rem 0;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-  .progress-bar-track {
-    flex: 1;
-    height: 4px;
-    background: var(--rule);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .progress-bar-fill {
-    height: 100%;
-    background: var(--amber);
-    border-radius: 2px;
-    transition: width .4s;
-  }
-  .progress-text {
-    font-family: var(--mono);
-    font-size: .72rem;
-    color: var(--amber);
-    white-space: nowrap;
-  }
-
-  /* ─── FOOTER ─── */
-  footer {
-    border-top: 1px solid var(--rule);
-    padding: 1.5rem;
-    text-align: center;
-    font-family: var(--mono);
-    font-size: .7rem;
-    color: rgba(26,18,9,.35);
-    letter-spacing: .06em;
-  }
-
-  @media (max-width: 600px) {
-    .objectives-grid { grid-template-columns: 1fr; }
-    .def-grid { grid-template-columns: 1fr 1fr; }
-    .header-meta { gap: 1rem; }
+  @media(max-width:600px) {
+    .objectives-grid { grid-template-columns:1fr; }
+    .def-grid { grid-template-columns:1fr; }
+    .header-meta { gap:1.5rem; }
+    .section-nav button { padding:.65rem .9rem; font-size:.65rem; }
   }
 </style>
 </head>
 <body>
 
+<!-- THEME TOGGLE -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+  <span class="toggle-icon moon">🌙</span>
+  <span class="toggle-icon sun">☀️</span>
+  <span id="toggleLabel">Light</span>
+  <div class="theme-toggle-pill"><div class="theme-toggle-knob"></div></div>
+</button>
+
 <header>
   <div class="header-inner">
     <div class="module-badge">Microeconomics · Module 3</div>
-    <h1>Firms, <em>Production</em><br>& Costs</h1>
-    <p class="header-sub">Where do costs come from? We move to the factory floor to understand how production technology shapes every cost curve a firm faces.</p>
+    <h1>Firms, <em>Production</em><br>&amp; Costs</h1>
+    <p class="header-sub">Where do costs come from? We descend to the factory floor to understand how production technology shapes every cost curve a firm faces — from fixed cost to marginal.</p>
     <div class="header-meta">
-      <span>Prof. <strong>Larry DeBrock</strong></span>
-      <span>Gies College of Business · <strong>UIUC</strong></span>
-      <span><strong>9</strong> Lessons · 2 Units</span>
+      <div class="meta-item"><span class="meta-label">Instructor</span><span class="meta-value">Prof. Larry DeBrock</span></div>
+      <div class="meta-item"><span class="meta-label">Institution</span><span class="meta-value">Gies · UIUC</span></div>
+      <div class="meta-item"><span class="meta-label">Lessons</span><span class="meta-value">9 Lessons · 2 Units</span></div>
+      <div class="meta-item"><span class="meta-label">Topics</span><span class="meta-value">Theory of Firm · Cost Curves</span></div>
     </div>
   </div>
 </header>
@@ -536,7 +281,7 @@
 <div class="page">
 
   <div class="objectives-card">
-    <h2>Learning Objectives</h2>
+    <div class="objectives-label">Learning Objectives</div>
     <div class="objectives-grid">
       <div class="obj-item"><span class="obj-num">01</span>Describe the general forms of business organization</div>
       <div class="obj-item"><span class="obj-num">02</span>Recognize firm objectives and constraints</div>
@@ -547,24 +292,19 @@
     </div>
   </div>
 
-  <!-- SECTION NAV -->
   <div class="section-nav">
-    <button class="active" onclick="switchSection('theory')">Theory of the Firm</button>
-    <button onclick="switchSection('costs')">Cost Theory</button>
-    <button onclick="switchSection('quiz')">Practice Quiz</button>
+    <button class="active" onclick="switchSection('theory',this)">Theory of the Firm</button>
+    <button onclick="switchSection('costs',this)">Cost Theory</button>
+    <button onclick="switchSection('quiz',this)">Practice Quiz</button>
   </div>
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 1: THEORY OF THE FIRM              -->
-  <!-- ═══════════════════════════════════════════ -->
+  <!-- ═══ THEORY ═══ -->
   <div class="lesson-section active" id="section-theory">
-
     <div class="section-header">
       <div class="section-label">Unit 3-1</div>
       <h2>The Theory of the Firm</h2>
     </div>
 
-    <!-- Lesson 3-1.1 -->
     <div class="lesson-card">
       <div class="lesson-header" onclick="toggleLesson(this)">
         <span class="lesson-num">3-1.1</span>
@@ -572,18 +312,16 @@
         <span class="lesson-toggle">›</span>
       </div>
       <div class="lesson-body">
-        <p>Firms exist to maximize profits — the residual of revenues after costs are subtracted. But where do costs come from? There are no "magic elves" building products overnight. Every firm must purchase inputs, combine them efficiently, and convert them into outputs that consumers will pay for.</p>
-        <p>Economists model this with a <strong>production function</strong>. Using the real-world example of the massive Kraft plant in Champaign, IL — which produces half of all macaroni and cheese sold in the US and is the sole source of Velveeta in North America — we can observe inputs (workers, eggs, glass jars, labels) entering and outputs (jars of mayonnaise) leaving.</p>
+        <p>Firms exist to maximize profits — the residual of revenues after costs are subtracted. But costs don't appear by magic. There are no magic elves building products overnight. Every firm must purchase inputs, combine them efficiently, and convert them into outputs consumers will pay for.</p>
+        <p>Using the Kraft plant in Champaign, IL as a running example — which produces half of all macaroni and cheese sold in the US and is the sole source of Velveeta in North America — we observe inputs (workers, eggs, glass jars, labels) entering and outputs (jars of mayonnaise) leaving. Economists model this with a <strong>production function</strong>.</p>
         <div class="formula-box">
           <span class="formula-label">Production Function</span>
-          <div class="formula">q = f(L, K)</div>
-          <div style="font-size:.78rem;color:rgba(250,247,242,.5);margin-top:.4rem">where q = output, L = labor, K = capital</div>
+          <span class="formula">q = f(L, K)</span>
+          <span class="formula-note">q = firm output &nbsp;|&nbsp; L = labor (variable) &nbsp;|&nbsp; K = capital (fixed in SR)<br>Capital uses K because C is reserved for cost functions.</span>
         </div>
-        <p>The two inputs economists use: <strong>Labor (L)</strong> — all variable inputs like workers, raw materials — and <strong>Capital (K)</strong> — fixed assets like the factory building and assembly lines.</p>
       </div>
     </div>
 
-    <!-- Lesson 3-1.2 -->
     <div class="lesson-card">
       <div class="lesson-header" onclick="toggleLesson(this)">
         <span class="lesson-num">3-1.2</span>
@@ -591,208 +329,163 @@
         <span class="lesson-toggle">›</span>
       </div>
       <div class="lesson-body">
-        <p>There are three general classes of business organization. Each carries different risk, tax, and ownership implications.</p>
-
+        <p>Three general classes of business organization exist, each carrying different risk, tax, and ownership implications.</p>
         <div class="def-grid">
-          <div class="def-card">
-            <span class="term">Sole Proprietorship</span>
-            <div class="definition">Single owner. Owner reports profit on Schedule C. Simple to form, but owner bears <em>full personal liability</em> for business debts.</div>
-          </div>
-          <div class="def-card">
-            <span class="term">Partnership</span>
-            <div class="definition">Group of owners sharing profits per agreed split. Can be very small (Larry & Brian's tree service) or massive (global accounting firms with hundreds of partners).</div>
-          </div>
-          <div class="def-card">
-            <span class="term">Corporation</span>
-            <div class="definition">Independent legal entity. Owners are shareholders. Limited liability — owners can only lose the value of their equity stake, not personal assets.</div>
-          </div>
+          <div class="def-card"><span class="term">Sole Proprietorship</span><div class="definition"><strong>Single owner.</strong> Reports profit on Schedule C. Simple to form — but the owner bears <em>full personal liability</em>. Drop a tree on someone's BMW and you personally owe the $300,000.</div></div>
+          <div class="def-card"><span class="term">Partnership</span><div class="definition"><strong>Group of owners</strong> sharing profits by agreed split. Can be tiny (Larry &amp; Brian's tree service) or massive (global accounting firms with hundreds of partners). Still carries <em>full personal liability</em>.</div></div>
+          <div class="def-card"><span class="term">Corporation</span><div class="definition"><strong>Independent legal entity.</strong> Owners are shareholders. <em>Limited liability</em> — max loss = equity stake. But faces double taxation: corporate profits taxed first, then dividends taxed again.</div></div>
         </div>
-
-        <p>Data from the 2019 Statistical Abstract of the United States (2013 data) shows the striking contrast:</p>
         <div class="data-table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Count</th>
-                <th>Share of Firms</th>
-                <th>Revenue</th>
-                <th>Revenue Share</th>
-                <th>Liability</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Type</th><th># Firms</th><th>Share of Firms</th><th>Revenue</th><th>Revenue Share</th><th>Liability</th></tr></thead>
             <tbody>
-              <tr>
-                <td>Sole Proprietorships</td>
-                <td>24.1M</td>
-                <td>71.9%</td>
-                <td>$1.3T</td>
-                <td>3.9%</td>
-                <td><span class="badge-full">Full</span></td>
-              </tr>
-              <tr>
-                <td>Partnerships</td>
-                <td>3.5M</td>
-                <td>10.4%</td>
-                <td>$5.1T</td>
-                <td>15.3%</td>
-                <td><span class="badge-full">Full</span></td>
-              </tr>
-              <tr>
-                <td>Corporations</td>
-                <td>5.9M</td>
-                <td>17.6%</td>
-                <td>$26.9T</td>
-                <td>80.8%</td>
-                <td><span class="badge-limited">Limited</span></td>
-              </tr>
+              <tr><td>Sole Proprietorships</td><td>24.1M</td><td>71.9%</td><td>$1.3T</td><td>3.9%</td><td><span class="badge-full">Full</span></td></tr>
+              <tr><td>Partnerships</td><td>3.5M</td><td>10.4%</td><td>$5.1T</td><td>15.3%</td><td><span class="badge-full">Full</span></td></tr>
+              <tr><td>Corporations</td><td>5.9M</td><td>17.6%</td><td>$26.9T</td><td>80.8%</td><td><span class="badge-limited">Limited</span></td></tr>
             </tbody>
           </table>
         </div>
-        <div class="callout red">
-          <div class="callout-label">Trade-off: Why not always incorporate?</div>
-          <p>Corporations face <strong>double taxation</strong>: corporate income tax on profits, then shareholders pay income tax again when dividends are distributed. Sole proprietors only pay once. If risk is low (e.g., selling quilts on Etsy), incorporation often isn't worth it.</p>
-        </div>
+        <div class="callout red"><div class="callout-label">The Double Taxation Trade-off</div><p>Corporations offer limited liability but face double taxation: corporate income tax on profits, then shareholders pay income tax on dividends. If you're selling quilts on Etsy, the risk is low and incorporation often isn't worth it.</p></div>
       </div>
     </div>
 
-    <!-- Lesson 3-1.3 -->
     <div class="lesson-card">
       <div class="lesson-header" onclick="toggleLesson(this)">
-        <span class="lesson-num">3-1.3 & 3-1.4</span>
+        <span class="lesson-num">3-1.3 · 3-1.4</span>
         <span class="lesson-title">The Behavioral Rule: Maximize Profits</span>
         <span class="lesson-toggle">›</span>
       </div>
       <div class="lesson-body">
-        <p>Whether for-profit or not-for-profit, every firm faces the same fundamental efficiency constraints. The goal: maximize the residual of revenue over cost.</p>
+        <p>Whether for-profit or not-for-profit, every firm faces identical efficiency constraints. Non-profits simply redirect their residual toward a cause instead of distributing it to owners. The behavioral rule is the same: maximize profits (or surplus).</p>
         <div class="formula-box">
-          <span class="formula-label">Profit (π) — Economic Profit</span>
-          <div class="formula">π = TR − TC</div>
-          <div style="font-size:.78rem;color:rgba(250,247,242,.5);margin-top:.6rem">TR = Total Revenue &nbsp;|&nbsp; TC = Total Cost (includes opportunity cost)</div>
-          <div style="margin-top:.8rem;font-size:.8rem;color:rgba(250,247,242,.4)">Total Revenue = P × Q</div>
+          <span class="formula-label">Profit Equation</span>
+          <span class="formula">π = TR − TC</span>
+          <span class="formula">TR = P × Q</span>
+          <span class="formula-note">TC includes opportunity costs — this is economic profit, not accounting profit</span>
         </div>
-        <div class="callout teal">
-          <div class="callout-label">Economic vs. Accounting Profit</div>
-          <p><strong>Accounting profit</strong> = TR − explicit costs only. <strong>Economic profit</strong> = TR − explicit costs − opportunity costs. A hot dog vendor making $78,000/year has a negative <em>economic</em> profit if they gave up a $100,000 salary to do so. Economists care about opportunity cost because it reveals where resources should flow.</p>
-        </div>
+        <div class="callout teal"><div class="callout-label">Economic vs. Accounting Profit</div><p><strong>Accounting profit</strong> = TR − explicit costs only. <strong>Economic profit</strong> = TR − explicit costs − opportunity costs. A hot dog vendor earning $78,000/year has positive accounting profit — but <em>negative economic profit</em> if they gave up a $100,000 salary. Economists care about opportunity cost because it reveals where resources should flow.</p></div>
       </div>
     </div>
 
-    <!-- Lesson 3-1.5 -->
     <div class="lesson-card">
       <div class="lesson-header" onclick="toggleLesson(this)">
         <span class="lesson-num">3-1.5</span>
-        <span class="lesson-title">Law of Diminishing Marginal Returns</span>
+        <span class="lesson-title">Marginal Product &amp; Law of Diminishing Returns</span>
         <span class="lesson-toggle">›</span>
       </div>
       <div class="lesson-body">
-        <div class="callout">
-          <div class="callout-label">Key Definition · Marginal</div>
-          <p>Economists use the word <strong>marginal</strong> to mean <em>change in</em>. Marginal cost = change in cost. Marginal product = change in output. For calculus users: marginal = the derivative.</p>
+        <div class="callout"><div class="callout-label">Key Term · Marginal</div><p>Economists use <strong>marginal</strong> to mean <em>change in</em>. Marginal cost = change in total cost. Marginal product = change in output per additional input. In calculus terms: marginal = the derivative. In plain terms: it's the slope.</p></div>
+
+        <div class="def-grid" style="margin:1.25rem 0">
+          <div class="def-card">
+            <span class="term">Marginal Product (MP)</span>
+            <div class="definition">The amount by which output increases when an input is increased by a small amount (often one unit), <strong>holding other inputs fixed</strong>.</div>
+          </div>
+          <div class="def-card">
+            <span class="term">Marginal Product of Labor (MPL)</span>
+            <div class="definition">Additional output produced by adding a small amount of labor, <strong>holding capital fixed</strong>. In calculus terms: MPL is the <em>derivative of the production function with respect to L</em>.</div>
+          </div>
         </div>
 
-        <p>In the short run, as we vary labor while capital is fixed, output follows a predictable pattern. The short-run production function is S-shaped:</p>
-        <ul style="font-size:.88rem;color:#3a3020;line-height:1.8;padding-left:1.5rem;margin:.75rem 0">
-          <li><strong>Increasing returns region:</strong> Adding workers raises output proportionally faster. (Adding a 2nd assembly-line worker eliminates side-switching inefficiency.)</li>
-          <li><strong>Inflection point:</strong> The transition between regions.</li>
-          <li><strong>Diminishing returns region:</strong> Each additional worker still adds output, but less than the previous worker did.</li>
+        <div class="formula-box">
+          <span class="formula-label">MPL — Calculus Definition</span>
+          <span class="formula">MPL = ∂q/∂L = ∂f(L, K̄)/∂L</span>
+          <span class="formula-note">The slope of the production function at any point. As L increases, how does MPL behave? → It eventually falls (Law of Diminishing Marginal Returns).</span>
+        </div>
+
+        <p>With capital fixed in the short run, the production function q = f(L; K̄) is S-shaped as we vary labor:</p>
+        <ul class="lesson-list">
+          <li><strong>Increasing returns region:</strong> MPL is <em>rising</em> — each extra worker adds more than the previous one. Specialization gains dominate.</li>
+          <li><strong>Inflection point:</strong> MPL is at its peak — the rate of output growth is about to slow.</li>
+          <li><strong>Diminishing returns region:</strong> MPL is <em>falling</em> — each additional worker still adds positive output, but less than the one before. The production curve flattens.</li>
         </ul>
 
-        <div class="chart-container">
-          <div class="chart-title">Short-Run Production Function</div>
-          <canvas id="prodChart" height="200"></canvas>
+        <div class="graph-wrap">
+          <div class="graph-title">Short-Run Production Function</div>
+          <svg id="svg-prod" viewBox="0 0 560 270" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="graph-legend">
+            <div class="legend-item"><div class="legend-swatch" style="background:#d4884a"></div> q = f(L; K̄)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#3d3830;border-top:2px dashed #3d3830;height:0;margin-top:1px"></div> Inflection</div>
+          </div>
         </div>
 
-        <div class="callout red">
-          <div class="callout-label">The Law (no known exceptions)</div>
-          <p>The <strong>Law of Diminishing Marginal Product</strong>: after some point, extra inputs will raise output <em>less</em> than previous inputs did. This is a short-run phenomenon arising from fixed capital. It applies universally — from tree trimming to Boeing 737 assembly — and there are no known counterexamples. A Nobel Prize awaits whoever finds one.</p>
-        </div>
-
-        <p>Short run vs. Long run is about <em>time</em>, not duration. For Larry's Tree Trimming, the long run is 30 minutes (drive to Home Depot for a second chainsaw). For a gasoline refinery, it's 4 years from groundbreaking to first output. What matters is whether you can change <em>all</em> inputs.</p>
+        <div class="callout red"><div class="callout-label">This is a Law — No Known Exceptions</div><p><strong>Law of Diminishing Marginal Product:</strong> after some point, extra inputs will raise output less than previous inputs did. No counterexample exists across any industry — consulting, auto manufacturing, baristas, tree trimming. A Nobel Prize awaits whoever finds one. It is a <em>short-run phenomenon</em> caused by overutilizing the variable input relative to fixed capital.</p></div>
 
         <div class="formula-box">
           <span class="formula-label">Short Run vs. Long Run</span>
-          <div class="formula">SR: q = f(L; K̄) &nbsp;&nbsp; ← K fixed</div>
-          <div class="formula" style="margin-top:.4rem">LR: q = f(L, K) &nbsp;&nbsp;&nbsp; ← all inputs variable</div>
+          <span class="formula">SR: q = f(L ; K̄)  ← some inputs fixed (K̄ notation signals fixed K)</span>
+          <span class="formula">LR: q = f(L, K)   ← all inputs variable</span>
+          <span class="formula-note">How long is the long run? It is <strong>industry and context specific — and can be very long.</strong> Larry's Tree Service: ~30 min. A gasoline refinery: ~4 years from groundbreaking to first output.</span>
         </div>
+
+        <div class="callout"><div class="callout-label">Notation Note · K̄ vs f(L;K)</div><p>Two equivalent notations signal that capital is fixed. Some texts write <strong>K̄</strong> (K with a bar over it) inside the function: <em>f(L, K̄)</em>. Prof. DeBrock uses a <strong>semicolon</strong>: <em>f(L; K)</em> — everything to the right of the semicolon is parametric (held fixed). Treating K as fixed in the short run is a <strong>simplification</strong> of the standard model; in reality, any input that cannot be changed on short notice qualifies as "fixed."</p></div>
       </div>
     </div>
-  </div>
+  </div><!-- /theory -->
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 2: COST THEORY                     -->
-  <!-- ═══════════════════════════════════════════ -->
+  <!-- ═══ COSTS ═══ -->
   <div class="lesson-section" id="section-costs">
-
     <div class="section-header">
       <div class="section-label">Unit 3-2</div>
       <h2>Cost Theory</h2>
     </div>
 
-    <!-- 3-2.1 & 3-2.2 -->
     <div class="lesson-card">
       <div class="lesson-header" onclick="toggleLesson(this)">
         <span class="lesson-num">3-2.1 · 3-2.2</span>
-        <span class="lesson-title">Total Cost: Fixed & Variable Components</span>
+        <span class="lesson-title">Total Cost: Fixed &amp; Variable Components</span>
         <span class="lesson-toggle">›</span>
       </div>
       <div class="lesson-body">
-        <p>Production costs come from inputs. The production function tells us <em>how many</em> inputs are needed for any output level. Pricing those inputs gives us cost. The total cost curve is built by adding two components:</p>
+        <p>The production function tells us <em>how many</em> inputs are needed for any output level. Pricing those inputs gives us cost. Total cost has exactly two components in the short run:</p>
         <div class="formula-box">
           <span class="formula-label">Total Cost</span>
-          <div class="formula">TC = FC + VC</div>
-          <div style="font-size:.78rem;color:rgba(250,247,242,.5);margin-top:.5rem">
-            FC = Fixed Cost (brick & mortar, capital) — does not change with q<br>
-            VC = Variable Cost (labor, materials) — rises with q
-          </div>
+          <span class="formula">TC = FC + VC</span>
+          <span class="formula-note">FC = Fixed Cost (factory, assembly lines) — does not change with q<br>VC = Variable Cost (labor, materials) — rises as output rises</span>
         </div>
-        <p><strong>Fixed Cost (FC)</strong> is a horizontal line — whether Kraft makes 0 or 100,000 jars of mayonnaise today, the cost of the factory and assembly lines is the same.</p>
-        <p><strong>Variable Cost (VC)</strong> is the inverse of the production function, scaled by the wage rate. Because of the law of diminishing marginal product, the VC curve is S-shaped: rising slowly at first (increasing returns region), then steeply (diminishing returns region).</p>
-        <p>The <strong>Total Cost curve</strong> is the VC curve shifted up vertically by the amount of FC. Every point on TC is exactly FC above VC.</p>
-
-        <div class="chart-container">
-          <div class="chart-title">Total Cost = Fixed Cost + Variable Cost</div>
-          <canvas id="tcChart" height="220"></canvas>
+        <p><strong>Fixed Cost (FC)</strong> is a horizontal line. Whether Kraft makes 0 or 100,000 jars of mayonnaise today, the cost of the factory is unchanged. Fixed costs are sunk in the short run.</p>
+        <p><strong>Variable Cost (VC)</strong> is the inverse of the production function scaled by the wage rate. Its S-shape reflects the production function: costs rise slowly (increasing-returns region), then steeply as diminishing returns kick in.</p>
+        <p>The <strong>Total Cost curve</strong> is VC shifted vertically up by exactly FC. Every point on TC is precisely FC dollars above VC.</p>
+        <div class="graph-wrap">
+          <div class="graph-title">Total Cost = Fixed Cost + Variable Cost</div>
+          <svg id="svg-tc" viewBox="0 0 560 290" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="graph-legend">
+            <div class="legend-item"><div class="legend-swatch" style="background:#e8e0d0"></div> TC</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#d4884a"></div> VC</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#3a9e8f"></div> FC (horizontal)</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 3-2.3 to 3-2.5 -->
     <div class="lesson-card">
       <div class="lesson-header" onclick="toggleLesson(this)">
         <span class="lesson-num">3-2.3 – 3-2.5</span>
-        <span class="lesson-title">Average Cost Curves (ATC, AFC, AVC)</span>
+        <span class="lesson-title">Average Cost Curves: ATC, AFC &amp; AVC</span>
         <span class="lesson-toggle">›</span>
       </div>
       <div class="lesson-body">
         <div class="formula-box">
-          <span class="formula-label">Average Total Cost</span>
-          <div class="formula">ATC = TC / q = AFC + AVC</div>
-          <div style="font-size:.78rem;color:rgba(250,247,242,.5);margin-top:.5rem">
-            AFC = FC/q &nbsp;(average fixed cost)<br>
-            AVC = VC/q &nbsp;(average variable cost)
+          <span class="formula-label">Average Total Cost (per-unit cost)</span>
+          <span class="formula">ATC = TC / q = AFC + AVC</span>
+          <span class="formula-note">AFC = FC/q &nbsp;|&nbsp; AVC = VC/q</span>
+        </div>
+        <p><strong>Average Fixed Cost (AFC)</strong> is a rectangular hyperbola — always declining, asymptotically approaching zero. At very low output it explodes toward infinity; it never touches the horizontal axis.</p>
+        <p><strong>Average Variable Cost (AVC)</strong> is U-shaped. AVC at any q = slope of the ray from the origin to the VC curve at q. That slope falls until the ray is tangent to VC (minimum AVC), then rises. This U-shape is a direct consequence of diminishing marginal product.</p>
+        <p><strong>Average Total Cost (ATC)</strong> = AFC + AVC. Also U-shaped, with its minimum to the <em>right</em> of AVC's minimum. At high output, ATC and AVC converge as AFC → 0.</p>
+        <div class="graph-wrap">
+          <div class="graph-title">Average Cost Curves</div>
+          <svg id="svg-avg" viewBox="0 0 560 290" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="graph-legend">
+            <div class="legend-item"><div class="legend-swatch" style="background:#e8e0d0"></div> ATC</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#d4884a"></div> AVC</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#3a9e8f"></div> AFC</div>
           </div>
         </div>
-
-        <p><strong>Average Fixed Cost (AFC)</strong> is a rectangular hyperbola — always declining. As output grows, the fixed cost is spread over more units. It asymptotically approaches zero but never reaches it. At very low output, AFC explodes toward infinity.</p>
-
-        <p><strong>Average Variable Cost (AVC)</strong> is U-shaped. The ratio VC/q equals the slope of a ray from the origin to the VC curve. That slope falls until the ray is tangent to VC (the minimum of AVC), then rises. This U-shape is entirely a creature of the law of diminishing marginal product.</p>
-
-        <p><strong>Average Total Cost (ATC)</strong> = AFC + AVC. Also U-shaped, but its minimum lies to the right of AVC's minimum. At high output, ATC and AVC converge because AFC → 0.</p>
-
-        <div class="chart-container">
-          <div class="chart-title">Average Cost Curves</div>
-          <canvas id="avgChart" height="230"></canvas>
-        </div>
-
-        <div class="callout teal">
-          <div class="callout-label">Practical Meaning of ATC</div>
-          <p>ATC = per-unit cost. If Kraft's ATC for a jar of mayonnaise is $3.27 but the market price is only $3.10, they lose money on every jar. The goal is to sell above ATC.</p>
-        </div>
+        <div class="callout teal"><div class="callout-label">Practical Meaning of ATC</div><p>ATC = per-unit cost. If Kraft's ATC is <strong>$3.27</strong> per jar but the market pays <strong>$3.10</strong>, they lose money on every jar. The firm must price above ATC to earn positive economic profit.</p></div>
       </div>
     </div>
 
-    <!-- 3-2.6 -->
     <div class="lesson-card">
       <div class="lesson-header" onclick="toggleLesson(this)">
         <span class="lesson-num">3-2.6</span>
@@ -800,27 +493,45 @@
         <span class="lesson-toggle">›</span>
       </div>
       <div class="lesson-body">
-        <p>Marginal cost is the single most important cost concept for profit maximization — saved for last, but used constantly from here forward.</p>
+        <p>Marginal cost is the most important cost concept in economics — it drives the profit-maximization rule in every market structure.</p>
         <div class="formula-box">
           <span class="formula-label">Marginal Cost</span>
-          <div class="formula">MC = dTC/dq = ΔTC/Δq = slope of TC</div>
-          <div style="font-size:.78rem;color:rgba(250,247,242,.5);margin-top:.5rem">How much does one more unit of output cost to produce?</div>
+          <span class="formula">MC = dTC/dq = ΔTC/Δq = slope of TC</span>
+          <span class="formula-note">How much does one more unit cost to produce? Also called "incremental cost" in business.</span>
         </div>
-        <p>For the Kraft plant: marginal cost of one more jar of mayonnaise = extra eggs + extra milk + glass jar + label + some workers' time. <em>No change in fixed costs</em> — the factory is already standing.</p>
-        <div class="callout">
-          <div class="callout-label">Incremental Cost</div>
-          <p>Business practitioners often call this <em>incremental cost</em>. The Wall Street Journal uses both terms. They mean the same thing: how much extra does it cost to make one more unit?</p>
+        <p>For Kraft: marginal cost of one more jar of mayonnaise = extra eggs + milk + glass jar + label + fractional workers' time. <strong>No change in fixed costs</strong> — the factory is already paid for.</p>
+
+        <div class="callout teal"><div class="callout-label">The MPL ↔ MC Inverse Relationship</div><p>If labor is the only variable input, the cost of producing a little more output is simply <strong>the labor required to do it</strong>. This creates a direct, inverse link between MPL and MC:</p></div>
+
+        <div class="def-grid" style="margin:1.25rem 0">
+          <div class="def-card">
+            <span class="term">When MPL is High</span>
+            <div class="definition">Each worker produces <em>a lot</em> of extra output → you need <em>fewer</em> workers per extra unit → <strong>MC is low</strong>.</div>
+          </div>
+          <div class="def-card">
+            <span class="term">When MPL is Low</span>
+            <div class="definition">Each worker produces <em>little</em> extra output → you need <em>more</em> workers per extra unit → <strong>MC is high</strong>.</div>
+          </div>
+          <div class="def-card">
+            <span class="term">MPL Rising</span>
+            <div class="definition">Increasing returns region — output per worker is growing, so cost per unit of output is <em>falling</em>. MC slopes downward.</div>
+          </div>
+          <div class="def-card">
+            <span class="term">MPL Falling</span>
+            <div class="definition">Diminishing returns region — output per worker is shrinking, so cost per unit is <em>rising</em>. MC slopes upward. This is why MC is U-shaped.</div>
+          </div>
         </div>
-        <p>Since fixed costs don't change with output, the derivative of FC with respect to q is zero. This means <strong>marginal cost has absolutely no relationship to fixed costs</strong> — a key insight with powerful implications (as we'll see with regulations and taxes).</p>
+
         <div class="formula-box">
-          <span class="formula-label">MC and Fixed Costs</span>
-          <div class="formula">MC = dVC/dq &nbsp;&nbsp; (dFC/dq ≡ 0)</div>
-          <div style="font-size:.78rem;color:rgba(250,247,242,.5);margin-top:.4rem">Fixed costs are sunk in the short run — MC ignores them entirely</div>
+          <span class="formula-label">Formal Inverse Relationship</span>
+          <span class="formula">MC = w / MPL</span>
+          <span class="formula-note">w = wage rate. Because production and cost are inversely related, <strong>MPL and MC are also inversely related.</strong> When MPL peaks (inflection point of production function), MC is at its minimum.</span>
         </div>
+
+        <div class="callout red"><div class="callout-label">Fixed Costs Have Zero Effect on MC</div><p>MC = dTC/dq = dFC/dq + dVC/dq = <strong>0</strong> + dVC/dq. The derivative of a constant is zero. A new city tax, rent increase, or any rise in fixed costs has <em>absolutely no effect on marginal cost</em>. One of the most important and counterintuitive results in cost theory.</p></div>
       </div>
     </div>
 
-    <!-- 3-2.7 – 3-2.9 -->
     <div class="lesson-card">
       <div class="lesson-header" onclick="toggleLesson(this)">
         <span class="lesson-num">3-2.7 – 3-2.9</span>
@@ -828,325 +539,432 @@
         <span class="lesson-toggle">›</span>
       </div>
       <div class="lesson-body">
-        <p>The MC curve is also U-shaped — the slope of TC falls in the increasing-returns region and rises steeply in the diminishing-returns region. Two critical intersection rules:</p>
-
-        <div class="callout teal">
-          <div class="callout-label">The Bowling Average Rule</div>
-          <p>When marginal > average, average is being pulled <strong>up</strong>. When marginal &lt; average, average is being pulled <strong>down</strong>. Therefore, MC <strong>must pass through the minimum of both ATC and AVC</strong>. (If your bowling average is 150 and you roll 180, your average rises. Roll 120, it falls.)</p>
+        <p>The MC curve is also U-shaped — its slope equals the slope of TC: falling during increasing returns, rising steeply during diminishing returns. MC is always positive (producing more always costs more).</p>
+        <div class="graph-wrap">
+          <div class="graph-title">Complete Family of Cost Curves</div>
+          <svg id="svg-full" viewBox="0 0 560 310" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="graph-legend">
+            <div class="legend-item"><div class="legend-swatch" style="background:#c05040"></div> MC</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#e8e0d0"></div> ATC</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#d4884a"></div> AVC</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#3a9e8f"></div> AFC</div>
+          </div>
         </div>
-
-        <div class="chart-container">
-          <div class="chart-title">Complete Family of Cost Curves</div>
-          <canvas id="fullChart" height="260"></canvas>
-        </div>
-
-        <div class="def-grid" style="margin-top:1.25rem">
-          <div class="def-card">
-            <span class="term">MC ∩ ATC</span>
-            <div class="definition">MC always intersects ATC at ATC's <em>minimum</em>. This is the most efficient per-unit production point.</div>
-          </div>
-          <div class="def-card">
-            <span class="term">MC ∩ AVC</span>
-            <div class="definition">MC also intersects AVC at AVC's <em>minimum</em> — by the same marginal-pulls-average logic.</div>
-          </div>
-          <div class="def-card">
-            <span class="term">MC ∩ AFC</span>
-            <div class="definition">Point α — <em>completely indeterminate</em>. MC has no relationship to fixed cost, so this intersection is meaningless.</div>
-          </div>
-          <div class="def-card">
-            <span class="term">If FC ↑</span>
-            <div class="definition">ATC shifts up. AVC unchanged. MC unchanged. Minimum of ATC still occurs at MC intersection — just higher.</div>
-          </div>
+        <div class="callout teal"><div class="callout-label">The Bowling Average Rule</div><p>When marginal > average, average is pulled <strong>up</strong>. When marginal &lt; average, average is pulled <strong>down</strong>. If your bowling average is 150 and you roll 180, your average rises. Roll 120, it falls. Therefore <strong>MC passes through the minimum of both ATC and AVC</strong>. This is provable with calculus but intuitive from the bowling analogy.</p></div>
+        <div class="def-grid">
+          <div class="def-card"><span class="term">MC ∩ ATC minimum</span><div class="definition">MC always passes through the <em>minimum of ATC</em> — the most efficient per-unit production point.</div></div>
+          <div class="def-card"><span class="term">MC ∩ AVC minimum</span><div class="definition">By identical logic, MC passes through the <em>minimum of AVC</em>, at a lower output level than min ATC.</div></div>
+          <div class="def-card"><span class="term">MC ∩ AFC (point α)</span><div class="definition"><em>Completely indeterminate.</em> MC has no relationship to fixed costs. This intersection is economically meaningless.</div></div>
+          <div class="def-card"><span class="term">If Fixed Cost ↑</span><div class="definition">ATC shifts up. AFC shifts up. <strong>AVC unchanged. MC unchanged.</strong> Minimum ATC still occurs at MC intersection — just higher.</div></div>
         </div>
       </div>
     </div>
-  </div>
+  </div><!-- /costs -->
 
-  <!-- ═══════════════════════════════════════════ -->
-  <!-- SECTION 3: QUIZ                            -->
-  <!-- ═══════════════════════════════════════════ -->
+  <!-- ═══ QUIZ ═══ -->
   <div class="lesson-section" id="section-quiz">
-
     <div class="section-header">
       <div class="section-label">Check Your Understanding</div>
       <h2>Practice Quiz</h2>
     </div>
-
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-track">
-        <div class="progress-bar-fill" id="quizProgress" style="width:0%"></div>
-      </div>
-      <span class="progress-text" id="quizProgressText">0 / 6</span>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-track"><div class="quiz-progress-fill" id="quizProgress" style="width:0%"></div></div>
+      <span class="quiz-progress-text" id="quizProgressText">0 / 6</span>
     </div>
-
     <div id="quizContainer"></div>
   </div>
 
 </div>
 
-<footer>
-  Module 3 · Firm Level Economics · Gies College of Business · University of Illinois at Urbana-Champaign
-</footer>
+<footer>Module 3 · Firm Level Economics · Gies College of Business · University of Illinois at Urbana-Champaign · © 2020 Larry DeBrock</footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
-// ─── NAVIGATION ───────────────────────────────
-function switchSection(id) {
+// ─── THEME ─────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  const next = isLight ? 'dark' : 'light';
+  html.setAttribute('data-theme', next);
+  document.getElementById('toggleLabel').textContent = next === 'light' ? 'Dark' : 'Light';
+  updateChartColors();
+  redrawAllVisibleCharts();
+}
+
+function getCSSVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function updateChartColors() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  C.bg     = getCSSVar('--bg');
+  C.grid   = isLight ? '#e0d8cc' : '#252118';
+  C.axis   = getCSSVar('--border2');
+  C.label  = getCSSVar('--text3');
+  C.text   = getCSSVar('--text2');
+  C.amber  = getCSSVar('--amber');
+  C.teal   = getCSSVar('--teal');
+  C.red    = getCSSVar('--red');
+  C.white  = getCSSVar('--text');
+  C.amber3 = getCSSVar('--amber3');
+  C.teal3  = getCSSVar('--teal3');
+}
+
+function redrawAllVisibleCharts() {
+  if (document.getElementById('svg-prod')) drawProdChart();
+  const costsVisible = document.getElementById('section-costs').classList.contains('active');
+  if (costsVisible) { drawTCChart(); drawAvgChart(); drawFullChart(); }
+}
+
+// ─── NAV ───────────────────────────────────────
+function switchSection(id, btn) {
   document.querySelectorAll('.lesson-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.section-nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('section-' + id).classList.add('active');
-  event.target.classList.add('active');
-  if (id === 'quiz') buildQuiz();
+  btn.classList.add('active');
+  if (id === 'costs') { updateChartColors(); setTimeout(drawCostCharts, 30); }
+  if (id === 'quiz' && !quizBuilt) buildQuiz();
+}
+function toggleLesson(hdr) {
+  const open = hdr.classList.contains('open');
+  hdr.classList.toggle('open', !open);
+  hdr.nextElementSibling.classList.toggle('open', !open);
 }
 
-// ─── ACCORDION ────────────────────────────────
-function toggleLesson(header) {
-  const body = header.nextElementSibling;
-  const isOpen = header.classList.contains('open');
-  header.classList.toggle('open', !isOpen);
-  body.classList.toggle('open', !isOpen);
+// ─── SVG HELPERS ───────────────────────────────
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v);
+  return e;
+}
+function polyline(pts, stroke, sw, dash) {
+  const p = el('polyline', { points: pts.map(([x,y]) => `${x},${y}`).join(' '), stroke, fill:'none', 'stroke-width':sw, 'stroke-linecap':'round', 'stroke-linejoin':'round' });
+  if (dash) p.setAttribute('stroke-dasharray', dash);
+  return p;
+}
+function txt(x, y, s, fill, size, anchor='start') {
+  const t = el('text', { x, y, fill, 'font-family':'IBM Plex Mono,monospace', 'font-size':size, 'text-anchor':anchor });
+  t.textContent = s;
+  return t;
+}
+function line(x1,y1,x2,y2,stroke,sw,dash) {
+  const l = el('line', {x1,y1,x2,y2,stroke,'stroke-width':sw});
+  if (dash) l.setAttribute('stroke-dasharray', dash);
+  return l;
+}
+function dot(cx,cy,r,fill) {
+  return el('circle', {cx,cy,r,fill, stroke:C.bg, 'stroke-width':1.5});
 }
 
-// ─── CHART HELPERS ────────────────────────────
-const ink = '#1a1209';
-const amber = '#c87941';
-const teal = '#2d6e6e';
-const red = '#b84040';
-const rule = '#d4c9b5';
+// ─── CHART COLORS (initialized from CSS vars) ──
+const C = { bg:'#0f0e0b', grid:'#252118', axis:'#3d3830', label:'#5c5245',
+  text:'#a09278', amber:'#d4884a', teal:'#3a9e8f', red:'#c05040',
+  white:'#e8e0d0', amber3:'#7a3e18', teal3:'#1a4f48' };
 
-function range(n) { return Array.from({length: n}, (_, i) => i); }
-
-// Production function: logistic-ish S-curve
-function prodFn(L) {
-  return 12 * (1 / (1 + Math.exp(-0.9*(L-5)))) + 0.3*L;
+// Map data coords → svg coords
+function mkMap(W, H, pad, xMax, yMin, yMax) {
+  const xR = W - pad.l - pad.r, yR = H - pad.t - pad.b;
+  return {
+    x: v => pad.l + xR * (v / xMax),
+    y: v => pad.t + yR * (1 - (Math.min(Math.max(v, yMin), yMax) - yMin) / (yMax - yMin))
+  };
 }
 
-// VC (inverse of prod fn, scaled)
-function vcFn(q) {
-  return 0.06*q*q*q - 0.9*q*q + 7*q + 2;
-}
-
-function mcFn(q) {
-  return 0.18*q*q - 1.8*q + 7;
-}
-function avcFn(q) {
-  return 0.06*q*q - 0.9*q + 7 + 2/q;
-}
-function atcFn(q, fc) {
-  return avcFn(q) + fc/q;
-}
-
-const chartDefaults = {
-  responsive: true,
-  plugins: { legend: { position: 'top', labels: { font: { family: "'IBM Plex Mono', monospace", size: 11 }, color: ink, boxWidth: 20 } }, tooltip: { bodyFont: { family: "'IBM Plex Mono', monospace" } } },
-  scales: {
-    x: { grid: { color: rule }, ticks: { font: { family: "'IBM Plex Mono', monospace", size: 10 }, color: '#6b5a3e' }, title: { display: true, text: 'Output (q)', color: '#6b5a3e', font: { family: "'IBM Plex Mono', monospace", size: 10 } } },
-    y: { grid: { color: rule }, ticks: { font: { family: "'IBM Plex Mono', monospace", size: 10 }, color: '#6b5a3e' }, title: { display: true, text: '$', color: '#6b5a3e', font: { family: "'IBM Plex Mono', monospace", size: 10 } } }
+function drawAxesLabels(svg, W, H, pad, map, xLabel, yLabel, xTicks, yTicks) {
+  // grid & y-ticks
+  for (const yv of yTicks) {
+    const yy = map.y(yv);
+    svg.appendChild(line(pad.l, yy, W-pad.r, yy, C.grid, 1));
+    svg.appendChild(txt(pad.l-6, yy+4, yv, C.label, 9, 'end'));
   }
-};
+  // axes
+  svg.appendChild(line(pad.l, pad.t, pad.l, H-pad.b, C.axis, 1.5));
+  svg.appendChild(line(pad.l, H-pad.b, W-pad.r, H-pad.b, C.axis, 1.5));
+  // x-ticks
+  for (const [xv, lbl] of xTicks) {
+    const xx = map.x(xv);
+    svg.appendChild(line(xx, H-pad.b, xx, H-pad.b+4, C.axis, 1));
+    if (lbl != null) svg.appendChild(txt(xx, H-pad.b+14, lbl, C.label, 9, 'middle'));
+  }
+  // axis labels
+  svg.appendChild(txt(W-pad.r, H-pad.b+24, xLabel, C.text, 10, 'end'));
+  const yl = txt(11, pad.t, yLabel, C.text, 10, 'middle');
+  yl.setAttribute('transform', `rotate(-90,11,${pad.t})`);
+  svg.appendChild(yl);
+}
 
-// ─── CHART 1: PRODUCTION FUNCTION ────────────
-const prodLabels = range(11).map(i => i);
-const prodData = prodLabels.map(L => +(prodFn(L)).toFixed(2));
+// ─── MATH ──────────────────────────────────────
+// Production: scaled logistic
+function pf(L) { return 18 / (1 + Math.exp(-1.2*(L-4.5))); }
+// VC = 0.05q³ - 0.6q² + 10q
+// → AVC = 0.05q² - 0.6q + 10   min at q=6
+// → MC  = 0.15q² - 1.2q  + 10  min at q=4
+// → With FC=30: min ATC at q≈9.4
+// MC = AVC at q=6 (min AVC)  ✓
+// MC = ATC at q≈9.4 (min ATC) ✓
+function vc(q)  { return 0.05*q*q*q - 0.6*q*q + 10*q; }
+function mc(q)  { return 0.15*q*q   - 1.2*q   + 10;   }
+const FC = 30;
+function afc(q) { return FC / q; }
+function avc(q) { return 0.05*q*q - 0.6*q + 10; }
+function atc(q) { return avc(q) + FC/q; }
 
-new Chart(document.getElementById('prodChart'), {
-  type: 'line',
-  data: {
-    labels: prodLabels,
-    datasets: [{
-      label: 'q = f(L; K̄)',
-      data: prodData,
-      borderColor: amber,
-      backgroundColor: 'rgba(200,121,65,.08)',
-      borderWidth: 2.5,
-      pointRadius: 3,
-      pointBackgroundColor: amber,
-      tension: 0.4,
-      fill: true
-    }]
-  },
-  options: { ...chartDefaults, scales: { ...chartDefaults.scales, x: { ...chartDefaults.scales.x, title: { display: true, text: 'Labor Inputs (L)', color: '#6b5a3e', font: { family: "'IBM Plex Mono', monospace", size: 10 } } }, y: { ...chartDefaults.scales.y, title: { display: true, text: 'Output (q)', color: '#6b5a3e', font: { family: "'IBM Plex Mono', monospace", size: 10 } } } } }
+// Build arrays of [x, y] pairs
+function curve(fn, vals) { return vals.map(v => [v, fn(v)]); }
+
+// ─── GRAPH 1: Production Function ──────────────
+function drawProdChart() {
+  const svg = document.getElementById('svg-prod');
+  if (!svg) return;
+  svg.innerHTML = '';
+  const W=560, H=270, pad={l:52,r:30,t:24,b:36};
+  const map = mkMap(W, H, pad, 10, 0, 19);
+  const Lvals = Array.from({length:101},(_,i)=>i*10/100);
+
+  drawAxesLabels(svg, W, H, pad, map, 'Labor (L)', 'Output (q)',
+    [[0,'0'],[2,'2'],[4,'4'],[6,'6'],[8,'8'],[10,'10']],
+    [0,5,10,15,18]);
+
+  // shade regions
+  const inflL = 4.5, inflY = map.y(pf(inflL)), inflX = map.x(inflL);
+  svg.appendChild(el('rect', {x:pad.l, y:pad.t, width:inflX-pad.l, height:H-pad.b-pad.t, fill:'rgba(58,158,143,.05)'}));
+  svg.appendChild(el('rect', {x:inflX, y:pad.t, width:W-pad.r-inflX, height:H-pad.b-pad.t, fill:'rgba(192,80,64,.04)'}));
+
+  // inflection dashed line
+  svg.appendChild(line(inflX, pad.t, inflX, H-pad.b, C.amber3, 1, '4,3'));
+
+  // curve
+  const pts = curve(v=>pf(v), Lvals).map(([x,y])=>[map.x(x),map.y(y)]);
+  svg.appendChild(polyline(pts, C.amber, 3));
+
+  // inflection dot
+  svg.appendChild(dot(inflX, inflY, 4.5, C.amber));
+
+  // region labels
+  svg.appendChild(txt(pad.l+8, H-pad.b-28, 'Increasing', C.teal, 9));
+  svg.appendChild(txt(pad.l+8, H-pad.b-17, 'Returns', C.teal, 9));
+  svg.appendChild(txt(inflX+10, H-pad.b-28, 'Diminishing', C.red, 9));
+  svg.appendChild(txt(inflX+10, H-pad.b-17, 'Returns', C.red, 9));
+  svg.appendChild(txt(W-pad.r-5, map.y(pf(9))-6, 'q=f(L;K̄)', C.amber, 9, 'end'));
+}
+
+// ─── GRAPH 2: TC ────────────────────────────────
+function drawTCChart() {
+  const svg = document.getElementById('svg-tc');
+  if (!svg) return;
+  svg.innerHTML = '';
+  const W=560, H=290, pad={l:55,r:36,t:24,b:36};
+  const qvals = Array.from({length:101},(_,i)=>i*12/100);
+  const yMax = 180;
+  const map = mkMap(W, H, pad, 12, 0, yMax);
+
+  drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ Cost',
+    [[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],
+    [0,40,80,120,160]);
+
+  // FC horizontal
+  const fcy = map.y(FC);
+  svg.appendChild(line(pad.l, fcy, W-pad.r, fcy, C.teal, 1.5, '6,3'));
+  svg.appendChild(txt(W-pad.r+3, fcy+4, 'FC', C.teal, 9));
+
+  // VC and TC
+  const vcPts = curve(q=>vc(q), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+  const tcPts = curve(q=>vc(q)+FC, qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+  svg.appendChild(polyline(vcPts, C.amber, 2.2, '7,4'));
+  svg.appendChild(polyline(tcPts, C.white, 3));
+
+  // FC gap annotation at q=6
+  const gq=6, gx=map.x(gq), gVCy=map.y(vc(gq)), gTCy=map.y(vc(gq)+FC);
+  svg.appendChild(line(gx, gVCy, gx, gTCy, C.amber3, 1, '2,2'));
+  svg.appendChild(line(gx-4, gTCy, gx+4, gTCy, C.amber, 1));
+  svg.appendChild(line(gx-4, gVCy, gx+4, gVCy, C.amber, 1));
+  svg.appendChild(txt(gx+7, (gVCy+gTCy)/2+4, '= FC', C.amber, 9));
+
+  // labels
+  svg.appendChild(txt(W-pad.r-5, map.y(vc(11)+FC)-10, 'TC', C.white, 10, 'end'));
+  svg.appendChild(txt(W-pad.r-5, map.y(vc(11))-10, 'VC', C.amber, 10, 'end'));
+}
+
+// ─── GRAPH 3: Average curves ───────────────────
+function drawAvgChart() {
+  const svg = document.getElementById('svg-avg');
+  if (!svg) return;
+  svg.innerHTML = '';
+  const W=560, H=290, pad={l:55,r:36,t:24,b:36};
+  const qvals = Array.from({length:95},(_,i)=>0.5+i*0.12);
+  const yMax = 30;
+  const map = mkMap(W, H, pad, 12, 0, yMax);
+
+  drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ per unit',
+    [[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],
+    [0,5,10,15,20,25,30]);
+
+  const afcPts = curve(q=>Math.min(afc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+  const avcPts = curve(q=>Math.min(avc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+  const atcPts = curve(q=>Math.min(atc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+
+  svg.appendChild(polyline(afcPts, C.teal, 1.8, '5,3'));
+  svg.appendChild(polyline(avcPts, C.amber, 2.4));
+  svg.appendChild(polyline(atcPts, C.white, 2.8));
+
+  // min AVC at q=6 exactly (by construction: -b/2a = 0.6/0.1 = 6)
+  const minAVCq = 6.0, minAVCv = avc(minAVCq);
+  if (minAVCv < yMax) {
+    const mx=map.x(minAVCq), my=map.y(minAVCv);
+    svg.appendChild(line(mx, my, mx, H-pad.b, C.amber3, 1, '3,3'));
+    svg.appendChild(dot(mx, my, 4.5, C.amber));
+    svg.appendChild(txt(mx+5, my-8, 'min AVC', C.amber, 9));
+  }
+
+  // min ATC at q≈9.4
+  const minATCq = 9.4, minATCv = atc(minATCq);
+  if (minATCv < yMax) {
+    const mx=map.x(minATCq), my=map.y(minATCv);
+    svg.appendChild(line(mx, my, mx, H-pad.b, C.axis, 1, '3,3'));
+    svg.appendChild(dot(mx, my, 4.5, C.white));
+    svg.appendChild(txt(mx+5, my-8, 'min ATC', C.white, 9));
+  }
+
+  // curve labels
+  svg.appendChild(txt(W-pad.r-4, map.y(Math.min(afc(11.5),yMax))+4, 'AFC', C.teal, 9, 'end'));
+  svg.appendChild(txt(map.x(9)+5, map.y(avc(9))+14, 'AVC', C.amber, 9));
+  svg.appendChild(txt(map.x(3.5), map.y(Math.min(atc(3.5),yMax))-8, 'ATC', C.white, 9));
+}
+
+// ─── GRAPH 4: Full family ──────────────────────
+function drawFullChart() {
+  const svg = document.getElementById('svg-full');
+  if (!svg) return;
+  svg.innerHTML = '';
+  const W=560, H=310, pad={l:55,r:36,t:24,b:40};
+  const qvals = Array.from({length:95},(_,i)=>0.5+i*0.12);
+  const yMax = 30;
+  const map = mkMap(W, H, pad, 12, 0, yMax);
+
+  drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ per unit',
+    [[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],
+    [0,5,10,15,20,25,30]);
+
+  const afcPts = curve(q=>Math.min(afc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+  const avcPts = curve(q=>Math.min(avc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+  const atcPts = curve(q=>Math.min(atc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+  const mcPts  = curve(q=>Math.min(mc(q), yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+
+  // Draw AFC first (back), then ATC, AVC, MC on top
+  svg.appendChild(polyline(afcPts, C.teal,  1.8, '5,3'));
+  svg.appendChild(polyline(atcPts, C.white, 2.2));
+  svg.appendChild(polyline(avcPts, C.amber, 2.2));
+  svg.appendChild(polyline(mcPts,  C.red,   3));
+
+  // ── MC minimum at q=4 (labeled) ──
+  const mcMinQ = 4.0, mcMinV = mc(mcMinQ);
+  svg.appendChild(dot(map.x(mcMinQ), map.y(mcMinV), 3.5, C.red));
+
+  // ── MC = AVC at q=6 (min AVC) ──
+  const minAVCq = 6.0, minAVCv = avc(minAVCq);
+  const ax1 = map.x(minAVCq), ay1 = map.y(minAVCv);
+  svg.appendChild(line(ax1, H-pad.b, ax1, ay1, C.amber3, 1, '3,3'));
+  svg.appendChild(dot(ax1, ay1, 5.5, C.amber));
+  // Intersection label on x-axis
+  svg.appendChild(txt(ax1, H-pad.b+24, 'q*avc', C.amber, 9, 'middle'));
+
+  // ── MC = ATC at q=9.4 (min ATC) ──
+  const minATCq = 9.4, minATCv = atc(minATCq);
+  const ax2 = map.x(minATCq), ay2 = map.y(minATCv);
+  svg.appendChild(line(ax2, H-pad.b, ax2, ay2, C.axis, 1, '3,3'));
+  svg.appendChild(dot(ax2, ay2, 5.5, C.white));
+  svg.appendChild(txt(ax2, H-pad.b+24, 'q*atc', C.white, 9, 'middle'));
+
+  // ── Curve labels ──
+  svg.appendChild(txt(map.x(1.5), map.y(Math.min(afc(1.5),yMax))+13, 'AFC', C.teal, 9));
+  svg.appendChild(txt(map.x(10.5), map.y(avc(10.5))+14, 'AVC', C.amber, 9));
+  svg.appendChild(txt(map.x(11),   map.y(atc(11))+12,   'ATC', C.white, 9));
+  svg.appendChild(txt(map.x(11),   map.y(Math.min(mc(11),yMax))-8, 'MC', C.red, 10));
+}
+
+function drawCostCharts() {
+  drawTCChart();
+  drawAvgChart();
+  drawFullChart();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  // Default is dark — label offers "Light" mode
+  document.getElementById('toggleLabel').textContent = 'Light';
+  updateChartColors();
+  drawProdChart();
 });
 
-// ─── CHART 2: TC = FC + VC ───────────────────
-const tcLabels = range(1,13).map((_, i) => i+1);
-const FC = 20;
-const vcData = tcLabels.map(q => +vcFn(q).toFixed(1));
-const tcData = tcLabels.map(q => +(vcFn(q) + FC).toFixed(1));
-const fcLine = tcLabels.map(() => FC);
-
-new Chart(document.getElementById('tcChart'), {
-  type: 'line',
-  data: {
-    labels: tcLabels,
-    datasets: [
-      { label: 'TC', data: tcData, borderColor: ink, backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.4, pointRadius: 0 },
-      { label: 'VC', data: vcData, borderColor: amber, backgroundColor: 'transparent', borderWidth: 2, borderDash: [5,3], tension: 0.4, pointRadius: 0 },
-      { label: 'FC', data: fcLine, borderColor: teal, backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [3,3], pointRadius: 0 }
-    ]
-  },
-  options: chartDefaults
-});
-
-// ─── CHART 3: AVERAGE CURVES ─────────────────
-const avgLabels = range(1,13).map((_,i) => i+1);
-const afcData = avgLabels.map(q => +(FC/q).toFixed(2));
-const avcData = avgLabels.map(q => +avcFn(q).toFixed(2));
-const atcData = avgLabels.map(q => +atcFn(q, FC).toFixed(2));
-
-new Chart(document.getElementById('avgChart'), {
-  type: 'line',
-  data: {
-    labels: avgLabels,
-    datasets: [
-      { label: 'ATC', data: atcData, borderColor: ink, backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.4, pointRadius: 0 },
-      { label: 'AVC', data: avcData, borderColor: amber, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, pointRadius: 0 },
-      { label: 'AFC', data: afcData, borderColor: teal, backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [4,3], tension: 0.4, pointRadius: 0 }
-    ]
-  },
-  options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 0, max: 60 } } }
-});
-
-// ─── CHART 4: FULL FAMILY ────────────────────
-const fullLabels = range(1,13).map((_,i) => i+1);
-const mcData = fullLabels.map(q => +mcFn(q).toFixed(2));
-const fullAfc = fullLabels.map(q => +(FC/q).toFixed(2));
-const fullAvc = fullLabels.map(q => +avcFn(q).toFixed(2));
-const fullAtc = fullLabels.map(q => +atcFn(q, FC).toFixed(2));
-
-new Chart(document.getElementById('fullChart'), {
-  type: 'line',
-  data: {
-    labels: fullLabels,
-    datasets: [
-      { label: 'MC', data: mcData, borderColor: red, backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.4, pointRadius: 0 },
-      { label: 'ATC', data: fullAtc, borderColor: ink, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, pointRadius: 0 },
-      { label: 'AVC', data: fullAvc, borderColor: amber, backgroundColor: 'transparent', borderWidth: 2, tension: 0.4, pointRadius: 0 },
-      { label: 'AFC', data: fullAfc, borderColor: teal, backgroundColor: 'transparent', borderWidth: 1.5, borderDash: [4,3], tension: 0.4, pointRadius: 0 }
-    ]
-  },
-  options: { ...chartDefaults, scales: { ...chartDefaults.scales, y: { ...chartDefaults.scales.y, min: 0, max: 65 } } }
-});
-
-// ─── QUIZ ─────────────────────────────────────
+// ─── QUIZ ──────────────────────────────────────
 const questions = [
-  {
-    q: "A corporation has limited liability. What does this mean in practice?",
-    opts: ["Shareholders can be personally sued for corporate debts", "The most an owner can lose is the value of their equity stake", "Corporations pay no taxes on profits", "Partners share profits equally regardless of stake"],
-    ans: 1,
-    feedback: "Correct! Limited liability means the owner's exposure is capped at the value of their shares. If you own $500 of stock in a corporation that faces a $300,000 lawsuit, the most you lose is your $500 — not your personal assets. This is why corporations incorporate, despite the double-taxation trade-off."
-  },
-  {
-    q: "What is the key difference between economic profit and accounting profit?",
-    opts: ["Economic profit subtracts depreciation; accounting profit does not", "Economic profit includes opportunity costs; accounting profit only counts explicit costs", "Accounting profit is always higher than economic profit", "They are the same thing but used in different industries"],
-    ans: 1,
-    feedback: "Exactly right. A hot dog vendor making $78,000 per year has positive accounting profit, but negative economic profit if they gave up a $100,000 salary. Economists care about what resources could earn in their next best use."
-  },
-  {
-    q: "The Law of Diminishing Marginal Product is described as a 'law' because:",
-    opts: ["It has been passed by government regulation", "No known counterexample exists across any industry", "It only applies to manufacturing firms", "It was proven using calculus in the 19th century"],
-    ans: 1,
-    feedback: "Correct. It is called a law because no known counterexample exists — not in consulting, auto manufacturing, coffee shops, or any other industry. In the short run, with capital fixed, squeezing more labor into that fixed capital always eventually produces diminishing additional output."
-  },
-  {
-    q: "In the short run, why can't Kraft increase mayonnaise production by expanding its factory?",
-    opts: ["Labor is too expensive to hire on short notice", "Capital (the factory) is fixed and cannot be changed quickly", "Variable costs become too high to justify expansion", "Government regulations prevent rapid expansion"],
-    ans: 1,
-    feedback: "Right! Capital (brick and mortar, assembly lines) is the fixed input in the short run. Kraft can hire overtime workers today, but they cannot add 40,000 square feet of factory space overnight. The short run is defined as the period when at least one input is fixed."
-  },
-  {
-    q: "If a firm's fixed costs increase by $10,000 due to a new city tax, what happens to marginal cost?",
-    opts: ["Marginal cost increases proportionally", "Marginal cost shifts up by exactly $10,000", "Marginal cost is unchanged", "Marginal cost decreases because the firm spreads costs over more units"],
-    ans: 2,
-    feedback: "Exactly right. MC = dVC/dq. The derivative of a constant (fixed cost) is zero. So fixed costs have absolutely no relationship to marginal cost. The new tax raises ATC (by raising AFC) but leaves MC and AVC completely unaffected."
-  },
-  {
-    q: "The marginal cost curve intersects the average total cost curve at:",
-    opts: ["The maximum of ATC", "The point where ATC equals AFC", "The minimum of ATC", "Any point — the intersection is indeterminate"],
-    ans: 2,
-    feedback: "Correct! By the marginal-pulls-average logic: when MC < ATC, average is falling; when MC > ATC, average is rising. The only consistent position is for MC to pass through the minimum of ATC. Same logic applies for MC intersecting AVC at its minimum."
-  }
+  { q:"A corporation has limited liability. What does this mean in practice?",
+    opts:["Shareholders can be personally sued for corporate debts","The most an owner can lose is the value of their equity stake","Corporations pay no taxes on profits","Partners share profits equally regardless of their stake"],
+    ans:1, fb:"<strong>Correct.</strong> If you own $500 of stock in a corporation facing a $300,000 lawsuit, the most you lose is your $500 — not your personal assets. This is why people incorporate despite the double-taxation cost." },
+  { q:"What is the key difference between economic profit and accounting profit?",
+    opts:["Economic profit subtracts depreciation; accounting profit does not","Economic profit includes opportunity costs; accounting profit only counts explicit costs","Accounting profit is always higher than economic profit","They are the same thing, just used in different industries"],
+    ans:1, fb:"<strong>Exactly right.</strong> A hot dog vendor earning $78,000 has positive accounting profit — but negative economic profit if they gave up a $100,000 salary. Economists care about opportunity cost because it reveals where resources should flow." },
+  { q:"The Law of Diminishing Marginal Product is called a 'law' because:",
+    opts:["It was enacted by government regulation","No known counterexample exists across any industry","It only applies to manufacturing firms","It was mathematically proven in all cases"],
+    ans:1, fb:"<strong>Correct.</strong> No counterexample exists across any industry — auto manufacturing, consulting, coffee shops, tree trimming. It is a short-run phenomenon: overutilizing labor relative to fixed capital always eventually produces diminishing additional output." },
+  { q:"In the short run, why can Kraft increase labor but NOT expand the factory?",
+    opts:["Labor costs less than capital","Capital (factory, assembly lines) is fixed and cannot be changed quickly","Government regulations prevent factory expansion","Variable costs become too high to justify expansion"],
+    ans:1, fb:"<strong>Right!</strong> Capital — brick and mortar, assembly lines — is the fixed input in the short run. Kraft can hire overtime workers today. They cannot add 40,000 sq ft of factory space overnight. The short run is defined as the period when at least one input is fixed." },
+  { q:"A city imposes a new $10,000 annual tax on all businesses (a fixed cost). What happens to marginal cost?",
+    opts:["MC increases proportionally across all output levels","MC shifts up by the entire $10,000","MC is completely unchanged","MC decreases as the firm spreads the tax over more units"],
+    ans:2, fb:"<strong>Exactly right.</strong> MC = dVC/dq. The derivative of a constant (fixed cost) is zero. Fixed costs have <em>absolutely no effect</em> on marginal cost. ATC shifts up, but MC and AVC are unaffected." },
+  { q:"The marginal cost curve intersects the average total cost curve at:",
+    opts:["The maximum point of ATC","The point where ATC crosses AFC","The minimum point of ATC","Any point — the intersection location is indeterminate"],
+    ans:2, fb:"<strong>Correct!</strong> When MC &lt; ATC, average is falling; when MC &gt; ATC, average is rising. So MC must pass through the exact minimum of ATC — and by identical logic, through the minimum of AVC as well." }
 ];
 
-let currentQ = 0;
-let answered = 0;
-let quizBuilt = false;
+let answered=0, quizBuilt=false;
 
-function buildQuiz() {
-  if (quizBuilt) return;
-  quizBuilt = true;
-  showQuestion(0);
-}
+function buildQuiz() { quizBuilt=true; showQuestion(0); }
 
 function showQuestion(idx) {
-  const container = document.getElementById('quizContainer');
-  const q = questions[idx];
-  container.innerHTML = `
+  const q=questions[idx];
+  document.getElementById('quizContainer').innerHTML=`
     <div class="quiz-wrap">
-      <div class="quiz-label">Question ${idx+1} of ${questions.length}</div>
+      <div class="quiz-meta">Question ${idx+1} of ${questions.length}</div>
       <div class="quiz-q">${q.q}</div>
       <div class="quiz-options">
-        ${q.opts.map((o, i) => `
-          <div class="quiz-opt" onclick="checkAnswer(this, ${i}, ${q.ans}, ${idx})">
-            <span>${String.fromCharCode(65+i)}</span>${o}
-          </div>
-        `).join('')}
+        ${q.opts.map((o,i)=>`
+          <div class="quiz-opt" onclick="checkAnswer(this,${i},${q.ans},${idx})">
+            <span class="quiz-opt-key">${String.fromCharCode(65+i)}</span>${o}
+          </div>`).join('')}
       </div>
-      <div class="quiz-feedback" id="qfeedback">${q.feedback}</div>
-      <button class="quiz-next" id="qnext" onclick="nextQuestion(${idx})">Next Question →</button>
-    </div>
-  `;
+      <div class="quiz-feedback" id="qfb">${q.fb}</div>
+      <button class="quiz-next-btn" id="qnxt" onclick="nextQ(${idx})">
+        ${idx===questions.length-1?'See Results':'Next Question →'}
+      </button>
+    </div>`;
 }
 
-function checkAnswer(el, chosen, correct, idx) {
-  const opts = el.parentElement.querySelectorAll('.quiz-opt');
-  opts.forEach(o => o.style.pointerEvents = 'none');
-  opts[correct].classList.add('correct');
-  if (chosen !== correct) el.classList.add('wrong');
-  
-  const fb = document.getElementById('qfeedback');
-  fb.classList.add('show', chosen === correct ? 'ok' : 'no');
-  
-  const btn = document.getElementById('qnext');
-  btn.classList.add('show');
-  if (idx === questions.length - 1) btn.textContent = 'See Results';
-  
-  answered = idx + 1;
-  updateProgress();
+function checkAnswer(el,chosen,correct,idx) {
+  el.closest('.quiz-options').querySelectorAll('.quiz-opt').forEach(o=>o.style.pointerEvents='none');
+  el.closest('.quiz-options').querySelectorAll('.quiz-opt')[correct].classList.add('correct');
+  if (chosen!==correct) el.classList.add('wrong');
+  document.getElementById('qfb').classList.add('show', chosen===correct?'ok':'no');
+  document.getElementById('qnxt').classList.add('show');
+  answered=idx+1;
+  document.getElementById('quizProgress').style.width=(answered/questions.length*100)+'%';
+  document.getElementById('quizProgressText').textContent=answered+' / '+questions.length;
 }
-
-function nextQuestion(idx) {
-  if (idx + 1 < questions.length) {
-    showQuestion(idx + 1);
-  } else {
-    showResults();
-  }
-}
-
+function nextQ(idx) { if(idx+1<questions.length) showQuestion(idx+1); else showResults(); }
 function showResults() {
-  const container = document.getElementById('quizContainer');
-  const score = document.querySelectorAll('.quiz-opt.correct').length;
-  container.innerHTML = `
-    <div class="quiz-wrap" style="text-align:center">
-      <div class="quiz-label">Quiz Complete</div>
-      <div style="font-family:var(--serif);font-size:3rem;font-weight:900;margin:.75rem 0;color:var(--amber)">${answered} / ${questions.length}</div>
-      <p style="font-size:.95rem;color:#3a3020;margin-bottom:1.5rem">You've covered all the key concepts in Module 3. Review any lesson cards above for concepts you'd like to revisit.</p>
-      <button class="quiz-next show" onclick="restartQuiz()">Restart Quiz</button>
-    </div>
-  `;
+  document.getElementById('quizContainer').innerHTML=`
+    <div class="quiz-wrap" style="text-align:center;padding:2.5rem 2rem">
+      <div class="quiz-meta" style="margin-bottom:.75rem">Quiz Complete</div>
+      <div style="font-family:var(--serif);font-size:4rem;font-weight:900;color:var(--amber);line-height:1">${answered}<span style="font-size:2rem;color:var(--text3)"> / ${questions.length}</span></div>
+      <p style="font-size:.9rem;color:var(--text2);margin:1.25rem auto;max-width:420px;line-height:1.7">You've reviewed all the key concepts in Module 3. Return to the lesson cards above to revisit any concept.</p>
+      <button class="quiz-next-btn show" onclick="restartQuiz()">Restart Quiz</button>
+    </div>`;
 }
-
 function restartQuiz() {
-  answered = 0;
-  quizBuilt = false;
-  updateProgress();
-  buildQuiz();
-}
-
-function updateProgress() {
-  const pct = (answered / questions.length) * 100;
-  document.getElementById('quizProgress').style.width = pct + '%';
-  document.getElementById('quizProgressText').textContent = answered + ' / ' + questions.length;
+  answered=0;
+  document.getElementById('quizProgress').style.width='0%';
+  document.getElementById('quizProgressText').textContent='0 / '+questions.length;
+  showQuestion(0);
 }
 </script>
 </body>
