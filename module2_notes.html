@@ -25,6 +25,19 @@
     --shadow: rgba(15,15,15,0.08);
   }
 
+  /* ── DARK THEME ── */
+  [data-theme="dark"] {
+    --ink: #e8e0d0;
+    --paper: #0f0e0b;
+    --cream: #1a1814;
+    --rule: #2e2a24;
+    --slate: #8a96a3;
+    --slate-light: #1c2127;
+    --teal-light: #122828;
+    --coral-light: #2d1612;
+    --purple-light: #1e122d;
+  }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -526,9 +539,60 @@
     .two-col, .goals-grid { grid-template-columns: 1fr; }
     .spectrum-zone { grid-template-columns: 1fr; }
   }
+
+  /* THEME TOGGLE */
+  .theme-toggle {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    padding: .3rem .3rem .3rem .75rem;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: .65rem;
+    letter-spacing: .1em;
+    color: var(--slate);
+    text-transform: uppercase;
+    box-shadow: 0 2px 12px var(--shadow);
+    transition: all .25s;
+  }
+  .theme-toggle:hover { border-color: var(--amber); color: var(--amber); }
+  .theme-toggle-pill {
+    width: 32px;
+    height: 20px;
+    border-radius: 100px;
+    background: var(--rule);
+    position: relative;
+    transition: background .25s;
+  }
+  [data-theme="dark"] .theme-toggle-pill { background: var(--amber); }
+  .theme-toggle-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--slate);
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  [data-theme="dark"] .theme-toggle-knob { transform: translateX(12px); background: white; }
+  *, *::before, *::after { transition: background-color .25s, border-color .25s, color .2s; }
 </style>
 </head>
 <body>
+
+<!-- THEME TOGGLE -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+  <span id="toggleLabel">Dark</span>
+  <div class="theme-toggle-pill"><div class="theme-toggle-knob"></div></div>
+</button>
 
 <!-- SIDEBAR -->
 <nav class="sidebar">
@@ -1395,6 +1459,14 @@
       block.style.display = text.includes(term) || term === '' ? '' : 'none';
     });
   });
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    const next = isDark ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    document.getElementById('toggleLabel').textContent = next === 'dark' ? 'Light' : 'Dark';
+  }
 </script>
 </body>
 </html>
