@@ -35,7 +35,21 @@
     --radius-sm: 6px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* ── LIGHT THEME ── */
+  [data-theme="light"] {
+    --bg: #fdfcfb;
+    --bg2: #f7f4f0;
+    --bg3: #efebe4;
+    --surface: #e8e4db;
+    --surface2: #dfd9ce;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.15);
+    --text: #1a1612;
+    --text2: #5a5047;
+    --text3: #9a8f82;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color .25s, border-color .25s, color .2s; }
 
   body {
     font-family: var(--sans);
@@ -377,9 +391,59 @@
     .two-col, .three-col, .comp-grid { grid-template-columns: 1fr; }
     .tab-btn { font-size: 12px; padding: 6px 10px; }
   }
+
+  /* THEME TOGGLE */
+  .theme-toggle {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 100px;
+    padding: .3rem .3rem .3rem .75rem;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: .65rem;
+    letter-spacing: .1em;
+    color: var(--text3);
+    text-transform: uppercase;
+    box-shadow: 0 2px 12px rgba(0,0,0,.25);
+    user-select: none;
+  }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .theme-toggle-pill {
+    width: 32px;
+    height: 20px;
+    border-radius: 100px;
+    background: var(--surface2);
+    position: relative;
+    transition: background .25s;
+  }
+  [data-theme="light"] .theme-toggle-pill { background: var(--accent); }
+  .theme-toggle-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text3);
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  [data-theme="light"] .theme-toggle-knob { transform: translateX(12px); background: white; }
 </style>
 </head>
 <body>
+
+<!-- THEME TOGGLE -->
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+  <span id="toggleLabel">Light</span>
+  <div class="theme-toggle-pill"><div class="theme-toggle-knob"></div></div>
+</button>
 
 <div class="shell">
 
@@ -397,6 +461,7 @@
 
   <!-- ── TAB NAV ── -->
   <nav class="tab-nav" role="tablist" aria-label="Module sections">
+    <a href="index.html" class="tab-btn" style="text-decoration: none; color: var(--accent); border-right: 1px solid var(--border2); margin-right: 4px; border-radius: 0; padding-right: 16px;">← Index</a>
     <button class="tab-btn active" role="tab" aria-selected="true"  onclick="showPage(0)">Overview</button>
     <button class="tab-btn"        role="tab" aria-selected="false" onclick="showPage(1)">Profit Max</button>
     <button class="tab-btn"        role="tab" aria-selected="false" onclick="showPage(2)">Graphically</button>
@@ -877,6 +942,14 @@
       b.setAttribute('aria-selected', i === n ? 'true' : 'false');
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isLight = html.getAttribute('data-theme') === 'light';
+    const next = isLight ? 'dark' : 'light';
+    html.setAttribute('data-theme', next);
+    document.getElementById('toggleLabel').textContent = next === 'light' ? 'Dark' : 'Light';
   }
 </script>
 
