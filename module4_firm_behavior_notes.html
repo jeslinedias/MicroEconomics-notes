@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 4 — Firm Behavior | Study Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e0c;
+    --bg2: #181714;
+    --bg3: #211f1b;
+    --surface: #252219;
+    --surface2: #2e2b24;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #f0ebe0;
+    --text2: #a89f8c;
+    --text3: #6b6558;
+    --accent: #e8a84a;
+    --accent2: #c4873a;
+    --green: #6ec97a;
+    --green-bg: rgba(110,201,122,0.08);
+    --red: #e06060;
+    --red-bg: rgba(224,96,96,0.08);
+    --blue: #7ab8e8;
+    --blue-bg: rgba(122,184,232,0.08);
+    --yellow: #e8d44a;
+    --yellow-bg: rgba(232,212,74,0.08);
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+    --mono: 'DM Mono', monospace;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .shell {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── Header ── */
+  .header {
+    padding: 48px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .header-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .header h1 {
+    font-family: var(--serif);
+    font-size: clamp(28px, 5vw, 44px);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .header-sub {
+    font-size: 15px;
+    color: var(--text2);
+    max-width: 520px;
+    line-height: 1.65;
+  }
+  .header-meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .meta-pill {
+    font-size: 12px;
+    color: var(--text3);
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .meta-pill span { color: var(--text2); }
+
+  /* ── Tab Nav ── */
+  .tab-nav {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 28px;
+    background: var(--bg2);
+    padding: 5px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow-x: auto;
+    scrollbar-width: none;
+    position: sticky;
+    top: 12px;
+    z-index: 100;
+  }
+  .tab-nav::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-family: var(--sans);
+    font-weight: 400;
+    color: var(--text3);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all .15s ease;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { color: var(--text2); background: var(--surface); }
+  .tab-btn.active {
+    background: var(--surface2);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── Pages ── */
+  .page { display: none; animation: fadeIn .2s ease; }
+  .page.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ── Section label ── */
+  .section-label {
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin: 0 0 14px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 14px;
+  }
+  .card + .section-label { margin-top: 22px; }
+  .card-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* ── Badges ── */
+  .badge {
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: .03em;
+  }
+  .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid rgba(110,201,122,.2); }
+  .badge-red   { background: var(--red-bg);   color: var(--red);   border: 1px solid rgba(224,96,96,.2); }
+  .badge-blue  { background: var(--blue-bg);  color: var(--blue);  border: 1px solid rgba(122,184,232,.2); }
+  .badge-warn  { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(232,212,74,.2); }
+  .badge-accent { background: rgba(232,168,74,.1); color: var(--accent); border: 1px solid rgba(232,168,74,.2); }
+
+  /* ── Body text ── */
+  .body-text { font-size: 14px; color: var(--text2); line-height: 1.7; }
+  .body-text strong { color: var(--text); font-weight: 500; }
+
+  /* ── Formula boxes ── */
+  .formula {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text);
+    text-align: center;
+    letter-spacing: .02em;
+  }
+  .formula.large {
+    font-size: 20px;
+    padding: 14px 18px;
+    color: var(--accent);
+    border-color: rgba(232,168,74,.2);
+    background: rgba(232,168,74,.05);
+  }
+  .formula.highlight {
+    color: var(--green);
+    border-color: rgba(110,201,122,.2);
+    background: rgba(110,201,122,.05);
+    font-size: 18px;
+    padding: 12px 18px;
+  }
+  .formula.danger {
+    color: var(--red);
+    border-color: rgba(224,96,96,.2);
+    background: rgba(224,96,96,.05);
+    font-size: 18px;
+    padding: 12px 18px;
+  }
+
+  /* ── Quote block ── */
+  .quote-block {
+    border-left: 2px solid var(--accent2);
+    padding: 10px 16px;
+    margin: 12px 0;
+    background: rgba(232,168,74,.04);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .quote-text {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.75;
+  }
+  .quote-source {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 6px;
+  }
+
+  /* ── Divider ── */
+  .divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+  /* ── Step list ── */
+  .step { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 13px; }
+  .step:last-child { margin-bottom: 0; }
+  .step-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    font-size: 11px; font-weight: 500;
+    color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 2px;
+  }
+  .step-content .step-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .step-content .step-body  { font-size: 13px; color: var(--text2); line-height: 1.65; margin-top: 3px; }
+
+  /* ── Rule cards ── */
+  .rule-card {
+    border-left: 2px solid;
+    padding: 10px 14px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin-bottom: 10px;
+  }
+  .rule-card:last-child { margin-bottom: 0; }
+  .rule-card.green  { border-color: var(--green);  background: var(--green-bg); }
+  .rule-card.red    { border-color: var(--red);    background: var(--red-bg); }
+  .rule-card.warn   { border-color: var(--yellow); background: var(--yellow-bg); }
+  .rule-label { font-size: 10.5px; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+  .rule-card.green .rule-label { color: var(--green); }
+  .rule-card.red   .rule-label { color: var(--red); }
+  .rule-card.warn  .rule-label { color: var(--yellow); }
+  .rule-title { font-size: 14px; font-weight: 500; color: var(--text); }
+  .rule-sub   { font-size: 13px; color: var(--text2); margin-top: 3px; line-height: 1.6; }
+
+  /* ── Two-col / Three-col grids ── */
+  .two-col   { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+  /* ── Metric tiles ── */
+  .metric {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+  }
+  .metric-label { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .metric-value { font-size: 19px; font-weight: 500; font-family: var(--mono); color: var(--text); }
+  .metric-desc  { font-size: 11px; color: var(--text3); margin-top: 3px; }
+
+  /* ── Comparison table ── */
+  .comp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .comp-cell {
+    padding: 10px 14px;
+    background: var(--bg2);
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.55;
+  }
+  .comp-cell.header {
+    background: var(--surface);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+
+  /* ── Tags ── */
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .tag {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: var(--surface);
+    color: var(--text3);
+    border: 1px solid var(--border);
+  }
+
+  /* ── Scenario cards ── */
+  .scenario-card {
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    border: 1px solid;
+  }
+  .scenario-card.green { border-color: rgba(110,201,122,.25); background: rgba(110,201,122,.06); }
+  .scenario-card.red   { border-color: rgba(224,96,96,.25);   background: rgba(224,96,96,.06); }
+  .scenario-label { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
+  .scenario-card.green .scenario-label { color: var(--green); }
+  .scenario-card.red   .scenario-label { color: var(--red); }
+
+  /* ── Key formula highlight bar ── */
+  .formula-bar {
+    background: linear-gradient(135deg, rgba(232,168,74,.08), rgba(232,168,74,.03));
+    border: 1px solid rgba(232,168,74,.2);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .formula-bar .big {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .formula-bar .sub {
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  /* ── Icon dots ── */
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .dot-green  { background: var(--green); }
+  .dot-red    { background: var(--red); }
+  .dot-yellow { background: var(--yellow); }
+
+  /* ── Responsive ── */
+  @media (max-width: 540px) {
+    .two-col, .three-col, .comp-grid { grid-template-columns: 1fr; }
+    .tab-btn { font-size: 12px; padding: 6px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-eyebrow">Firm Level Economics · Consumer &amp; Producer Behavior</div>
+    <h1>Module 4<br><em>Firm Behavior</em></h1>
+    <p class="header-sub">How a price-taking firm finds its optimal short-run output, reads profit on a graph, and decides whether to keep producing or shut the doors.</p>
+    <div class="header-meta">
+      <div class="meta-pill">📚 <span>Prof. Larry DeBrock — UIUC Gies</span></div>
+      <div class="meta-pill">📄 <span>10 Lessons · 2 Sections</span></div>
+      <div class="meta-pill">🎯 <span>5 Learning Objectives</span></div>
+    </div>
+  </header>
+
+  <!-- ── TAB NAV ── -->
+  <nav class="tab-nav" role="tablist" aria-label="Module sections">
+    <button class="tab-btn active" role="tab" aria-selected="true"  onclick="showPage(0)">Overview</button>
+    <button class="tab-btn"        role="tab" aria-selected="false" onclick="showPage(1)">Profit Max</button>
+    <button class="tab-btn"        role="tab" aria-selected="false" onclick="showPage(2)">Graphically</button>
+    <button class="tab-btn"        role="tab" aria-selected="false" onclick="showPage(3)">Negative Profits</button>
+    <button class="tab-btn"        role="tab" aria-selected="false" onclick="showPage(4)">Shutdown Rule</button>
+    <button class="tab-btn"        role="tab" aria-selected="false" onclick="showPage(5)">Quick Ref</button>
+  </nav>
+
+  <!-- ══════════════════════════════════════
+       PAGE 0 — Overview
+  ══════════════════════════════════════ -->
+  <main id="page-0" class="page active" role="tabpanel">
+
+    <div class="section-label">What this module is about</div>
+    <div class="card">
+      <div class="card-title">Big picture</div>
+      <p class="body-text">Module 3 taught us <em>cost curves</em>. Module 4 asks: given an externally set price and those costs, <strong>what output should the firm choose?</strong> And when losses are unavoidable in the short run, should the firm keep producing or lock the door?</p>
+      <div class="tag-row">
+        <span class="tag">Individual firm decisions</span>
+        <span class="tag">Short-run optimization</span>
+        <span class="tag">Shutdown conditions</span>
+        <span class="tag">Economic vs. accounting profit</span>
+      </div>
+    </div>
+
+    <div class="section-label">Two things the firm knows</div>
+    <div class="card">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Its own cost curves</div>
+          <div class="step-body">MC, ATC, AVC — everything from Module 3. The firm can map how costs change at every possible output level.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">An exogenously given price P₀</div>
+          <div class="step-body">The firm is a <em>price-taker</em> — it has zero control over the price the market sets. It can only optimize given that price.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      <div class="quote-text">"A farmer may not like it, the farmer wishes the price of corn was $2 higher — but the farmer has no control over it. That price is set by the Chicago Board of Trade. We're talking about taking a fixed price, which you have no control over, and optimizing given that price and given the costs you are aware of."</div>
+      <div class="quote-source">— Prof. DeBrock, Lesson 4-1.1</div>
+    </div>
+
+    <div class="section-label">Why even non-profits care</div>
+    <div class="card">
+      <p class="body-text">The profit-maximizing model applies equally to <strong>non-profit organizations</strong>. They want to maximize "residuals" — surpluses that fund their cause (a hospital, an environmental mission). Maximizing residuals requires running the most efficient operation possible. The math is identical.</p>
+    </div>
+
+    <div class="section-label">Short run vs. long run</div>
+    <div class="two-col">
+      <div class="card" style="margin-bottom:0">
+        <div class="card-title"><span class="dot dot-yellow"></span> Short Run</div>
+        <p class="body-text">Fixed inputs (plant, equipment) <strong>cannot change</strong>. The firm is stuck with its fixed cost. It cannot exit an unprofitable industry — only choose whether to operate or shut down temporarily.</p>
+      </div>
+      <div class="card" style="margin-bottom:0">
+        <div class="card-title"><span class="dot dot-green"></span> Long Run</div>
+        <p class="body-text">All inputs are variable. If Π &lt; 0 the firm can eventually exit. If Π &gt; 0 new firms enter. The long run is when the market reaches equilibrium — but that's Module 5 territory.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:14px" class="section-label">Learning objectives</div>
+    <div class="card">
+      <div class="step"><div class="step-num">✓</div><div class="step-content"><div class="step-title">Determine the optimal output q* in the short run</div></div></div>
+      <div class="step"><div class="step-num">✓</div><div class="step-content"><div class="step-title">Calculate and visualize economic profit graphically</div></div></div>
+      <div class="step"><div class="step-num">✓</div><div class="step-content"><div class="step-title">Model the shutdown vs. continue-operating decision</div></div></div>
+      <div class="step"><div class="step-num">✓</div><div class="step-content"><div class="step-title">Understand why firms may stay open while losing money</div></div></div>
+      <div class="step"><div class="step-num">✓</div><div class="step-content"><div class="step-title">Build a market supply curve from individual firm decisions</div></div></div>
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE 1 — Profit Maximization
+  ══════════════════════════════════════ -->
+  <main id="page-1" class="page" role="tabpanel">
+
+    <div class="formula-bar">
+      <div class="big">MR = MC</div>
+      <div class="sub">The universal rule for profit maximization</div>
+    </div>
+
+    <div class="section-label">Building the profit equation</div>
+    <div class="card">
+      <div class="card-title">Profit defined</div>
+      <div class="formula large">Π = TR − TC</div>
+      <div class="formula">TR = P₀ × q</div>
+      <p class="body-text" style="margin-top:10px">Total Revenue is a <strong>straight line</strong> through the origin — slope = P₀. Because price is fixed and constant, every additional unit of output adds exactly P₀ to revenue. The slope never changes.</p>
+    </div>
+
+    <div class="section-label">Why MR equals the price</div>
+    <div class="card">
+      <div class="card-title">Marginal Revenue = slope of TR <span class="badge badge-blue">Key identity</span></div>
+      <div class="formula">MR = dTR/dq = d(P₀·q)/dq = P₀</div>
+      <p class="body-text" style="margin-top:10px">Marginal revenue is the extra revenue from one more unit. Since P₀ is constant, every new unit brings in P₀ — no more, no less. On the graph, MR is a <strong>horizontal line at the price level P₀</strong>.</p>
+      <div class="quote-block" style="margin-top:10px">
+        <div class="quote-text">"If I increase output by one unit, how does my revenue change? Well, if I increased output by one extra q, what do I get? P zero. What if I increased output again? P zero. So every time I increase output, my revenue goes up by exactly the same amount."</div>
+        <div class="quote-source">— Prof. DeBrock, Lesson 4-1.2</div>
+      </div>
+    </div>
+
+    <div class="section-label">The geometric proof of MR = MC</div>
+    <div class="card">
+      <div class="card-title">Maximizing the vertical gap</div>
+      <p class="body-text">Profit is the vertical distance between TR and TC. That gap is maximized at the output where the <strong>slopes of the two curves are equal</strong>.</p>
+      <div class="divider"></div>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Low output — curves diverging</div>
+          <div class="step-body">Slope of TR &gt; slope of TC → gap is still growing → keep increasing output.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">At the peak gap — slopes equal</div>
+          <div class="step-body">Slope of TR = slope of TC → MR = MC → this is q*. Maximum vertical gap.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Past q* — curves converging</div>
+          <div class="step-body">Slope of TC &gt; slope of TR → MC &gt; MR → each extra unit costs more than it earns → gap shrinking → stop.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Calculus confirmation (optional)</div>
+    <div class="card">
+      <div class="card-title">First-order condition</div>
+      <div class="formula">dΠ/dq = 0 → dTR/dq − dTC/dq = 0 → MR = MC</div>
+      <p class="body-text" style="margin-top:8px">Setting the first derivative of profit to zero finds extreme values. The rule MR = MC emerges directly. (A second derivative test confirms it's a maximum, not a minimum — covered on the next page.)</p>
+    </div>
+
+    <div class="section-label">Profit function shape — summary</div>
+    <div class="three-col">
+      <div class="metric">
+        <div class="metric-label">At q = 0</div>
+        <div class="metric-value" style="color: var(--red)">−F₀</div>
+        <div class="metric-desc">Pure fixed cost loss. Zero revenue, zero variable cost, full FC hit.</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">At qα and qβ (break-even)</div>
+        <div class="metric-value">Π = 0</div>
+        <div class="metric-desc">TR = TC exactly. Two zero-profit points bracket the profit hill.</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">At q*</div>
+        <div class="metric-value" style="color: var(--green)">Π max</div>
+        <div class="metric-desc">Peak of the profit hill. Largest vertical gap between TR and TC.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE 2 — Graphically
+  ══════════════════════════════════════ -->
+  <main id="page-2" class="page" role="tabpanel">
+
+    <div class="section-label">The α vs. β problem</div>
+    <div class="card">
+      <div class="card-title">Two intersections — only one is the maximum <span class="badge badge-warn">Watch out</span></div>
+      <p class="body-text">A horizontal MR line crosses the U-shaped MC curve at <strong>two points</strong>. Both satisfy MR = MC, but they have opposite effects.</p>
+      <div class="divider"></div>
+      <div class="comp-grid">
+        <div class="comp-cell header">Point α (left — MC falling)</div>
+        <div class="comp-cell header">Point β (right — MC rising)</div>
+        <div class="comp-cell" style="color:var(--red)">Profit <strong>minimum</strong></div>
+        <div class="comp-cell" style="color:var(--green)">Profit <strong>maximum</strong> ★</div>
+        <div class="comp-cell">Past α: MR &gt; MC → profits rising. Don't stop here — keep going.</div>
+        <div class="comp-cell">Past β: MC &gt; MR → each extra unit costs more than it earns. Stop exactly here.</div>
+      </div>
+      <div class="rule-card green" style="margin-top:4px">
+        <div class="rule-label">The rule</div>
+        <div class="rule-title">Always choose MR = MC where MC is upward-sloping</div>
+        <div class="rule-sub">In practice, textbook graphs omit the downward-sloping portion of MC entirely.</div>
+      </div>
+    </div>
+
+    <div class="section-label">Reading profit off the graph</div>
+    <div class="card">
+      <div class="card-title">From TC = q × ATC to the profit rectangle</div>
+      <div class="formula">ATC = TC/q → TC = q × ATC</div>
+      <div class="formula highlight">Π = TR − TC = P₀·q* − ATC·q* = q*·[P₀ − ATC]</div>
+      <div class="divider"></div>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Find q* — where MR = MC on the upward MC slope</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Drop a vertical line to the ATC curve at q*</div>
+          <div class="step-body">The ATC value at q* gives you per-unit average cost.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Height = P₀ − ATC at q*</div>
+          <div class="step-body">The vertical gap between the price line and the ATC curve.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Width = q*</div>
+          <div class="step-body">The horizontal distance from zero to optimal output.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Rectangle area = Profit</div>
+          <div class="step-body">q* × [P₀ − ATC] — positive if P₀ &gt; ATC, negative if P₀ &lt; ATC.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Two profit outcomes</div>
+    <div class="two-col">
+      <div class="scenario-card green">
+        <div class="scenario-label">✓ Positive profit</div>
+        <div class="formula" style="font-size:13px;margin:6px 0">P₀ &gt; ATC at q*</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.6">Price line sits above ATC at optimal output. Green rectangle = profit above opportunity cost. "Good life."</p>
+      </div>
+      <div class="scenario-card red">
+        <div class="scenario-label">✗ Negative profit (loss)</div>
+        <div class="formula" style="font-size:13px;margin:6px 0">P₀ &lt; ATC at q*</div>
+        <p style="font-size:13px;color:var(--text2);line-height:1.6">ATC curve sits above price line. Red rectangle = economic loss. Firm earns less than its next-best alternative.</p>
+      </div>
+    </div>
+
+    <div class="quote-block" style="margin-top:14px">
+      <div class="quote-text">"Profit is just quantity times the per unit markup. Price minus average total cost is really the per unit markup on the product. We multiply that per unit markup times the number of units we sell — that's our profit."</div>
+      <div class="quote-source">— Prof. DeBrock, Lesson 4-2.2</div>
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE 3 — Negative Profits
+  ══════════════════════════════════════ -->
+  <main id="page-3" class="page" role="tabpanel">
+
+    <div class="section-label">Worked example — the flat tax</div>
+    <div class="card">
+      <div class="card-title">City imposes a $10,000 flat tax on all businesses <span class="badge badge-warn">Case study</span></div>
+      <p class="body-text">A lump-sum tax, regardless of how much the firm produces, is a pure addition to <strong>fixed cost</strong>. It has no effect on variable cost or marginal cost.</p>
+      <div class="divider"></div>
+      <div class="step">
+        <div class="step-num">→</div>
+        <div class="step-content">
+          <div class="step-title">Fixed cost: F₀ becomes F₀ + $10,000</div>
+          <div class="step-body">The entire cost curve shifts up at every output level.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">→</div>
+        <div class="step-content">
+          <div class="step-title">Marginal cost: unchanged</div>
+          <div class="step-body">MC = dTC/dq. The derivative of a constant is zero — fixed cost drops out. MC curve stays exactly where it was.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">→</div>
+        <div class="step-content">
+          <div class="step-title">ATC shifts upward: ATC = AFC + AVC</div>
+          <div class="step-body">AFC = F/q goes up → ATC curve shifts up. AVC is unchanged.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">→</div>
+        <div class="step-content">
+          <div class="step-title">q* is unchanged — but profits fall</div>
+          <div class="step-body">Since MR and MC didn't change, optimal output stays the same. But now ATC may sit above P₀, turning the profit rectangle negative.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">What options does the firm have?</div>
+    <div class="rule-card red"><div class="rule-label">❌ Cannot raise prices</div><div class="rule-title">Price is exogenously given — the firm is a price-taker</div><div class="rule-sub">Farmers complain bitterly, but they cannot post a different price than the Board of Trade.</div></div>
+    <div class="rule-card red"><div class="rule-label">❌ Cannot find lower costs immediately</div><div class="rule-title">If cheaper technology existed, the firm would already be using it</div></div>
+    <div class="rule-card red"><div class="rule-label">❌ Cannot exit in the short run</div><div class="rule-title">Fixed inputs are locked in — stuck with the lease, the plant, the equipment</div><div class="rule-sub">"You call your broker and say find a buyer. I might not be able to get it for a week, it might be a month." — DeBrock</div></div>
+    <div class="rule-card warn"><div class="rule-label">Only two choices remain</div><div class="rule-title">1. Produce at MR = MC (while losing money) &nbsp; OR &nbsp; 2. Shut down (q = 0, wait to exit FC)</div></div>
+
+    <div class="section-label" style="margin-top:22px">Economic profit vs. accounting profit</div>
+    <div class="card">
+      <div class="card-title">Why economic loss is the real signal</div>
+      <p class="body-text">Economic profit subtracts <strong>opportunity cost</strong> — what the firm's owner could earn doing something else with the same resources. Accounting profit only subtracts explicit costs.</p>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div class="metric">
+          <div class="metric-label">Economic Π &gt; 0</div>
+          <div class="metric-value" style="font-size:15px;color:var(--green)">Stay &amp; expand</div>
+          <div class="metric-desc">Earning above opportunity cost. No reason to leave. Others may enter.</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Economic Π &lt; 0</div>
+          <div class="metric-value" style="font-size:15px;color:var(--red)">Exit signal</div>
+          <div class="metric-desc">Earning less than next-best alternative. In LR: must exit. In SR: stuck — must decide between produce or shut down.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE 4 — Shutdown Rule
+  ══════════════════════════════════════ -->
+  <main id="page-4" class="page" role="tabpanel">
+
+    <div class="formula-bar">
+      <div class="big">Shut down if P₀ &lt; AVC</div>
+      <div class="sub">Keep producing if P₀ ≥ AVC — even while making a loss</div>
+    </div>
+
+    <div class="section-label">Deriving the shutdown condition step by step</div>
+    <div class="card">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Core logic: shut down if TR &lt; VC</div>
+          <div class="step-body">If total revenue doesn't even cover variable costs, staying open makes losses larger than shutting down. The firm can't recover any fixed cost contribution by operating.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Substitute TR = P₀ · q* and VC = AVC · q*</div>
+          <div class="step-body">From the definition: AVC = VC/q → VC = AVC × q</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Divide both sides by q* (q* &gt; 0)</div>
+          <div class="step-body">P₀ · q* &lt; AVC · q* cancels to P₀ &lt; AVC</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="formula">TR &lt; VC → P₀·q* &lt; AVC·q* → P₀ &lt; AVC ✓</div>
+    </div>
+
+    <div class="section-label">The intuition — factory wages example</div>
+    <div class="card">
+      <div class="quote-block">
+        <div class="quote-text">"Suppose your workers come in and you had to pay them $40,000 in wages for that day. But the output they make you can sell for $45,000. You're only paying $40,000 and they made $45,000 — that's $5,000 extra you can put towards that fixed cost, which you wouldn't have if you decided to produce zero."</div>
+        <div class="quote-source">— Prof. DeBrock, Lesson 4-2.4</div>
+      </div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div class="scenario-card green">
+          <div class="scenario-label">Keep producing (TR ≥ VC)</div>
+          <p style="font-size:13px;color:var(--text2);line-height:1.65;margin-top:4px">Workers cost $40K, output worth $45K. Opening the doors generates $5K towards fixed cost. Still losing money overall, but less than if you stayed closed.</p>
+          <div class="formula" style="font-size:12px;margin-top:8px">Loss = FC − (TR − VC)</div>
+        </div>
+        <div class="scenario-card red">
+          <div class="scenario-label">Shut down (TR &lt; VC)</div>
+          <p style="font-size:13px;color:var(--text2);line-height:1.65;margin-top:4px">Workers cost $40K, output only worth $30K. Opening the doors loses another $10K on top of fixed costs. Lock up.</p>
+          <div class="formula" style="font-size:12px;margin-top:8px">Losses = FC + (VC − TR)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">Fixed costs are irrelevant to the shutdown decision</div>
+    <div class="card">
+      <div class="card-title">Sunk costs don't drive the choice</div>
+      <p class="body-text">Whether you shut down or stay open, <strong>fixed costs must be paid</strong>. They are sunk. The shutdown question is purely: <em>does operating cover its own variable costs?</em> If yes, every dollar of TR above VC chips away at the fixed cost burden — you're better off open.</p>
+      <div class="quote-block" style="margin-top:12px">
+        <div class="quote-text">"That fixed cost is sitting in the corner of the room like a 900-pound gorilla. It's a million-dollar fixed cost. You're going to be paying it whether you produce or not. The only question is: do your workers contribute enough to offset some of it?"</div>
+        <div class="quote-source">— Prof. DeBrock, Lesson 4-2.5</div>
+      </div>
+    </div>
+
+    <div class="section-label">Graphical summary</div>
+    <div class="card">
+      <div class="card-title">Two scenarios on the same graph</div>
+      <div class="comp-grid">
+        <div class="comp-cell header">P₀ &gt; AVC (but &lt; ATC)</div>
+        <div class="comp-cell header">P₀ &lt; AVC</div>
+        <div class="comp-cell">At q*, price sits above AVC minimum. TR covers all VC + contributes toward FC.</div>
+        <div class="comp-cell">At q*, price is below AVC. TR doesn't even cover VC. Shut down.</div>
+        <div class="comp-cell" style="color:var(--yellow)">Loss = FC − contribution margin<br>(Produce at q*)</div>
+        <div class="comp-cell" style="color:var(--red)">Loss = FC + (VC − TR)<br>(Produce q = 0)</div>
+      </div>
+      <p class="body-text" style="margin-top:10px">Note: AVC and ATC converge at high output (AFC → 0). Both are U-shaped; AVC minimum is reached along the MC curve at a lower output than ATC minimum.</p>
+    </div>
+
+  </main>
+
+  <!-- ══════════════════════════════════════
+       PAGE 5 — Quick Reference
+  ══════════════════════════════════════ -->
+  <main id="page-5" class="page" role="tabpanel">
+
+    <div class="section-label">All key formulas</div>
+    <div class="card">
+      <div class="formula large">Π = TR − TC</div>
+      <div class="formula">TR = P₀ × q</div>
+      <div class="formula">MR = P₀&nbsp;&nbsp;&nbsp;(price-taking firm)</div>
+      <div class="formula highlight">Profit max: MR = MC (upward-sloping MC only)</div>
+      <div class="formula">TC = q × ATC&nbsp;&nbsp;&nbsp;(from ATC = TC/q)</div>
+      <div class="formula">Π = q* × [P₀ − ATC]</div>
+      <div class="formula danger">Shutdown: P₀ &lt; AVC</div>
+      <div class="formula">ATC = AFC + AVC</div>
+    </div>
+
+    <div class="section-label">Decision flowchart</div>
+    <div class="card">
+      <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Find q* → MR = MC, on the upward-sloping portion of MC</div></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Is P₀ &gt; ATC at q*?</div><div class="step-body"><strong>YES →</strong> Produce at q*. Positive economic profit. No further analysis needed.</div></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Is P₀ between AVC and ATC at q*?</div><div class="step-body"><strong>YES →</strong> Produce at q*. Accept losses — you still cover variable costs and contribute to fixed cost.</div></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Is P₀ &lt; AVC at q*?</div><div class="step-body"><strong>YES →</strong> Shut down. Produce q = 0. Wait for long run to exit the industry.</div></div></div>
+    </div>
+
+    <div class="section-label">Curve positions cheat sheet</div>
+    <div class="three-col">
+      <div class="metric">
+        <div class="metric-label">ATC</div>
+        <div class="metric-value" style="font-size:15px">AFC + AVC</div>
+        <div class="metric-desc">U-shaped. Sits above AVC at all outputs. MC passes through its minimum from below.</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">AVC</div>
+        <div class="metric-value" style="font-size:15px">VC ÷ q</div>
+        <div class="metric-desc">U-shaped. Sits below ATC. MC passes through its minimum. Converges to ATC at high q.</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">MC</div>
+        <div class="metric-value" style="font-size:15px">dTC/dq</div>
+        <div class="metric-desc">U-shaped. Contains no FC information. Crosses both AVC and ATC at their minimums.</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top:22px">Common exam mistakes</div>
+    <div class="rule-card warn">
+      <div class="rule-label">⚠ α vs β confusion</div>
+      <div class="rule-title">MR = MC has two solutions — use only the upward-sloping MC intersection</div>
+      <div class="rule-sub">α is a profit minimum (MC falling). β is the profit maximum (MC rising). The downward portion of MC is usually not even drawn.</div>
+    </div>
+    <div class="rule-card warn">
+      <div class="rule-label">⚠ Lump-sum tax doesn't shift q*</div>
+      <div class="rule-title">A flat fixed-cost addition moves ATC up but leaves MC and q* unchanged</div>
+      <div class="rule-sub">Only changes to variable cost (i.e. per-unit costs) shift MC and therefore q*.</div>
+    </div>
+    <div class="rule-card warn">
+      <div class="rule-label">⚠ Loss ≠ shutdown</div>
+      <div class="rule-title">A firm rationally produces at a loss whenever TR ≥ VC</div>
+      <div class="rule-sub">Fixed costs are sunk — you pay them either way. As long as operating covers variable costs, it's worth staying open in the short run.</div>
+    </div>
+    <div class="rule-card warn">
+      <div class="rule-label">⚠ Short run vs. long run</div>
+      <div class="rule-title">In LR: Π &lt; 0 means exit. In SR: you cannot exit — only shut down temporarily.</div>
+      <div class="rule-sub">"Shutdown" means q = 0 while still paying fixed costs, waiting for the long run. It is not the same as exiting the industry.</div>
+    </div>
+
+  </main>
+
+</div><!-- /shell -->
+
+<script>
+  function showPage(n) {
+    document.querySelectorAll('.page').forEach((p, i) => {
+      p.classList.toggle('active', i === n);
+    });
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', i === n);
+      b.setAttribute('aria-selected', i === n ? 'true' : 'false');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
