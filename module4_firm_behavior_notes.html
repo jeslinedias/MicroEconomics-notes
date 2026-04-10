@@ -582,6 +582,13 @@
       <div class="step">
         <div class="step-num">2</div>
         <div class="step-content">
+          <div class="card">
+            <div class="card-title">Total Revenue & Total Cost</div>
+            <div style="margin-top:10px; margin-bottom:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px;">
+              <svg id="graph-tr-tc" viewBox="0 0 560 320" width="100%" height="320"></svg>
+            </div>
+            <p class="body-text" style="text-align:center; font-size:12px; color:var(--text3);">Profit is maximized where the vertical distance between TR and TC is greatest, which occurs when their slopes are equal (MR=MC).</p>
+          </div>
           <div class="step-title">At the peak gap — slopes equal</div>
           <div class="step-body">Slope of TR = slope of TC → MR = MC → this is q*. Maximum vertical gap.</div>
         </div>
@@ -668,6 +675,13 @@
         </div>
       </div>
       <div class="step">
+        <div class="card">
+          <div class="card-title">Profit Maximization: P > ATC</div>
+          <div style="margin-top:10px; margin-bottom:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px;">
+            <svg id="graph-profit-pos" viewBox="0 0 560 320" width="100%" height="320"></svg>
+          </div>
+          <p class="body-text" style="text-align:center; font-size:12px; color:var(--text3);">When price (MR) is above ATC at q*, the firm earns positive economic profit (green rectangle).</p>
+        </div>
         <div class="step-num">3</div>
         <div class="step-content">
           <div class="step-title">Height = P₀ − ATC at q*</div>
@@ -848,6 +862,13 @@
 
     <div class="section-label">Graphical summary</div>
     <div class="card">
+      <div class="card-title">Shutdown Decision: P vs. AVC</div>
+      <div style="margin-top:10px; margin-bottom:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px;">
+        <svg id="graph-shutdown" viewBox="0 0 560 360" width="100%" height="360"></svg>
+      </div>
+      <p class="body-text" style="text-align:center; font-size:12px; color:var(--text3);">The firm's decision to produce or shut down depends on whether price covers average variable cost.</p>
+    </div>
+    <div class="card">
       <div class="card-title">Two scenarios on the same graph</div>
       <div class="comp-grid">
         <div class="comp-cell header">P₀ &gt; AVC (but &lt; ATC)</div>
@@ -933,15 +954,349 @@
 </div><!-- /shell -->
 
 <script>
+  // SVG Helper Functions
+  const NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs) {
+    const e = document.createElementNS(NS, tag);
+    for (const [k,v] of Object.entries(attrs)) e.setAttribute(k,v);
+    return e;
+  }
+  function polyline(pts, stroke, sw, dash) {
+    const p = el('polyline', { points: pts.map(([x,y]) => `${x},${y}`).join(' '), stroke, fill:'none', 'stroke-width':sw, 'stroke-linecap':'round', 'stroke-linejoin':'round' });
+    if (dash) p.setAttribute('stroke-dasharray', dash);
+    return p;
+  }
+  function txt(x, y, s, fill, size, anchor='start', weight='normal') {
+    const t = el('text', { x, y, fill, 'font-family':'var(--mono)', 'font-size':size, 'text-anchor':anchor, 'font-weight':weight });
+    t.textContent = s;
+    return t;
+  }
+  function line(x1,y1,x2,y2,stroke,sw,dash) {
+    const l = el('line', {x1,y1,x2,y2,stroke,'stroke-width':sw});
+    if (dash) l.setAttribute('stroke-dasharray', dash);
+    return l;
+  }
+  function dot(cx,cy,r,fill, stroke=null, sw=null) {
+    const c = el('circle', {cx,cy,r,fill});
+    if (stroke) c.setAttribute('stroke', stroke);
+    if (sw) c.setAttribute('stroke-width', sw);
+    return c;
+  }
+
+  // Map data coords → svg coords
+  function mkMap(W, H, pad, xMax, yMin, yMax) {
+    const xR = W - pad.l - pad.r, yR = H - pad.t - pad.b;
+    return {
+      x: v => pad.l + xR * (v / xMax),
+      y: v => pad.t + yR * (1 - (Math.min(Math.max(v, yMin), yMax) - yMin) / (yMax - yMin))
+    };
+  }
+
+  function drawAxesLabels(svg, W, H, pad, map, xLabel, yLabel, xTicks, yTicks, colors) {
+    // grid & y-ticks
+    for (const yv of yTicks) {
+      const yy = map.y(yv);
+      svg.appendChild(line(pad.l, yy, W-pad.r, yy, colors.grid, 1, '4,4'));
+      svg.appendChild(txt(pad.l-6, yy+4, yv, colors.label, 9, 'end'));
+    }
+    // axes
+    svg.appendChild(line(pad.l, pad.t, pad.l, H-pad.b, colors.axis, 1.5));
+    svg.appendChild(line(pad.l, H-pad.b, W-pad.r, H-pad.b, colors.axis, 1.5));
+    // x-ticks
+    for (const [xv, lbl] of xTicks) {
+      const xx = map.x(xv);
+      svg.appendChild(line(xx, H-pad.b, xx, H-pad.b+4, colors.axis, 1));
+      if (lbl != null) svg.appendChild(txt(xx, H-pad.b+14, lbl, colors.label, 9, 'middle'));
+    }
+    // axis labels
+    svg.appendChild(txt(W-pad.r, H-pad.b+24, xLabel, colors.text, 10, 'end'));
+    const yl = txt(11, pad.t, yLabel, colors.text, 10, 'middle');
+    yl.setAttribute('transform', `rotate(-90,11,${pad.t})`);
+    svg.appendChild(yl);
+  }
+
+  // MATH functions (from Module 3)
+  function vc(q)  { return 0.05*q*q*q - 0.6*q*q + 10*q; }
+  function mc(q)  { return 0.15*q*q   - 1.2*q   + 10;   }
+  const FC = 30;
+  function afc(q) { return FC / q; }
+  function avc(q) { return 0.05*q*q - 0.6*q + 10; }
+  function atc(q) { return avc(q) + FC/q; }
+  function tr(q, p) { return p * q; } // Added for TR
+
+  // Build arrays of [x, y] pairs
+  function curve(fn, vals) { return vals.map(v => [v, fn(v)]); }
+
+  // Helper to get CSS variable
+  function getCSSVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  // Dynamic colors for SVG
+  let C = {}; // Will be populated by updateChartColors
+
+  function updateChartColors() {
+    C = {
+      bg: getCSSVar('--bg'),
+      grid: getCSSVar('--border'),
+      axis: getCSSVar('--text3'),
+      label: getCSSVar('--text3'),
+      text: getCSSVar('--text2'),
+      accent: getCSSVar('--accent'),
+      green: getCSSVar('--green'),
+      red: getCSSVar('--red'),
+      blue: getCSSVar('--blue'),
+      yellow: getCSSVar('--yellow'),
+      surface: getCSSVar('--surface'),
+      border2: getCSSVar('--border2')
+    };
+  }
+
+  // --- Graph 1: TR and TC curves with profit maximization (page-1) ---
+  function drawTrTcChart() {
+    const svg = document.getElementById('graph-tr-tc');
+    if (!svg) return;
+    svg.innerHTML = '';
+    const W=560, H=320, pad={l:55,r:36,t:24,b:36};
+    const qvals = Array.from({length:101},(_,i)=>i*12/100);
+    const yMax = 180; // Max cost/revenue for scaling
+    const map = mkMap(W, H, pad, 12, 0, yMax);
+
+    drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ Cost / Revenue',
+      [[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],
+      [0,40,80,120,160], C);
+
+    // Fixed Cost (FC)
+    const fcy = map.y(FC);
+    svg.appendChild(line(pad.l, fcy, W-pad.r, fcy, C.text3, 1.5, '6,3'));
+    svg.appendChild(txt(W-pad.r+3, fcy+4, 'FC', C.text3, 9));
+
+    // Variable Cost (VC)
+    const vcPts = curve(q=>vc(q), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    svg.appendChild(polyline(vcPts, C.blue, 2.2));
+    svg.appendChild(txt(W-pad.r-5, map.y(vc(11))-10, 'VC', C.blue, 10, 'end'));
+
+    // Total Cost (TC)
+    const tcPts = curve(q=>vc(q)+FC, qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    svg.appendChild(polyline(tcPts, C.text, 3));
+    svg.appendChild(txt(W-pad.r-5, map.y(vc(11)+FC)-10, 'TC', C.text, 10, 'end'));
+
+    // Total Revenue (TR) - assume P=15 for positive profit
+    const P_profit_tr = 15; // Use a distinct variable name to avoid confusion with P_profit in other graphs
+    const trPts = curve(q=>tr(q, P_profit_tr), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    svg.appendChild(polyline(trPts, C.green, 3));
+    svg.appendChild(txt(W-pad.r-5, map.y(tr(11, P_profit_tr))-10, 'TR', C.green, 10, 'end'));
+
+    // Find q* where MR=MC (slope of TR = slope of TC)
+    // P_profit_tr = 15 => 0.15q^2 - 1.2q - 5 = 0 => q_star = 11.02
+    const q_star_tr = 11.02;
+
+    const q_star_x = map.x(q_star_tr);
+    const tr_at_q_star = map.y(tr(q_star_tr, P_profit_tr));
+    const tc_at_q_star = map.y(tc(q_star_tr));
+
+    // Dashed line for q*
+    svg.appendChild(line(q_star_x, H-pad.b, q_star_x, tr_at_q_star, C.text3, 1, '4,4'));
+    svg.appendChild(txt(q_star_x, H-pad.b+14, 'q*', C.text, 9, 'middle'));
+
+    // Highlight profit area (vertical line between TR and TC)
+    svg.appendChild(line(q_star_x, tr_at_q_star, q_star_x, tc_at_q_star, C.green, 2));
+    svg.appendChild(txt(q_star_x + 8, (tr_at_q_star + tc_at_q_star) / 2, 'Profit', C.green, 9));
+  }
+
+  // --- Graph 2: MC, ATC, AVC, MR=P with positive profit (page-2) ---
+  function drawProfitPosChart() {
+    const svg = document.getElementById('graph-profit-pos');
+    if (!svg) return;
+    svg.innerHTML = '';
+    const W=560, H=320, pad={l:55,r:36,t:24,b:36};
+    const qvals = Array.from({length:95},(_,i)=>0.5+i*0.12); // Start from 0.5 to avoid division by zero for AFC
+    const yMax = 30; // Max price/cost for scaling
+    const map = mkMap(W, H, pad, 12, 0, yMax);
+
+    drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ per unit',
+      [[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],
+      [0,5,10,15,20,25,30], C);
+
+    // Curves: MC, ATC, AVC
+    const mcPts  = curve(q=>Math.min(mc(q), yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    const atcPts = curve(q=>Math.min(atc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    const avcPts = curve(q=>Math.min(avc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+
+    svg.appendChild(polyline(avcPts, C.blue, 2.2));
+    svg.appendChild(polyline(atcPts, C.text, 2.8));
+    svg.appendChild(polyline(mcPts,  C.red, 3));
+
+    // MR=P line (P=15 for positive profit)
+    const P_profit = 15;
+    const mrY = map.y(P_profit);
+    svg.appendChild(line(pad.l, mrY, W-pad.r, mrY, C.green, 2.5));
+    svg.appendChild(txt(W-pad.r+3, mrY+4, 'MR = P₀', C.green, 10));
+
+    // Optimal q* (where MR=MC, upward-sloping MC)
+    const q_star = 11.02; // Calculated from 0.15q^2 - 1.2q + 10 = 15
+    const q_star_x = map.x(q_star);
+    const atc_at_q_star = atc(q_star);
+
+    // Dashed lines for q* and P*
+    svg.appendChild(line(q_star_x, H-pad.b, q_star_x, mrY, C.text3, 1, '4,4'));
+    svg.appendChild(txt(q_star_x, H-pad.b+14, 'q*', C.text, 9, 'middle'));
+    svg.appendChild(line(pad.l, mrY, q_star_x, mrY, C.text3, 1, '4,4'));
+    svg.appendChild(txt(pad.l-6, mrY+4, P_profit.toFixed(2), C.green, 9, 'end'));
+
+    // Profit rectangle
+    if (P_profit > atc_at_q_star) {
+      const profitHeight = map.y(atc_at_q_star) - mrY;
+      svg.appendChild(el('rect', {
+        x: map.x(0), // Start from Y-axis
+        y: mrY,
+        width: q_star_x - map.x(0),
+        height: profitHeight,
+        fill: C.green,
+        opacity: 0.15
+      }));
+      svg.appendChild(el('rect', {
+        x: map.x(0), // Start from Y-axis
+        y: mrY,
+        width: q_star_x - map.x(0),
+        height: profitHeight,
+        fill: 'none',
+        stroke: C.green,
+        'stroke-width': 1
+      }));
+      svg.appendChild(txt(map.x(q_star/2), mrY + profitHeight/2 + 4, 'Profit', C.green, 10, 'middle', 'bold'));
+    }
+
+    // Labels for curves
+    svg.appendChild(txt(W-pad.r-4, map.y(avc(11))+14, 'AVC', C.blue, 9, 'end'));
+    svg.appendChild(txt(W-pad.r-4, map.y(atc(11))+12, 'ATC', C.text, 9, 'end'));
+    svg.appendChild(txt(W-pad.r-4, map.y(mc(11))-8, 'MC', C.red, 10, 'end'));
+  }
+
+  // --- Graph 3: Comprehensive Shutdown Chart (page-4) ---
+  function drawShutdownChart() {
+    const svg = document.getElementById('graph-shutdown');
+    if (!svg) return;
+    svg.innerHTML = '';
+    const W=560, H=360, pad={l:55,r:36,t:24,b:36};
+    const qvals = Array.from({length:95},(_,i)=>0.5+i*0.12);
+    const yMax = 30;
+    const map = mkMap(W, H, pad, 12, 0, yMax);
+
+    drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ per unit',
+      [[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],
+      [0,5,10,15,20,25,30], C);
+
+    // Curves: MC, ATC, AVC
+    const mcPts  = curve(q=>Math.min(mc(q), yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    const atcPts = curve(q=>Math.min(atc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    const avcPts = curve(q=>Math.min(avc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+
+    svg.appendChild(polyline(avcPts, C.blue, 2.2));
+    svg.appendChild(polyline(atcPts, C.text, 2.8));
+    svg.appendChild(polyline(mcPts,  C.red, 3));
+
+    // Price levels and their corresponding q*
+    const prices = [
+      { p: 15, label: 'P_profit', color: C.green, type: 'profit' }, // Above min ATC
+      { p: 10.5, label: 'P_loss', color: C.yellow, type: 'loss_produce' }, // Between min AVC and min ATC
+      { p: 8, label: 'P_shutdown', color: C.red, type: 'shutdown' } // Below min AVC
+    ];
+
+    prices.forEach(scenario => {
+      const p = scenario.p;
+      const mrY = map.y(p);
+      let q_star = 0;
+      // Solve 0.15q^2 - 1.2q + 10 = p for q > 4 (upward-sloping MC)
+      const a = 0.15, b = -1.2, c = 10 - p;
+      const discriminant = b*b - 4*a*c;
+      if (discriminant >= 0) {
+        const q1 = (-b - Math.sqrt(discriminant)) / (2*a);
+        const q2 = (-b + Math.sqrt(discriminant)) / (2*a);
+        q_star = q2 > 4 ? q2 : q1; // Take the one on the upward slope
+      }
+      if (q_star < 0.5) q_star = 0.5; // Ensure q is within graph bounds
+
+      const q_star_x = map.x(q_star);
+      const atc_at_q_star = atc(q_star);
+      const avc_at_q_star = avc(q_star);
+
+      // MR=P line
+      svg.appendChild(line(pad.l, mrY, W-pad.r, mrY, scenario.color, 2, '5,3'));
+      svg.appendChild(txt(W-pad.r+3, mrY+4, `MR = ${scenario.label}`, scenario.color, 10));
+
+      // Dashed lines for q* and P*
+      svg.appendChild(line(q_star_x, H-pad.b, q_star_x, mrY, C.text3, 1, '4,4'));
+      svg.appendChild(txt(q_star_x, H-pad.b+14, `q* (${scenario.label.split('_')[1]})`, C.text, 9, 'middle'));
+      svg.appendChild(line(pad.l, mrY, q_star_x, mrY, C.text3, 1, '4,4'));
+      svg.appendChild(txt(pad.l-6, mrY+4, p.toFixed(2), scenario.color, 9, 'end'));
+
+      // Profit/Loss rectangle
+      let rectY, rectHeight, rectFill, rectStroke, rectLabel;
+      if (scenario.type === 'profit') {
+        rectY = mrY;
+        rectHeight = map.y(atc_at_q_star) - mrY;
+        rectFill = C.green;
+        rectStroke = C.green;
+        rectLabel = 'Profit';
+      } else { // Loss scenarios (loss_produce or shutdown)
+        rectY = map.y(atc_at_q_star);
+        rectHeight = mrY - map.y(atc_at_q_star);
+        rectFill = scenario.type === 'loss_produce' ? C.yellow : C.red;
+        rectStroke = scenario.type === 'loss_produce' ? C.yellow : C.red;
+        rectLabel = scenario.type === 'loss_produce' ? 'Loss (produce)' : 'Loss (shutdown)';
+      }
+
+      // Only draw rectangle if producing (profit or loss_produce)
+      // For shutdown, we show the price line but no rectangle for output, as q=0
+      if (scenario.type !== 'shutdown' || p >= avc_at_q_star) { // Draw rectangle if P >= AVC
+        svg.appendChild(el('rect', {
+          x: map.x(0), // Start from Y-axis
+          y: rectY,
+          width: q_star_x - map.x(0),
+          height: rectHeight,
+          fill: rectFill,
+          opacity: 0.15
+        }));
+        svg.appendChild(el('rect', {
+          x: map.x(0), // Start from Y-axis
+          y: rectY,
+          width: q_star_x - map.x(0),
+          height: rectHeight,
+          fill: 'none',
+          stroke: rectStroke,
+          'stroke-width': 1
+        }));
+        svg.appendChild(txt(map.x(q_star/2), rectY + rectHeight/2 + 4, rectLabel, rectStroke, 9, 'middle', 'bold'));
+      }
+    });
+
+    // Labels for curves
+    svg.appendChild(txt(W-pad.r-4, map.y(avc(11))+14, 'AVC', C.blue, 9, 'end'));
+    svg.appendChild(txt(W-pad.r-4, map.y(atc(11))+12, 'ATC', C.text, 9, 'end'));
+    svg.appendChild(txt(W-pad.r-4, map.y(mc(11))-8, 'MC', C.red, 10, 'end'));
+  }
+
   function showPage(n) {
     document.querySelectorAll('.page').forEach((p, i) => {
       p.classList.toggle('active', i === n);
     });
     document.querySelectorAll('.tab-btn').forEach((b, i) => {
-      b.classList.toggle('active', i === n);
+      // Skip the first button (index.html link) for active state
+      if (i > 0) b.classList.toggle('active', (i - 1) === n);
       b.setAttribute('aria-selected', i === n ? 'true' : 'false');
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    updateChartColors(); // Update colors on page switch
+    // Draw graphs when their respective pages are active
+    if (n === 1) { // Profit Max page
+      drawTrTcChart();
+    } else if (n === 2) { // Graphically page
+      drawProfitPosChart();
+    } else if (n === 4) { // Shutdown Rule page
+      drawShutdownChart();
+    }
   }
 
   function toggleTheme() {
@@ -950,7 +1305,22 @@
     const next = isLight ? 'dark' : 'light';
     html.setAttribute('data-theme', next);
     document.getElementById('toggleLabel').textContent = next === 'light' ? 'Dark' : 'Light';
+    updateChartColors();
+    // Redraw visible graph on theme change
+    const activePage = document.querySelector('.page.active');
+    if (activePage) {
+      const pageId = activePage.id;
+      if (pageId === 'page-1') drawTrTcChart();
+      else if (pageId === 'page-2') drawProfitPosChart();
+      else if (pageId === 'page-4') drawShutdownChart();
+    }
   }
+
+  // Initial call to show the first page and set up colors
+  document.addEventListener('DOMContentLoaded', () => {
+    updateChartColors();
+    showPage(0); // Show overview page by default
+  });
 </script>
 
 </body>
