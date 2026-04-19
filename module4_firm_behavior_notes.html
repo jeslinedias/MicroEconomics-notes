@@ -733,6 +733,11 @@
     <div class="section-label">Worked example — the flat tax</div>
     <div class="card">
       <div class="card-title">City imposes a $10,000 flat tax on all businesses <span class="badge badge-warn">Case study</span></div>
+      <div style="margin-top:10px; margin-bottom:10px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px;">
+        <svg id="graph-flat-tax" viewBox="0 0 560 320" width="100%" height="320"></svg>
+      </div>
+      <p class="body-text" style="text-align:center; font-size:12px; color:var(--text3);">A flat tax increases fixed costs, shifting ATC up, but leaves MC and AVC unchanged.</p>
+      <div class="divider"></div>
       <p class="body-text">A lump-sum tax, regardless of how much the firm produces, is a pure addition to <strong>fixed cost</strong>. It has no effect on variable cost or marginal cost.</p>
       <div class="divider"></div>
       <div class="step">
@@ -1016,12 +1021,13 @@
   }
 
   // MATH functions (from Module 3)
-  function vc(q)  { return 0.05*q*q*q - 0.6*q*q + 10*q; }
-  function mc(q)  { return 0.15*q*q   - 1.2*q   + 10;   }
+  function vc(q)  { return 0.2*q*q*q - 2.4*q*q + 10*q; }
+  function mc(q)  { return 0.6*q*q   - 4.8*q   + 10;   }
   const FC = 30;
   function afc(q) { return FC / q; }
-  function avc(q) { return 0.05*q*q - 0.6*q + 10; }
+  function avc(q) { return 0.2*q*q - 2.4*q + 10; }
   function atc(q) { return avc(q) + FC/q; }
+  function tc(q)  { return vc(q) + FC; }
   function tr(q, p) { return p * q; } // Added for TR
 
   // Build arrays of [x, y] pairs
@@ -1058,50 +1064,62 @@
     if (!svg) return;
     svg.innerHTML = '';
     const W=560, H=320, pad={l:55,r:36,t:24,b:36};
-    const qvals = Array.from({length:101},(_,i)=>i*12/100);
-    const yMax = 180; // Max cost/revenue for scaling
-    const map = mkMap(W, H, pad, 12, 0, yMax);
+    const qMax = 20, yMax = 1000;
+    const qvals = Array.from({length:101},(_,i)=>i*qMax/100);
+    const map = mkMap(W, H, pad, qMax, 0, yMax);
 
     drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ Cost / Revenue',
-      [[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],
-      [0,40,80,120,160], C);
+      [[0,'0'],[5,'5'],[10,'10'],[15,'15'],[20,'20']],
+      [0,200,400,600,800,1000], C);
 
-    // Fixed Cost (FC)
-    const fcy = map.y(FC);
-    svg.appendChild(line(pad.l, fcy, W-pad.r, fcy, C.text3, 1.5, '6,3'));
-    svg.appendChild(txt(W-pad.r+3, fcy+4, 'FC', C.text3, 9));
+    // Fixed Cost (F0) at q=0
+    const f0y = map.y(FC);
+    svg.appendChild(line(pad.l, f0y, W-pad.r, f0y, C.text3, 1, '6,3'));
+    svg.appendChild(dot(map.x(0), f0y, 4, C.text3));
+    svg.appendChild(txt(pad.l-10, f0y+4, 'F₀', C.text3, 11, 'end', 'bold'));
+    svg.appendChild(txt(map.x(0.5), f0y-8, 'Fixed Cost (starting point)', C.text3, 9));
 
     // Variable Cost (VC)
     const vcPts = curve(q=>vc(q), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
-    svg.appendChild(polyline(vcPts, C.blue, 2.2));
-    svg.appendChild(txt(W-pad.r-5, map.y(vc(11))-10, 'VC', C.blue, 10, 'end'));
+    svg.appendChild(polyline(vcPts, C.blue, 1.5, '5,5'));
+    svg.appendChild(txt(W-pad.r-5, map.y(vc(qMax-2))-10, 'VC', C.blue, 10, 'end'));
 
     // Total Cost (TC)
     const tcPts = curve(q=>vc(q)+FC, qvals).map(([x,y])=>[map.x(x),map.y(y)]);
     svg.appendChild(polyline(tcPts, C.text, 3));
-    svg.appendChild(txt(W-pad.r-5, map.y(vc(11)+FC)-10, 'TC', C.text, 10, 'end'));
+    svg.appendChild(txt(W-pad.r-5, map.y(vc(qMax)+FC)-10, 'TC', C.text, 10, 'end', 'bold'));
 
-    // Total Revenue (TR) - assume P=15 for positive profit
-    const P_profit_tr = 15; // Use a distinct variable name to avoid confusion with P_profit in other graphs
+    // Total Revenue (TR) - P=22 to create better gap with sharper costs
+    const P_profit_tr = 22; 
     const trPts = curve(q=>tr(q, P_profit_tr), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
     svg.appendChild(polyline(trPts, C.green, 3));
-    svg.appendChild(txt(W-pad.r-5, map.y(tr(11, P_profit_tr))-10, 'TR', C.green, 10, 'end'));
+    svg.appendChild(txt(W-pad.r-5, map.y(tr(qMax, P_profit_tr))-10, 'TR', C.green, 10, 'end', 'bold'));
+
+    // Alpha and Beta (Break-even levels where TR = TC)
+    const q_alpha = 1.85, q_beta = 15.35;
+    [[q_alpha, 'α'], [q_beta, 'β']].forEach(([qVal, label]) => {
+      const qx = map.x(qVal), qy = map.y(tr(qVal, P_profit_tr));
+      svg.appendChild(dot(qx, qy, 5, C.red));
+      svg.appendChild(txt(qx, qy-12, label, C.red, 12, 'middle', 'bold'));
+      svg.appendChild(line(qx, qy, qx, H-pad.b, C.red, 0.8, '2,2'));
+      svg.appendChild(txt(qx, H-pad.b+14, 'q' + label, C.red, 9, 'middle'));
+    });
 
     // Find q* where MR=MC (slope of TR = slope of TC)
-    // P_profit_tr = 15 => 0.15q^2 - 1.2q - 5 = 0 => q_star = 11.02
-    const q_star_tr = 11.02;
-
+    const q_star_tr = 10;
     const q_star_x = map.x(q_star_tr);
     const tr_at_q_star = map.y(tr(q_star_tr, P_profit_tr));
     const tc_at_q_star = map.y(tc(q_star_tr));
 
-    // Dashed line for q*
-    svg.appendChild(line(q_star_x, H-pad.b, q_star_x, tr_at_q_star, C.text3, 1, '4,4'));
-    svg.appendChild(txt(q_star_x, H-pad.b+14, 'q*', C.text, 9, 'middle'));
+    // Max Profit Indicator (Vertical Gap)
+    svg.appendChild(line(q_star_x, tr_at_q_star, q_star_x, tc_at_q_star, C.accent, 2.5));
+    svg.appendChild(line(q_star_x-4, tr_at_q_star, q_star_x+4, tr_at_q_star, C.accent, 2));
+    svg.appendChild(line(q_star_x-4, tc_at_q_star, q_star_x+4, tc_at_q_star, C.accent, 2));
+    svg.appendChild(txt(q_star_x + 8, (tr_at_q_star + tc_at_q_star) / 2 + 4, 'Max Profit', C.accent, 10, 'start', 'bold'));
 
-    // Highlight profit area (vertical line between TR and TC)
-    svg.appendChild(line(q_star_x, tr_at_q_star, q_star_x, tc_at_q_star, C.green, 2));
-    svg.appendChild(txt(q_star_x + 8, (tr_at_q_star + tc_at_q_star) / 2, 'Profit', C.green, 9));
+    // Dashed line for q*
+    svg.appendChild(line(q_star_x, H-pad.b, q_star_x, tc_at_q_star, C.text3, 1, '4,4'));
+    svg.appendChild(txt(q_star_x, H-pad.b+14, 'q*', C.accent, 10, 'middle', 'bold'));
   }
 
   // --- Graph 2: MC, ATC, AVC, MR=P with positive profit (page-2) ---
@@ -1111,7 +1129,7 @@
     svg.innerHTML = '';
     const W=560, H=320, pad={l:55,r:36,t:24,b:36};
     const qvals = Array.from({length:95},(_,i)=>0.5+i*0.12); // Start from 0.5 to avoid division by zero for AFC
-    const yMax = 30; // Max price/cost for scaling
+    const yMax = 60; // Increased scale for sharper curves
     const map = mkMap(W, H, pad, 12, 0, yMax);
 
     drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ per unit',
@@ -1125,16 +1143,16 @@
 
     svg.appendChild(polyline(avcPts, C.blue, 2.2));
     svg.appendChild(polyline(atcPts, C.text, 2.8));
-    svg.appendChild(polyline(mcPts,  C.red, 3));
+    svg.appendChild(polyline(mcPts,  C.red, 3.5));
 
-    // MR=P line (P=15 for positive profit)
-    const P_profit = 15;
+    // MR=P line
+    const P_profit = 22;
     const mrY = map.y(P_profit);
     svg.appendChild(line(pad.l, mrY, W-pad.r, mrY, C.green, 2.5));
-    svg.appendChild(txt(W-pad.r+3, mrY+4, 'MR = P₀', C.green, 10));
+    svg.appendChild(txt(W-pad.r+3, mrY+4, 'P_profit', C.green, 10));
 
     // Optimal q* (where MR=MC, upward-sloping MC)
-    const q_star = 11.02; // Calculated from 0.15q^2 - 1.2q + 10 = 15
+    const q_star = 10; // Calculated from 0.6q^2 - 4.8q + 10 = 22
     const q_star_x = map.x(q_star);
     const atc_at_q_star = atc(q_star);
 
@@ -1153,8 +1171,9 @@
         width: q_star_x - map.x(0),
         height: profitHeight,
         fill: C.green,
-        opacity: 0.15
+        opacity: 0.25
       }));
+      svg.appendChild(dot(q_star_x, mrY, 5, C.green));
       svg.appendChild(el('rect', {
         x: map.x(0), // Start from Y-axis
         y: mrY,
@@ -1173,6 +1192,62 @@
     svg.appendChild(txt(W-pad.r-4, map.y(mc(11))-8, 'MC', C.red, 10, 'end'));
   }
 
+  // --- Graph 3: Flat Tax Effect (page-3) ---
+  function drawFlatTaxChart() {
+    const svg = document.getElementById('graph-flat-tax');
+    if (!svg) return;
+    svg.innerHTML = '';
+    const W=560, H=320, pad={l:55,r:36,t:24,b:36};
+    const qvals = Array.from({length:95},(_,i)=>0.5+i*0.12); // Start from 0.5 to avoid division by zero for AFC
+    const yMax = 60; // Max price/cost for scaling
+    const map = mkMap(W, H, pad, 12, 0, yMax);
+
+    drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ per unit',
+      [[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],
+      [0,10,20,30,40,50,60], C);
+
+    const FLAT_TAX_AMOUNT = 12; // Increased flat tax to widen the gap
+    const FC_taxed = FC + FLAT_TAX_AMOUNT;
+
+    // Define the taxed ATC function
+    function atc_taxed(q) { return avc(q) + FC_taxed / q; }
+
+    // Curves: MC, AVC, Original ATC, Taxed ATC
+    const mcPts  = curve(q=>Math.min(mc(q), yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    const avcPts = curve(q=>Math.min(avc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    const atcPts = curve(q=>Math.min(atc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+    const atcTaxedPts = curve(q=>Math.min(atc_taxed(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
+
+    // Draw curves
+    svg.appendChild(polyline(avcPts, C.blue, 2.2));
+    svg.appendChild(polyline(mcPts,  C.red, 3.5));
+    svg.appendChild(polyline(atcPts, C.text, 2)); // Original ATC thinner
+    svg.appendChild(polyline(atcTaxedPts, C.green, 2.8, '6,3')); // New ATC (dashed)
+
+    // Labels for curves
+    svg.appendChild(txt(W-pad.r-4, map.y(avc(11))+14, 'AVC', C.blue, 9, 'end'));
+    svg.appendChild(txt(W-pad.r-4, map.y(mc(11))-8, 'MC', C.red, 10, 'end'));
+    svg.appendChild(txt(W-pad.r-4, map.y(atc(11))+12, 'ATC₀', C.text, 9, 'end'));
+    svg.appendChild(txt(W-pad.r-4, map.y(atc_taxed(11))+12, 'ATCₜ', C.green, 9, 'end'));
+
+    // Add an arrow to show the shift
+    const q_arrow = 8; // Choose a point for the arrow
+    const y_atc_orig = map.y(atc(q_arrow));
+    const y_atc_taxed = map.y(atc_taxed(q_arrow));
+    const x_arrow = map.x(q_arrow);
+
+    // Arrowhead (simple triangle path)
+    svg.appendChild(el('path', {
+      d: `M${x_arrow-3},${y_atc_taxed+6} L${x_arrow},${y_atc_taxed} L${x_arrow+3},${y_atc_taxed+6} Z`,
+      fill: C.green
+    }));
+    svg.appendChild(line(x_arrow, y_atc_orig, x_arrow, y_atc_taxed, C.green, 1.5, null));
+    svg.appendChild(txt(x_arrow + 8, (y_atc_orig + y_atc_taxed) / 2 + 4, `+ $${FLAT_TAX_AMOUNT}`, C.green, 9));
+    svg.appendChild(txt(x_arrow, H-pad.b+14, 'q', C.text, 9, 'middle')); // Label for the q where arrow is drawn
+  }
+
+
+  // --- Graph 4: Comprehensive Shutdown Chart (page-4) ---
   // --- Graph 3: Comprehensive Shutdown Chart (page-4) ---
   function drawShutdownChart() {
     const svg = document.getElementById('graph-shutdown');
@@ -1180,35 +1255,41 @@
     svg.innerHTML = '';
     const W=560, H=360, pad={l:55,r:36,t:24,b:36};
     const qvals = Array.from({length:95},(_,i)=>0.5+i*0.12);
-    const yMax = 30;
+    const yMax = 60;
     const map = mkMap(W, H, pad, 12, 0, yMax);
 
     drawAxesLabels(svg, W, H, pad, map, 'Output (q)', '$ per unit',
       [[0,'0'],[3,'3'],[6,'6'],[9,'9'],[12,'12']],
-      [0,5,10,15,20,25,30], C);
+      [0,10,20,30,40,50,60], C);
 
     // Curves: MC, ATC, AVC
     const mcPts  = curve(q=>Math.min(mc(q), yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
     const atcPts = curve(q=>Math.min(atc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
     const avcPts = curve(q=>Math.min(avc(q),yMax), qvals).map(([x,y])=>[map.x(x),map.y(y)]);
 
+    // Shutdown threshold line (min AVC)
+    const minAvcY = map.y(2.8); // Min AVC at q=6 for new math
+    svg.appendChild(line(pad.l, minAvcY, W-pad.r, minAvcY, C.blue, 1, '5,5'));
+    svg.appendChild(txt(W-pad.r+3, minAvcY+4, 'Shutdown Price Threshold', C.blue, 9));
+
     svg.appendChild(polyline(avcPts, C.blue, 2.2));
     svg.appendChild(polyline(atcPts, C.text, 2.8));
-    svg.appendChild(polyline(mcPts,  C.red, 3));
+    svg.appendChild(polyline(mcPts,  C.red, 3.5));
 
     // Price levels and their corresponding q*
     const prices = [
-      { p: 15, label: 'P_profit', color: C.green, type: 'profit' }, // Above min ATC
-      { p: 10.5, label: 'P_loss', color: C.yellow, type: 'loss_produce' }, // Between min AVC and min ATC
-      { p: 8, label: 'P_shutdown', color: C.red, type: 'shutdown' } // Below min AVC
+      { p: 25, label: 'P_profit', color: C.green, type: 'profit' }, // Above min ATC
+      { p: 9, label: 'P_loss', color: C.yellow, type: 'loss_produce' }, // Between min AVC and min ATC
+      { p: 4, label: 'P_shutdown', color: C.red, type: 'shutdown' } // Below min AVC
     ];
 
     prices.forEach(scenario => {
       const p = scenario.p;
       const mrY = map.y(p);
       let q_star = 0;
-      // Solve 0.15q^2 - 1.2q + 10 = p for q > 4 (upward-sloping MC)
-      const a = 0.15, b = -1.2, c = 10 - p;
+      
+      // Adjusted Quadratic Solver for Sharper MC (a=0.6, b=-4.8, c=10-p)
+      const a = 0.6, b = -4.8, c = 10 - p;
       const discriminant = b*b - 4*a*c;
       if (discriminant >= 0) {
         const q1 = (-b - Math.sqrt(discriminant)) / (2*a);
@@ -1243,7 +1324,7 @@
         rectY = map.y(atc_at_q_star);
         rectHeight = mrY - map.y(atc_at_q_star);
         rectFill = scenario.type === 'loss_produce' ? C.yellow : C.red;
-        rectStroke = scenario.type === 'loss_produce' ? C.yellow : C.red;
+        rectStroke = scenario.type === 'loss_produce' ? C.accent : C.red;
         rectLabel = scenario.type === 'loss_produce' ? 'Loss (produce)' : 'Loss (shutdown)';
       }
 
@@ -1256,8 +1337,9 @@
           width: q_star_x - map.x(0),
           height: rectHeight,
           fill: rectFill,
-          opacity: 0.15
+          opacity: 0.3
         }));
+        svg.appendChild(dot(q_star_x, mrY, 5, scenario.color));
         svg.appendChild(el('rect', {
           x: map.x(0), // Start from Y-axis
           y: rectY,
@@ -1294,6 +1376,8 @@
       drawTrTcChart();
     } else if (n === 2) { // Graphically page
       drawProfitPosChart();
+    } else if (n === 3) { // Negative Profits page (where flat tax example is)
+      drawFlatTaxChart();
     } else if (n === 4) { // Shutdown Rule page
       drawShutdownChart();
     }
@@ -1311,8 +1395,9 @@
     if (activePage) {
       const pageId = activePage.id;
       if (pageId === 'page-1') drawTrTcChart();
-      else if (pageId === 'page-2') drawProfitPosChart();
-      else if (pageId === 'page-4') drawShutdownChart();
+      else if (pageId === 'page-2') drawProfitPosChart(); // Corrected to page-2
+      else if (pageId === 'page-3') drawFlatTaxChart(); // Added for page-3
+      else if (pageId === 'page-4') drawShutdownChart(); // Corrected to page-4
     }
   }
 

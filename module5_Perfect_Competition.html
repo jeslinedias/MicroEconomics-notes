@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 5 — Perfect Competition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════
+     LIGHT THEME (default)
+  ═══════════════════════════════════════ */
+  :root,
+  [data-theme="light"] {
+    --bg:             #F7F6F2;
+    --bg-topbar:      rgba(247,246,242,0.9);
+    --surface:        #FFFFFF;
+    --surface-muted:  #F0EFE9;
+    --border:         rgba(0,0,0,0.08);
+    --border-med:     rgba(0,0,0,0.14);
+    --border-strong:  rgba(0,0,0,0.22);
+    --text-primary:   #1A1917;
+    --text-secondary: #6B6960;
+    --text-tertiary:  #9C9A92;
+    --check-color:    #1D9E75;
+    --mark-bg:        #FFF0A3;
+    --mark-color:     #3d2f00;
+    --back-hover:     #ECEAE4;
+
+    /* Badge fills & inks */
+    --fill-blue:   #E6F1FB; --ink-blue:   #185FA5;
+    --fill-teal:   #E1F5EE; --ink-teal:   #0F6E56;
+    --fill-amber:  #FAEEDA; --ink-amber:  #BA7517;
+    --fill-purple: #EEEDFE; --ink-purple: #534AB7;
+    --fill-coral:  #FAECE7; --ink-coral:  #993C1D;
+
+    /* SVG spectrum */
+    --svg-mono:  #185FA5;
+    --svg-oligo: #0F6E56;
+    --svg-perf:  #534AB7;
+    --svg-sub:   #9C9A92;
+    --svg-line:  #D3D1C7;
+  }
+
+  /* ═══════════════════════════════════════
+     DARK THEME
+  ═══════════════════════════════════════ */
+  [data-theme="dark"] {
+    --bg:             #141413;
+    --bg-topbar:      rgba(20,20,19,0.92);
+    --surface:        #1F1E1C;
+    --surface-muted:  #2A2927;
+    --border:         rgba(255,255,255,0.07);
+    --border-med:     rgba(255,255,255,0.12);
+    --border-strong:  rgba(255,255,255,0.22);
+    --text-primary:   #E8E6DF;
+    --text-secondary: #9C9A92;
+    --text-tertiary:  #5F5E5A;
+    --check-color:    #5DCAA5;
+    --mark-bg:        #4a3d00;
+    --mark-color:     #F5D76E;
+    --back-hover:     #2A2927;
+
+    --fill-blue:   #0C2D50; --ink-blue:   #85B7EB;
+    --fill-teal:   #062820; --ink-teal:   #5DCAA5;
+    --fill-amber:  #3A2106; --ink-amber:  #EFB84A;
+    --fill-purple: #1E1A4A; --ink-purple: #AFA9EC;
+    --fill-coral:  #3A1508; --ink-coral:  #F0997B;
+
+    --svg-mono:  #85B7EB;
+    --svg-oligo: #5DCAA5;
+    --svg-perf:  #AFA9EC;
+    --svg-sub:   #5F5E5A;
+    --svg-line:  #3A3935;
+  }
+
+  /* ═══════════════════════════════════════
+     BASE
+  ═══════════════════════════════════════ */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Geist', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+    transition: background 0.22s ease, color 0.22s ease;
+  }
+
+  /* ═══════════════════════════════════════
+     TOPBAR
+  ═══════════════════════════════════════ */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-topbar);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 0.5px solid var(--border-med);
+    padding: 0 1.25rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.22s ease, border-color 0.22s ease;
+  }
+
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 0.5px solid var(--border-med);
+    border-radius: 8px;
+    background: var(--surface);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .back-btn:hover {
+    background: var(--back-hover);
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+  }
+  .back-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  .topbar-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  /* ═══════════════════════════════════════
+     SEARCH
+  ═══════════════════════════════════════ */
+  .search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .search-icon {
+    position: absolute;
+    left: 9px;
+    width: 14px;
+    height: 14px;
+    color: var(--text-tertiary);
+    pointer-events: none;
+  }
+  #search-input {
+    font-family: 'Geist', sans-serif;
+    font-size: 13px;
+    background: var(--surface);
+    border: 0.5px solid var(--border-med);
+    border-radius: 8px;
+    padding: 6px 38px 6px 29px;
+    width: 200px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s, width 0.2s, background 0.22s, color 0.22s;
+  }
+  #search-input:focus { border-color: var(--border-strong); width: 240px; }
+  #search-input::placeholder { color: var(--text-tertiary); }
+  .search-count {
+    position: absolute;
+    right: 9px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    pointer-events: none;
+    display: none;
+    white-space: nowrap;
+  }
+
+  /* ═══════════════════════════════════════
+     THEME TOGGLE BUTTON
+  ═══════════════════════════════════════ */
+  .theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    border: 0.5px solid var(--border-med);
+    border-radius: 8px;
+    background: var(--surface);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    color: var(--text-secondary);
+  }
+  .theme-btn:hover {
+    background: var(--back-hover);
+    color: var(--text-primary);
+    border-color: var(--border-strong);
+  }
+  .theme-btn svg { width: 16px; height: 16px; }
+
+  /* icon visibility */
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ═══════════════════════════════════════
+     LAYOUT
+  ═══════════════════════════════════════ */
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+    animation: fadeUp 0.3s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ═══════════════════════════════════════
+     PAGE HEADER
+  ═══════════════════════════════════════ */
+  .page-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid var(--border-med);
+  }
+  .module-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+  }
+  .page-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 34px;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .page-subtitle { font-size: 14px; color: var(--text-secondary); }
+
+  /* ═══════════════════════════════════════
+     SECTIONS
+  ═══════════════════════════════════════ */
+  .section { margin-bottom: 2rem; }
+  .section-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid var(--border);
+    transition: color 0.22s, border-color 0.22s;
+  }
+
+  /* ═══════════════════════════════════════
+     CARDS
+  ═══════════════════════════════════════ */
+  .card {
+    background: var(--surface);
+    border: 0.5px solid var(--border-med);
+    border-radius: 14px;
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 0.65rem;
+    transition: background 0.22s, border-color 0.22s;
+  }
+  .card-sm {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.5rem;
+    transition: background 0.22s, border-color 0.22s;
+  }
+  .card-muted {
+    background: var(--surface-muted);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.5rem;
+    transition: background 0.22s;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+    margin-bottom: 0.65rem;
+  }
+
+  /* ═══════════════════════════════════════
+     BADGES
+  ═══════════════════════════════════════ */
+  .badge {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 2px 9px;
+    border-radius: 99px;
+    margin-bottom: 7px;
+    letter-spacing: 0.02em;
+    transition: background 0.22s, color 0.22s;
+  }
+  .b-blue   { background: var(--fill-blue);   color: var(--ink-blue);   }
+  .b-teal   { background: var(--fill-teal);   color: var(--ink-teal);   }
+  .b-amber  { background: var(--fill-amber);  color: var(--ink-amber);  }
+  .b-purple { background: var(--fill-purple); color: var(--ink-purple); }
+  .b-coral  { background: var(--fill-coral);  color: var(--ink-coral);  }
+
+  /* ═══════════════════════════════════════
+     TYPOGRAPHY
+  ═══════════════════════════════════════ */
+  .label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-bottom: 3px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .val    { font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.5; }
+  .val-sm { font-size: 13px; color: var(--text-primary); line-height: 1.65; }
+  .muted  { color: var(--text-secondary); }
+
+  .blockquote {
+    border-left: 2px solid var(--border-med);
+    padding: 6px 14px;
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    line-height: 1.7;
+    transition: border-color 0.22s, color 0.22s;
+  }
+
+  .eq {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    background: var(--surface-muted);
+    border: 0.5px solid var(--border-med);
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    color: var(--text-primary);
+    transition: background 0.22s, border-color 0.22s, color 0.22s;
+  }
+
+  hr.divider {
+    border: none;
+    border-top: 0.5px solid var(--border-med);
+    margin: 2rem 0;
+    transition: border-color 0.22s;
+  }
+
+  /* ═══════════════════════════════════════
+     CONDITION ROWS
+  ═══════════════════════════════════════ */
+  .cond-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+  .cond-num {
+    font-family: 'Instrument Serif', serif;
+    font-size: 26px;
+    color: var(--border-strong);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 28px;
+    text-align: right;
+    transition: color 0.22s;
+  }
+  .cond-body { flex: 1; }
+
+  /* ═══════════════════════════════════════
+     TWO-COL
+  ═══════════════════════════════════════ */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 520px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ═══════════════════════════════════════
+     FLOW ARROWS
+  ═══════════════════════════════════════ */
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .arrow-span { color: var(--text-tertiary); font-size: 12px; }
+  .flow-text  { color: var(--text-secondary); }
+
+  /* ═══════════════════════════════════════
+     TABLE
+  ═══════════════════════════════════════ */
+  table.neat { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.neat th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-tertiary);
+    padding: 6px 10px;
+    border-bottom: 0.5px solid var(--border-med);
+    transition: color 0.22s, border-color 0.22s;
+  }
+  table.neat td {
+    padding: 9px 10px;
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text-primary);
+    vertical-align: top;
+    line-height: 1.55;
+    transition: color 0.22s, border-color 0.22s;
+  }
+  table.neat tr:last-child td { border-bottom: none; }
+  .check { color: var(--check-color); font-weight: 600; }
+
+  /* ═══════════════════════════════════════
+     PILLS
+  ═══════════════════════════════════════ */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pill {
+    font-size: 12px;
+    padding: 4px 11px;
+    border: 0.5px solid var(--border-med);
+    border-radius: 99px;
+    color: var(--text-secondary);
+    background: var(--surface);
+    transition: background 0.22s, border-color 0.22s, color 0.22s;
+  }
+
+  /* ═══════════════════════════════════════
+     SHOCK GRID
+  ═══════════════════════════════════════ */
+  .shock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+    gap: 9px;
+    margin-bottom: 10px;
+  }
+  .shock-step {
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 0.8rem 0.9rem;
+    background: var(--surface);
+    transition: background 0.22s, border-color 0.22s;
+  }
+
+  /* ═══════════════════════════════════════
+     SPECTRUM SVG WRAPPER
+  ═══════════════════════════════════════ */
+  .spectrum-wrap { padding: 0.2rem 0 0.4rem; }
+
+  /* ═══════════════════════════════════════
+     SEARCH HIGHLIGHT
+  ═══════════════════════════════════════ */
+  mark {
+    background: var(--mark-bg);
+    color: var(--mark-color);
+    border-radius: 2px;
+    padding: 0 2px;
+    transition: background 0.22s, color 0.22s;
+  }
+
+  /* ═══════════════════════════════════════
+     NO RESULTS / VISIBILITY
+  ═══════════════════════════════════════ */
+  #no-results {
+    display: none;
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-tertiary);
+    font-size: 14px;
+  }
+  .section.hidden     { display: none; }
+  .page-header.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- ── Topbar ── -->
+<nav class="topbar">
+  <a class="back-btn" href="index.html">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 12L6 8l4-4"/>
+    </svg>
+    Back
+  </a>
+
+  <span class="topbar-title">Module 5 — Perfect Competition</span>
+
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6.5" cy="6.5" r="4"/><path d="M11 11l2.5 2.5"/>
+    </svg>
+    <input type="text" id="search-input" placeholder="Search notes…" autocomplete="off" spellcheck="false">
+    <span class="search-count" id="search-count"></span>
+  </div>
+
+  <button class="theme-btn" id="theme-toggle" aria-label="Toggle dark mode">
+    <!-- Sun icon — shown in dark mode -->
+    <svg class="icon-sun" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="10" cy="10" r="3.5"/>
+      <line x1="10" y1="1.5" x2="10" y2="3.5"/>
+      <line x1="10" y1="16.5" x2="10" y2="18.5"/>
+      <line x1="1.5" y1="10" x2="3.5" y2="10"/>
+      <line x1="16.5" y1="10" x2="18.5" y2="10"/>
+      <line x1="4.1" y1="4.1" x2="5.5" y2="5.5"/>
+      <line x1="14.5" y1="14.5" x2="15.9" y2="15.9"/>
+      <line x1="4.1" y1="15.9" x2="5.5" y2="14.5"/>
+      <line x1="14.5" y1="5.5" x2="15.9" y2="4.1"/>
+    </svg>
+    <!-- Moon icon — shown in light mode -->
+    <svg class="icon-moon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 12.5A7 7 0 1 1 7.5 3a5.5 5.5 0 0 0 9.5 9.5z"/>
+    </svg>
+  </button>
+</nav>
+
+<!-- ── Main content ── -->
+<main class="page" id="main-content">
+
+  <header class="page-header" id="page-header">
+    <div class="module-label">Economics · Module 5</div>
+    <h1 class="page-title">Perfect Competition</h1>
+    <p class="page-subtitle">Short &amp; long run equilibrium · External shocks · Market structure benchmark</p>
+  </header>
+
+  <div id="no-results">No matching notes found.</div>
+
+  <!-- 1. Spectrum -->
+  <section class="section" data-section="market structure spectrum monopoly oligopoly competition firms">
+    <div class="section-title">Market structure spectrum</div>
+    <div class="card">
+      <div class="spectrum-wrap">
+        <svg id="spectrum-svg" width="100%" viewBox="0 0 680 72" role="img">
+          <title>Market structure spectrum from monopoly to perfect competition</title>
+          <defs>
+            <marker id="arrS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path class="arr-head" d="M2 1L8 5L2 9" fill="none" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <line class="spec-line" x1="30" y1="36" x2="650" y2="36" stroke-width="1" marker-end="url(#arrS)"/>
+          <circle class="dot-mono"  cx="30"  cy="36" r="5"/>
+          <circle class="dot-oligo" cx="340" cy="36" r="5"/>
+          <circle class="dot-perf"  cx="630" cy="36" r="5"/>
+          <text class="t-mono"  font-family="'Geist',sans-serif" font-size="12" font-weight="500" text-anchor="middle" x="30"  y="20">Monopoly</text>
+          <text class="t-oligo" font-family="'Geist',sans-serif" font-size="12" font-weight="500" text-anchor="middle" x="340" y="20">Oligopoly</text>
+          <text class="t-perf"  font-family="'Geist',sans-serif" font-size="12" font-weight="500" text-anchor="middle" x="630" y="20">Perfect competition</text>
+          <text class="t-sub"   font-family="'Geist',sans-serif" font-size="11" text-anchor="middle" x="30"  y="58">1 firm</text>
+          <text class="t-sub"   font-family="'Geist',sans-serif" font-size="11" text-anchor="middle" x="340" y="58">handful of firms</text>
+          <text class="t-sub"   font-family="'Geist',sans-serif" font-size="11" text-anchor="middle" x="630" y="58">N very large</text>
+        </svg>
+      </div>
+      <blockquote class="blockquote">"If Honda decided to double its output of Accords, there is going to be a big impact on the midsize automobile market. Toyota will feel the pain too."</blockquote>
+    </div>
+  </section>
+
+  <!-- 2. Four conditions -->
+  <section class="section" data-section="four conditions perfect competition homogeneous free entry exit information price taker corn">
+    <div class="section-title">4 conditions for perfect competition</div>
+    <div class="card">
+      <div class="cond-row">
+        <span class="cond-num">1</span>
+        <div class="cond-body">
+          <div class="val">Large number of relatively small buyers &amp; sellers</div>
+          <div class="val-sm muted" style="margin-top:3px;">No single player has market power. Example: take the largest corn farmer in Illinois and triple their output — zero price impact.</div>
+        </div>
+      </div>
+      <div class="cond-row">
+        <span class="cond-num">2</span>
+        <div class="cond-body">
+          <div class="val">Homogeneous (identical) products</div>
+          <div class="val-sm muted" style="margin-top:3px;">Generic, undifferentiated goods. Corn is corn — Illinois, Brazil, or Canada. Not craft beer or branded cereal.</div>
+        </div>
+      </div>
+      <div class="cond-row">
+        <span class="cond-num">3</span>
+        <div class="cond-body">
+          <div class="val">Free entry &amp; exit</div>
+          <div class="val-sm muted" style="margin-top:3px;">No regulatory barriers. Not costless — you still build a plant. But no rules blocking you. Contrast: Champaign liquor licenses are capped by the mayor.</div>
+        </div>
+      </div>
+      <div class="cond-row" style="margin-bottom:0">
+        <span class="cond-num">4</span>
+        <div class="cond-body">
+          <div class="val">Perfect information</div>
+          <div class="val-sm muted" style="margin-top:3px;">Prices are well-known. Corn price is quoted 15×/day on Illinois radio. Without this: two-tier pricing emerges (Smithsonian kiosk "tourist trap").</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-muted">
+      <div class="label">Real-world example that fits all 4</div>
+      <div class="val">Corn market</div>
+      <div class="val-sm muted" style="margin-top:4px;">Millions of producers, identical product, farmers freely switch between corn &amp; soybeans each season, continuous public price data.</div>
+    </div>
+  </section>
+
+  <!-- 3. Price takers -->
+  <section class="section" data-section="price takers market power demand curve flat horizontal marginal revenue MR price">
+    <div class="section-title">Key implication — price takers</div>
+    <div class="card-grid">
+      <div class="card-sm">
+        <div class="badge b-blue">Why</div>
+        <div class="val-sm">All 4 conditions together mean no firm can influence price. The market sets it; firms observe it.</div>
+      </div>
+      <div class="card-sm">
+        <div class="badge b-teal">Effect</div>
+        <div class="val-sm">Price = marginal revenue for each firm. The demand curve facing an individual firm is perfectly flat (horizontal).</div>
+      </div>
+      <div class="card-sm">
+        <div class="badge b-coral">Analogy</div>
+        <div class="val-sm">If the market price for corn is $3.70, charging $4 means zero sales. Charging less is pointless — you can sell everything at $3.70.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 4. Profit equation -->
+  <section class="section" data-section="profit equation TR TC total revenue cost ATC markup output economic accounting">
+    <div class="section-title">Core profit equation</div>
+    <div class="card">
+      <div class="eq">π = TR − TC = P·q − ATC·q = q(P − ATC)</div>
+      <div class="val-sm muted" style="margin-top:8px;">(P − ATC) is the per-unit markup. Multiply by output q to get total profit. A $0.50 markup on each jar × jars sold = profit.</div>
+      <div class="two-col" style="margin-top:10px;">
+        <div class="card-sm">
+          <div class="badge b-teal" style="margin-bottom:4px;">π &gt; 0</div>
+          <div class="val-sm">P &gt; ATC. Positive economic profit — rectangle sits below the MR line.</div>
+        </div>
+        <div class="card-sm">
+          <div class="badge b-coral" style="margin-bottom:4px;">π &lt; 0</div>
+          <div class="val-sm">P &lt; ATC. Firm loses money but may still operate if P ≥ AVC (short run).</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Supply curve -->
+  <section class="section" data-section="supply curve MC marginal cost AVC individual firm shutdown horizontal sum">
+    <div class="section-title">Individual firm supply curve</div>
+    <div class="card">
+      <div class="val">Supply curve = MC curve at or above min AVC</div>
+      <div class="val-sm muted" style="margin-top:6px;">For any quoted price, the firm jumps to its MC curve at that price level. Below min AVC → shut down (q = 0). Market supply is the horizontal sum of every firm's MC curve:</div>
+      <div class="eq">S = Σ<sup>N</sup><sub>i=1</sub> MCᵢ &nbsp; (at or above AVC)</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 6. Equilibrium -->
+  <section class="section" data-section="equilibrium short run long run MR MC profit zero D=S market clears stable">
+    <div class="section-title">Equilibrium conditions</div>
+    <div class="card">
+      <table class="neat">
+        <thead>
+          <tr><th>Condition</th><th>Short run</th><th>Long run</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Market clears</td>
+            <td><span class="check">✓</span> D = S</td>
+            <td><span class="check">✓</span> D = S</td>
+          </tr>
+          <tr>
+            <td>Firm optimizes</td>
+            <td>MR = MC ≥ AVC</td>
+            <td>MR = MC</td>
+          </tr>
+          <tr>
+            <td>Profit</td>
+            <td>π can be &gt; 0, &lt; 0, or 0</td>
+            <td><strong>π = 0</strong> (economic)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <blockquote class="blockquote" style="margin:0 0 0.65rem;">"Only when economic profit equals zero do we have stability. Nobody inside wants out, nobody outside wants in."</blockquote>
+    <div class="card-muted">
+      <div class="label">Important distinction</div>
+      <div class="val-sm">π = 0 means <em>economic</em> profit is zero, not accounting profit. A firm can report $20M accounting profit and still have π = 0 if the best alternative use of those resources also earns $20M. Opportunity cost is built in.</div>
+    </div>
+  </section>
+
+  <!-- 7. Entry & exit -->
+  <section class="section" data-section="entry exit dynamics ball bearing supply shift price falls rises profit eroded firms">
+    <div class="section-title">Entry &amp; exit dynamics</div>
+    <div class="card">
+      <div class="flow-row">
+        <span class="badge b-amber" style="margin:0;">π &gt; 0</span>
+        <span class="arrow-span">→</span>
+        <span class="flow-text">Outsiders enter</span>
+        <span class="arrow-span">→</span>
+        <span class="flow-text">S shifts right</span>
+        <span class="arrow-span">→</span>
+        <span class="flow-text">Price falls</span>
+        <span class="arrow-span">→</span>
+        <span class="flow-text">π eroded to 0</span>
+      </div>
+      <div class="flow-row" style="margin-bottom:10px;">
+        <span class="badge b-coral" style="margin:0;">π &lt; 0</span>
+        <span class="arrow-span">→</span>
+        <span class="flow-text">Insiders exit</span>
+        <span class="arrow-span">→</span>
+        <span class="flow-text">S shifts left</span>
+        <span class="arrow-span">→</span>
+        <span class="flow-text">Price rises</span>
+        <span class="arrow-span">→</span>
+        <span class="flow-text">π returns to 0</span>
+      </div>
+      <blockquote class="blockquote">"If profits are positive in the short-run this is going to attract entry from people in other sectors… they will just keep coming in until they've basically collapsed the returns in your sector to the returns in their sector."</blockquote>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- 8. External shock -->
+  <section class="section" data-section="external shock demand increase long run short run adjustment equilibrium price output entry supply shift cancer study example">
+    <div class="section-title">External shock walkthrough — demand increase</div>
+    <div class="card">
+      <div class="shock-grid">
+        <div class="shock-step">
+          <div class="badge b-purple">Start</div>
+          <div class="val-sm">LR equilibrium. D₀ = S₀, π = 0. ATC tangent to MR₀.</div>
+        </div>
+        <div class="shock-step">
+          <div class="badge b-blue">Shock</div>
+          <div class="val-sm">New study: product cuts cancer risk 20%. D shifts right to D₁.</div>
+        </div>
+        <div class="shock-step">
+          <div class="badge b-amber">SR new eq.</div>
+          <div class="val-sm">Price jumps to P₁, output rises to Q₁. Firms earn positive π. (SR only.)</div>
+        </div>
+        <div class="shock-step">
+          <div class="badge b-teal">LR adjustment</div>
+          <div class="val-sm">Entry flows in, S shifts right to S₂. Price falls back to P₀. π → 0. New LR eq. at Q₂ &gt; Q₀.</div>
+        </div>
+      </div>
+      <div class="eq">LR result: same price P₀, more total output Q₂, more firms</div>
+      <blockquote class="blockquote">"Think of that ball bearing at the bottom of the bowl. Something kicks it and it rolls everywhere. Eventually it comes to rest again — that's when profits are driven back to zero."</blockquote>
+    </div>
+  </section>
+
+  <!-- 9. Shutdown -->
+  <section class="section" data-section="shutdown condition AVC ATC fixed cost variable sunk short run operate decision">
+    <div class="section-title">Shutdown condition (short run)</div>
+    <div class="card">
+      <table class="neat">
+        <thead><tr><th>Condition</th><th>Decision</th><th>Reasoning</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>P ≥ AVC</td>
+            <td>Operate at MR = MC</td>
+            <td>Revenue covers variable costs; residual offsets some fixed cost</td>
+          </tr>
+          <tr>
+            <td>P &lt; AVC</td>
+            <td>Shut down (q = 0)</td>
+            <td>Can't cover variable costs — losing money on every unit produced</td>
+          </tr>
+          <tr>
+            <td>P &lt; ATC but P ≥ AVC</td>
+            <td>Operate (SR), exit (LR)</td>
+            <td>Fixed costs are sunk in SR; call your broker to get out of the lease</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 10. Quick vocab -->
+  <section class="section" data-section="vocab glossary definitions economic profit accounting MR price taker LR equilibrium min ATC homogeneous">
+    <div class="section-title">Quick vocab</div>
+    <div class="pill-row">
+      <span class="pill">Economic profit = accounting profit − opportunity cost</span>
+      <span class="pill">MR = P (price takers)</span>
+      <span class="pill">S = ΣMCᵢ at or above AVC</span>
+      <span class="pill">LR equilibrium: P = min ATC</span>
+      <span class="pill">Homogeneous = identical product</span>
+      <span class="pill">Price taker = no market power</span>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ════════════════════════════════
+   THEME SYSTEM
+════════════════════════════════ */
+(function() {
+  const html = document.documentElement;
+  const btn  = document.getElementById('theme-toggle');
+
+  // SVG colour maps
+  const svgColors = {
+    light: {
+      mono: '#185FA5', oligo: '#0F6E56', perf: '#534AB7',
+      sub:  '#9C9A92', line: '#D3D1C7'
+    },
+    dark: {
+      mono: '#85B7EB', oligo: '#5DCAA5', perf: '#AFA9EC',
+      sub:  '#5F5E5A', line: '#3A3935'
+    }
+  };
+
+  function paintSVG(theme) {
+    const c   = svgColors[theme];
+    const svg = document.getElementById('spectrum-svg');
+    if (!svg) return;
+    svg.querySelectorAll('.t-mono')   .forEach(el => el.setAttribute('fill', c.mono));
+    svg.querySelectorAll('.t-oligo')  .forEach(el => el.setAttribute('fill', c.oligo));
+    svg.querySelectorAll('.t-perf')   .forEach(el => el.setAttribute('fill', c.perf));
+    svg.querySelectorAll('.t-sub')    .forEach(el => el.setAttribute('fill', c.sub));
+    svg.querySelectorAll('.spec-line').forEach(el => el.setAttribute('stroke', c.line));
+    svg.querySelectorAll('.arr-head') .forEach(el => el.setAttribute('stroke', c.line));
+    svg.querySelectorAll('.dot-mono') .forEach(el => el.setAttribute('fill', c.mono));
+    svg.querySelectorAll('.dot-oligo').forEach(el => el.setAttribute('fill', c.oligo));
+    svg.querySelectorAll('.dot-perf') .forEach(el => el.setAttribute('fill', c.perf));
+  }
+
+  function applyTheme(theme, save) {
+    html.setAttribute('data-theme', theme);
+    paintSVG(theme);
+    if (save) localStorage.setItem('econ-theme', theme);
+  }
+
+  // Initial: saved > system preference > light
+  const saved  = localStorage.getItem('econ-theme');
+  const prefer = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  applyTheme(saved || prefer, false);
+
+  // Toggle on click
+  btn.addEventListener('click', function() {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next, true);
+  });
+
+  // Respond to system changes only when user hasn't manually chosen
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('econ-theme')) {
+      applyTheme(e.matches ? 'dark' : 'light', false);
+    }
+  });
+})();
+
+/* ════════════════════════════════
+   SEARCH
+════════════════════════════════ */
+(function() {
+  const input    = document.getElementById('search-input');
+  const counter  = document.getElementById('search-count');
+  const noRes    = document.getElementById('no-results');
+  const header   = document.getElementById('page-header');
+  const sections = Array.from(document.querySelectorAll('.section'));
+  const originals = sections.map(s => s.innerHTML);
+
+  function clearHighlights() {
+    sections.forEach((s, i) => { s.innerHTML = originals[i]; });
+  }
+
+  function highlight(node, term) {
+    if (node.nodeType === 3) {
+      const idx = node.nodeValue.toLowerCase().indexOf(term);
+      if (idx === -1) return;
+      const before = document.createTextNode(node.nodeValue.slice(0, idx));
+      const mk     = document.createElement('mark');
+      mk.textContent = node.nodeValue.slice(idx, idx + term.length);
+      const after  = document.createTextNode(node.nodeValue.slice(idx + term.length));
+      const p      = node.parentNode;
+      p.insertBefore(before, node);
+      p.insertBefore(mk, node);
+      p.insertBefore(after, node);
+      p.removeChild(node);
+    } else if (node.nodeType === 1 && !['SCRIPT','STYLE','MARK'].includes(node.nodeName)) {
+      Array.from(node.childNodes).forEach(c => highlight(c, term));
+    }
+  }
+
+  input.addEventListener('input', function() {
+    const term = this.value.trim().toLowerCase();
+
+    if (!term) {
+      clearHighlights();
+      sections.forEach(s => s.classList.remove('hidden'));
+      header.classList.remove('hidden');
+      noRes.style.display    = 'none';
+      counter.style.display  = 'none';
+      return;
+    }
+
+    header.classList.add('hidden');
+    sections.forEach((s, i) => { s.innerHTML = originals[i]; });
+
+    let total = 0, visible = 0;
+
+    sections.forEach(s => {
+      const haystack = (s.dataset.section + ' ' + s.textContent).toLowerCase();
+      if (haystack.includes(term)) {
+        s.classList.remove('hidden');
+        s.querySelectorAll('.val,.val-sm,.eq,.blockquote,.badge,.pill,td,th,.label')
+          .forEach(el => highlight(el, term));
+        total += s.querySelectorAll('mark').length;
+        visible++;
+      } else {
+        s.classList.add('hidden');
+      }
+    });
+
+    noRes.style.display   = visible === 0 ? 'block' : 'none';
+    counter.style.display = total   > 0   ? 'block' : 'none';
+    if (total > 0) counter.textContent = total + (total === 1 ? ' match' : ' matches');
+  });
+})();
+</script>
+</body>
+</html>
