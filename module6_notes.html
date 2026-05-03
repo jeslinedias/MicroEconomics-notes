@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 6 — Monopoly Markets &amp; Efficiency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════
+     LIGHT THEME
+  ═══════════════════════════════════════ */
+  :root,
+  [data-theme="light"] {
+    --bg:             #F7F6F2;
+    --bg-topbar:      rgba(247,246,242,0.9);
+    --surface:        #FFFFFF;
+    --surface-muted:  #F0EFE9;
+    --border:         rgba(0,0,0,0.08);
+    --border-med:     rgba(0,0,0,0.14);
+    --border-strong:  rgba(0,0,0,0.22);
+    --text-primary:   #1A1917;
+    --text-secondary: #6B6960;
+    --text-tertiary:  #9C9A92;
+    --check-color:    #1D9E75;
+    --mark-bg:        #FFF0A3;
+    --mark-color:     #3d2f00;
+    --back-hover:     #ECEAE4;
+    --fill-blue:   #E6F1FB; --ink-blue:   #185FA5;
+    --fill-teal:   #E1F5EE; --ink-teal:   #0F6E56;
+    --fill-amber:  #FAEEDA; --ink-amber:  #BA7517;
+    --fill-purple: #EEEDFE; --ink-purple: #534AB7;
+    --fill-coral:  #FAECE7; --ink-coral:  #993C1D;
+    --fill-red:    #FCEBEB; --ink-red:    #A32D2D;
+    --fill-green:  #EAF3DE; --ink-green:  #3B6D11;
+  }
+
+  /* ═══════════════════════════════════════
+     DARK THEME
+  ═══════════════════════════════════════ */
+  [data-theme="dark"] {
+    --bg:             #141413;
+    --bg-topbar:      rgba(20,20,19,0.92);
+    --surface:        #1F1E1C;
+    --surface-muted:  #2A2927;
+    --border:         rgba(255,255,255,0.07);
+    --border-med:     rgba(255,255,255,0.12);
+    --border-strong:  rgba(255,255,255,0.22);
+    --text-primary:   #E8E6DF;
+    --text-secondary: #9C9A92;
+    --text-tertiary:  #5F5E5A;
+    --check-color:    #5DCAA5;
+    --mark-bg:        #4a3d00;
+    --mark-color:     #F5D76E;
+    --back-hover:     #2A2927;
+    --fill-blue:   #0C2D50; --ink-blue:   #85B7EB;
+    --fill-teal:   #062820; --ink-teal:   #5DCAA5;
+    --fill-amber:  #3A2106; --ink-amber:  #EFB84A;
+    --fill-purple: #1E1A4A; --ink-purple: #AFA9EC;
+    --fill-coral:  #3A1508; --ink-coral:  #F0997B;
+    --fill-red:    #3d1111; --ink-red:    #F09595;
+    --fill-green:  #142208; --ink-green:  #97C459;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Geist', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+    transition: background 0.22s ease, color 0.22s ease;
+  }
+
+  /* ── Topbar ── */
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg-topbar);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 0.5px solid var(--border-med);
+    padding: 0 1.25rem; height: 52px;
+    display: flex; align-items: center; gap: 10px;
+    transition: background 0.22s ease, border-color 0.22s ease;
+  }
+  .back-btn {
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'Geist', sans-serif; font-size: 13px; font-weight: 400;
+    color: var(--text-secondary); text-decoration: none;
+    padding: 5px 10px; border: 0.5px solid var(--border-med);
+    border-radius: 8px; background: var(--surface);
+    cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .back-btn:hover { background: var(--back-hover); color: var(--text-primary); border-color: var(--border-strong); }
+  .back-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .topbar-title {
+    font-size: 13px; font-weight: 500; color: var(--text-primary);
+    flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+  }
+
+  /* ── Search ── */
+  .search-wrap { position: relative; display: flex; align-items: center; flex-shrink: 0; }
+  .search-icon {
+    position: absolute; left: 9px; width: 14px; height: 14px;
+    color: var(--text-tertiary); pointer-events: none;
+  }
+  #search-input {
+    font-family: 'Geist', sans-serif; font-size: 13px;
+    background: var(--surface); border: 0.5px solid var(--border-med);
+    border-radius: 8px; padding: 6px 38px 6px 29px;
+    width: 200px; color: var(--text-primary); outline: none;
+    transition: border-color 0.15s, width 0.2s, background 0.22s, color 0.22s;
+  }
+  #search-input:focus { border-color: var(--border-strong); width: 240px; }
+  #search-input::placeholder { color: var(--text-tertiary); }
+  .search-count {
+    position: absolute; right: 9px; font-size: 11px;
+    color: var(--text-tertiary); pointer-events: none; display: none; white-space: nowrap;
+  }
+
+  /* ── Theme toggle ── */
+  .theme-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; flex-shrink: 0;
+    border: 0.5px solid var(--border-med); border-radius: 8px;
+    background: var(--surface); cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    color: var(--text-secondary);
+  }
+  .theme-btn:hover { background: var(--back-hover); color: var(--text-primary); border-color: var(--border-strong); }
+  .theme-btn svg { width: 16px; height: 16px; }
+  .icon-sun  { display: none; }
+  .icon-moon { display: block; }
+  [data-theme="dark"] .icon-sun  { display: block; }
+  [data-theme="dark"] .icon-moon { display: none; }
+
+  /* ── Layout ── */
+  .page {
+    max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem;
+    animation: fadeUp 0.3s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Page header ── */
+  .page-header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--border-med); }
+  .module-label { font-size: 11px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px; }
+  .page-title { font-family: 'Instrument Serif', serif; font-size: 34px; font-weight: 400; color: var(--text-primary); line-height: 1.2; margin-bottom: 8px; }
+  .page-subtitle { font-size: 14px; color: var(--text-secondary); }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 2rem; }
+  .section-title {
+    font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-tertiary); margin-bottom: 0.75rem; padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid var(--border); transition: color 0.22s, border-color 0.22s;
+  }
+
+  /* ── Cards ── */
+  .card { background: var(--surface); border: 0.5px solid var(--border-med); border-radius: 14px; padding: 1.1rem 1.3rem; margin-bottom: 0.65rem; transition: background 0.22s, border-color 0.22s; }
+  .card-sm { background: var(--surface); border: 0.5px solid var(--border); border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 0.5rem; transition: background 0.22s, border-color 0.22s; }
+  .card-muted { background: var(--surface-muted); border: 0.5px solid var(--border); border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 0.5rem; transition: background 0.22s; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-bottom: 0.65rem; }
+
+  /* ── Badges ── */
+  .badge { display: inline-block; font-size: 10.5px; font-weight: 500; padding: 2px 9px; border-radius: 99px; margin-bottom: 7px; letter-spacing: 0.02em; transition: background 0.22s, color 0.22s; }
+  .b-blue   { background: var(--fill-blue);   color: var(--ink-blue);   }
+  .b-teal   { background: var(--fill-teal);   color: var(--ink-teal);   }
+  .b-amber  { background: var(--fill-amber);  color: var(--ink-amber);  }
+  .b-purple { background: var(--fill-purple); color: var(--ink-purple); }
+  .b-coral  { background: var(--fill-coral);  color: var(--ink-coral);  }
+  .b-red    { background: var(--fill-red);    color: var(--ink-red);    }
+  .b-green  { background: var(--fill-green);  color: var(--ink-green);  }
+
+  /* ── Typography ── */
+  .label  { font-size: 11px; color: var(--text-tertiary); margin-bottom: 3px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+  .val    { font-size: 14px; font-weight: 500; color: var(--text-primary); line-height: 1.5; }
+  .val-sm { font-size: 13px; color: var(--text-primary); line-height: 1.65; }
+  .muted  { color: var(--text-secondary); }
+  .blockquote {
+    border-left: 2px solid var(--border-med); padding: 6px 14px; margin: 10px 0 0;
+    font-size: 13px; color: var(--text-secondary); font-family: 'Instrument Serif', serif;
+    font-style: italic; line-height: 1.7; transition: border-color 0.22s, color 0.22s;
+  }
+  .eq {
+    font-family: 'DM Mono', monospace; font-size: 12.5px; background: var(--surface-muted);
+    border: 0.5px solid var(--border-med); border-radius: 10px; padding: 8px 12px; margin: 8px 0;
+    color: var(--text-primary); transition: background 0.22s, border-color 0.22s, color 0.22s;
+  }
+  hr.divider { border: none; border-top: 0.5px solid var(--border-med); margin: 2rem 0; transition: border-color 0.22s; }
+
+  /* ── Cause rows ── */
+  .cond-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; }
+  .cond-num { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--border-strong); line-height: 1; flex-shrink: 0; width: 28px; text-align: right; transition: color 0.22s; }
+  .cond-body { flex: 1; }
+
+  /* ── Two-col ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .three-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+  @media (max-width: 520px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── Flow arrows ── */
+  .flow-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; margin-bottom: 10px; }
+  .arrow-span { color: var(--text-tertiary); font-size: 12px; }
+  .flow-text  { color: var(--text-secondary); }
+
+  /* ── Table ── */
+  table.neat { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.neat th { text-align: left; font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-tertiary); padding: 6px 10px; border-bottom: 0.5px solid var(--border-med); transition: color 0.22s, border-color 0.22s; }
+  table.neat td { padding: 9px 10px; border-bottom: 0.5px solid var(--border); color: var(--text-primary); vertical-align: top; line-height: 1.55; transition: color 0.22s, border-color 0.22s; }
+  table.neat tr:last-child td { border-bottom: none; }
+  .check { color: var(--check-color); font-weight: 600; }
+  .cross { color: var(--ink-red); font-weight: 600; }
+
+  /* ── Pills ── */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 7px; }
+  .pill { font-size: 12px; padding: 4px 11px; border: 0.5px solid var(--border-med); border-radius: 99px; color: var(--text-secondary); background: var(--surface); transition: background 0.22s, border-color 0.22s, color 0.22s; }
+
+  /* ── Diagram wrapper ── */
+  .diagram-wrap { margin: 10px 0; }
+  .diagram-wrap svg { width: 100%; }
+
+  /* ── Search highlight ── */
+  mark { background: var(--mark-bg); color: var(--mark-color); border-radius: 2px; padding: 0 2px; transition: background 0.22s, color 0.22s; }
+
+  /* ── No results / visibility ── */
+  #no-results { display: none; text-align: center; padding: 3rem 1rem; color: var(--text-tertiary); font-size: 14px; }
+  .section.hidden     { display: none; }
+  .page-header.hidden { display: none; }
+
+  /* ── Surplus diagram SVG classes ── */
+  .cs-fill    { fill: var(--fill-blue);   opacity: 0.55; }
+  .ps-fill    { fill: var(--fill-teal);   opacity: 0.55; }
+  .dwl-fill   { fill: var(--fill-amber);  opacity: 0.65; }
+  .profit-fill{ fill: var(--fill-purple); opacity: 0.55; }
+  .curve-d    { stroke: var(--ink-blue);  fill: none; stroke-width: 2; }
+  .curve-mr   { stroke: var(--ink-purple);fill: none; stroke-width: 2; stroke-dasharray: 5 3; }
+  .curve-mc   { stroke: var(--ink-coral); fill: none; stroke-width: 2; }
+  .curve-atc  { stroke: var(--ink-amber); fill: none; stroke-width: 1.5; stroke-dasharray: 4 3; }
+  .ref-line   { stroke: var(--text-tertiary); stroke-width: 0.7; stroke-dasharray: 3 3; fill: none; }
+  .axis-line  { stroke: var(--border-strong); stroke-width: 1; fill: none; }
+  .svg-label  { font-family: 'Geist', sans-serif; font-size: 11px; fill: var(--text-primary); }
+  .svg-label-sm { font-family: 'Geist', sans-serif; font-size: 9.5px; fill: var(--text-secondary); }
+  .svg-label-bold { font-family: 'Geist', sans-serif; font-size: 11px; font-weight: 600; fill: var(--text-primary); }
+</style>
+</head>
+<body>
+
+<!-- ── Topbar ── -->
+<nav class="topbar">
+  <a class="back-btn" href="index.html">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 12L6 8l4-4"/>
+    </svg>
+    Back
+  </a>
+  <span class="topbar-title">Module 6 — Monopoly Markets &amp; Efficiency</span>
+  <div class="search-wrap">
+    <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="6.5" cy="6.5" r="4"/><path d="M11 11l2.5 2.5"/>
+    </svg>
+    <input type="text" id="search-input" placeholder="Search notes…" autocomplete="off" spellcheck="false">
+    <span class="search-count" id="search-count"></span>
+  </div>
+  <button class="theme-btn" id="theme-toggle" aria-label="Toggle dark mode">
+    <svg class="icon-sun" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="10" cy="10" r="3.5"/>
+      <line x1="10" y1="1.5" x2="10" y2="3.5"/><line x1="10" y1="16.5" x2="10" y2="18.5"/>
+      <line x1="1.5" y1="10" x2="3.5" y2="10"/><line x1="16.5" y1="10" x2="18.5" y2="10"/>
+      <line x1="4.1" y1="4.1" x2="5.5" y2="5.5"/><line x1="14.5" y1="14.5" x2="15.9" y2="15.9"/>
+      <line x1="4.1" y1="15.9" x2="5.5" y2="14.5"/><line x1="14.5" y1="5.5" x2="15.9" y2="4.1"/>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 12.5A7 7 0 1 1 7.5 3a5.5 5.5 0 0 0 9.5 9.5z"/>
+    </svg>
+  </button>
+</nav>
+
+<main class="page" id="main-content">
+
+  <header class="page-header" id="page-header">
+    <div class="module-label">Economics · Module 6</div>
+    <h1 class="page-title">Monopoly Markets &amp; Efficiency</h1>
+    <p class="page-subtitle">Welfare analysis · Consumer &amp; producer surplus · Monopoly equilibrium · Deadweight loss · Antitrust</p>
+  </header>
+
+  <div id="no-results">No matching notes found.</div>
+
+  <!-- ─────────────────────────────────────────────────────
+       1. WELFARE ANALYSIS FRAMEWORK
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="welfare analysis efficiency metric yardstick measure outcome social gain pie consumers producers benevolent dictator">
+    <div class="section-title">Welfare analysis framework</div>
+    <div class="card">
+      <div class="val">Goal: build a metric — a "yardstick" — to measure efficiency</div>
+      <div class="val-sm muted" style="margin-top:6px;">Welfare economics asks: how good is this outcome for society? The yardstick will be held up against competitive markets, monopoly, oligopoly, and any other structure we study.</div>
+      <div class="blockquote">"You don't need to take a course in economics to understand monopolies are not very efficient for most people. Monopoly is great if you're the monopolist — but that's why we have antitrust laws."</div>
+    </div>
+    <div class="card-grid">
+      <div class="card-sm">
+        <div class="badge b-blue">Assumption</div>
+        <div class="val-sm">No government intervention — just two parties: consumers and producers.</div>
+      </div>
+      <div class="card-sm">
+        <div class="badge b-teal">Definition</div>
+        <div class="val-sm">Welfare to economists = efficiency of outcomes, not income transfers or food stamps.</div>
+      </div>
+      <div class="card-sm">
+        <div class="badge b-purple">Benchmark</div>
+        <div class="val-sm">Perfectly competitive market = the best-case outcome. Everything else gets measured against it.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────
+       2. CONSUMER SURPLUS
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="consumer surplus CS definition value expenditure willingness to pay demand curve triangle price area">
+    <div class="section-title">Consumer surplus (CS)</div>
+    <div class="card">
+      <div class="val" style="margin-bottom:6px;">CS = Consumer value − consumer expenditure</div>
+      <div class="eq">CS = area below demand curve, above price P</div>
+      <div class="val-sm muted" style="margin-top:8px;">The demand curve is marginal willingness to pay. Anyone whose willingness to pay exceeds the market price gets a surplus — they would have paid more but didn't have to.</div>
+      <blockquote class="blockquote">"I'm buying a Snickers bar. In my head it's worth $2.50. I hand over $1. That extra $1.50 — the excess of my value over what I paid — that's consumer surplus."</blockquote>
+    </div>
+    <div class="card-muted">
+      <div class="label">Price increase effect</div>
+      <div class="val-sm">When price rises from P₀ to P₁, CS falls. The lost area has two parts: (1) a transfer to producers — consumers now pay more for the same units; (2) a deadweight loss triangle — consumers who would have bought at P₀ no longer buy at all.</div>
+    </div>
+
+    <!-- SVG: CS diagram (dedicated) -->
+    <div class="card" style="padding:1rem 1.3rem 1.1rem;">
+      <div class="label" style="margin-bottom:8px;">Consumer surplus — graph</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 480 250" role="img" id="cs-svg">
+          <title>Consumer surplus: shaded triangle between demand curve and price level</title>
+          <!--
+            Demand: (55,35) → (430,215)
+            P꜀ horizontal at y=145
+            Equilibrium: demand at y=145 → x = 55 + (430-55)*(145-35)/(215-35) = 55 + 375*110/180 = 55+229 = 284
+            CS triangle: (55,35), (284,145), (55,145)  ← all three corners verified on the lines
+          -->
+          <defs>
+            <pattern id="cs-hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#185FA5" stroke-width="1.2" stroke-opacity="0.35"/>
+            </pattern>
+          </defs>
+          <!-- Axes -->
+          <line class="axis-line" x1="55" y1="15" x2="55" y2="215"/>
+          <line class="axis-line" x1="55" y1="215" x2="445" y2="215"/>
+          <text class="svg-label" x="30" y="19">P ($)</text>
+          <text class="svg-label" x="440" y="230">Q</text>
+
+          <!-- CS fill — triangle (55,35)→(284,145)→(55,145) -->
+          <polygon points="55,35 284,145 55,145" fill="url(#cs-hatch)" opacity="0.9"/>
+          <polygon points="55,35 284,145 55,145" fill="#185FA5" opacity="0.13"/>
+
+          <!-- Demand curve D: (55,35) → (430,215) -->
+          <line class="curve-d" x1="55" y1="35" x2="430" y2="215"/>
+
+          <!-- P꜀ horizontal reference line: from y-axis to equilibrium x=284 -->
+          <line class="ref-line" x1="55" y1="145" x2="284" y2="145"/>
+          <!-- Q꜀ vertical drop from equilibrium (284,145) to x-axis (284,215) -->
+          <line class="ref-line" x1="284" y1="145" x2="284" y2="215"/>
+
+          <!-- Equilibrium dot — sits exactly on the demand line at (284,145) -->
+          <circle cx="284" cy="145" r="4.5" fill="#185FA5"/>
+
+          <!-- Axis tick labels -->
+          <text class="svg-label" x="28" y="148">P꜀</text>
+          <text class="svg-label" x="276" y="229">Q꜀</text>
+
+          <!-- Demand label -->
+          <text class="svg-label" x="410" y="212" fill="#185FA5">D</text>
+
+          <!-- CS area label -->
+          <text class="svg-label-bold" x="98" y="110" fill="#185FA5">CS</text>
+          <text class="svg-label-sm" x="98" y="124">(value − price paid)</text>
+
+          <!-- Max WTP annotation at top-left corner -->
+          <text class="svg-label-sm" x="62" y="33">Max WTP</text>
+          <text class="svg-label-sm" x="62" y="45">(D-intercept)</text>
+
+          <!-- Surplus annotation right of triangle -->
+          <text class="svg-label-sm" x="300" y="88">WTP &gt; P꜀</text>
+          <text class="svg-label-sm" x="300" y="101">→ surplus</text>
+          <text class="svg-label-sm" x="300" y="114">to consumer</text>
+
+          <!-- Note below price line -->
+          <text class="svg-label-sm" x="160" y="185">No CS below P꜀</text>
+          <text class="svg-label-sm" x="145" y="198">(consumers exit market)</text>
+        </svg>
+      </div>
+      <div style="margin-top:8px;font-size:12px;color:var(--text-secondary);">
+        CS is the triangular area <em>below</em> the demand curve and <em>above</em> the price line P꜀. Every buyer who would have paid more than P꜀ receives a surplus equal to (their WTP − P꜀).
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────
+       3. PRODUCER SURPLUS
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="producer surplus PS revenue marginal cost supply curve area below price above MC net revenue firm willing sell minimum">
+    <div class="section-title">Producer surplus (PS)</div>
+    <div class="card">
+      <div class="val" style="margin-bottom:6px;">PS = Net revenue above what is needed to supply each unit</div>
+      <div class="eq">PS = area below price P, above the supply curve (= ΣMCᵢ)</div>
+      <div class="val-sm muted" style="margin-top:8px;">The supply curve is built from marginal costs — it tells us the <em>minimum price</em> at which each successive unit will be offered to the market. For any unit whose marginal cost is <em>below</em> the market price, the producer earns a surplus on that unit equal to (P − MC).</div>
+      <blockquote class="blockquote">"I would have sold you that unit for $2. But the market price is $5. That $3 gap? That's a piece of producer surplus. Add all those gaps up across every unit produced — that's total PS."</blockquote>
+    </div>
+    <div class="card-muted">
+      <div class="label">Key mechanism</div>
+      <div class="val-sm">Firms are not forced to sell. They choose to supply at the market price because price ≥ MC for all units produced. The vertical gap between the market price line and the supply curve at every output level is the per-unit surplus. Summing across all Q꜀ units gives the triangular PS area.</div>
+    </div>
+
+    <!-- SVG: PS dedicated diagram -->
+    <div class="card" style="padding:1rem 1.3rem 1.1rem;">
+      <div class="label" style="margin-bottom:8px;">Producer surplus — graph</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 480 250" role="img" id="ps-svg">
+          <title>Producer surplus: shaded triangle between price level and supply curve</title>
+          <!--
+            Supply: (55,215) → (390,55)
+            P꜀ horizontal at y=145
+            Equilibrium on supply at y=145 → x = 55 + (390-55)*(215-145)/(215-55) = 55 + 335*70/160 = 55+146.6 = 201.6 ≈ 202
+            PS triangle: (55,215), (55,145), (202,145)  ← supply-y-intercept at (55,215), price line corners
+            Per-unit gap at x=155: supply y = 215 + (55-215)*(155-55)/(390-55) = 215 - 160*100/335 = 215-47.8 = 167
+          -->
+          <defs>
+            <pattern id="ps-hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(135)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#0F6E56" stroke-width="1.2" stroke-opacity="0.35"/>
+            </pattern>
+          </defs>
+          <!-- Axes -->
+          <line class="axis-line" x1="55" y1="15" x2="55" y2="215"/>
+          <line class="axis-line" x1="55" y1="215" x2="445" y2="215"/>
+          <text class="svg-label" x="30" y="19">P ($)</text>
+          <text class="svg-label" x="440" y="230">Q</text>
+
+          <!-- PS fill — triangle (55,215)→(55,145)→(202,145) -->
+          <polygon points="55,215 55,145 202,145" fill="url(#ps-hatch)" opacity="0.9"/>
+          <polygon points="55,215 55,145 202,145" fill="#0F6E56" opacity="0.13"/>
+
+          <!-- Supply curve S: (55,215) → (390,55) -->
+          <line class="curve-mc" x1="55" y1="215" x2="390" y2="55"/>
+
+          <!-- P꜀ horizontal reference from y-axis to equil x=202 -->
+          <line class="ref-line" x1="55" y1="145" x2="202" y2="145"/>
+          <!-- Q꜀ vertical drop from (202,145) to x-axis -->
+          <line class="ref-line" x1="202" y1="145" x2="202" y2="215"/>
+
+          <!-- Equilibrium dot — on supply at (202,145) -->
+          <circle cx="202" cy="145" r="4.5" fill="#0F6E56"/>
+
+          <!-- Axis tick labels -->
+          <text class="svg-label" x="28" y="148">P꜀</text>
+          <text class="svg-label" x="194" y="229">Q꜀</text>
+
+          <!-- Supply label -->
+          <text class="svg-label" x="366" y="52" fill="#993C1D">S = ΣMCᵢ</text>
+
+          <!-- PS area label -->
+          <text class="svg-label-bold" x="72" y="196" fill="#0F6E56">PS</text>
+          <text class="svg-label-sm" x="72" y="210">(price − MC)</text>
+
+          <!-- Per-unit gap annotation at x=155, supply y≈167 -->
+          <line x1="155" y1="145" x2="155" y2="167" stroke="#0F6E56" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <!-- small tick marks at each end -->
+          <line x1="150" y1="145" x2="160" y2="145" stroke="#0F6E56" stroke-width="1"/>
+          <line x1="150" y1="167" x2="160" y2="167" stroke="#0F6E56" stroke-width="1"/>
+          <text class="svg-label-sm" x="163" y="152">Per-unit</text>
+          <text class="svg-label-sm" x="163" y="164">surplus (P−MC)</text>
+
+          <!-- Supply intercept note at bottom-left -->
+          <text class="svg-label-sm" x="62" y="207">Min. price</text>
+          <text class="svg-label-sm" x="62" y="219">to supply</text>
+
+          <!-- Right side annotation -->
+          <text class="svg-label-sm" x="220" y="170">P exceeds</text>
+          <text class="svg-label-sm" x="220" y="183">min. needed</text>
+          <text class="svg-label-sm" x="220" y="196">→ producer</text>
+          <text class="svg-label-sm" x="220" y="209">surplus</text>
+        </svg>
+      </div>
+      <div style="margin-top:8px;font-size:12px;color:var(--text-secondary);">
+        PS is the triangular area <em>below</em> the price line P꜀ and <em>above</em> the supply curve. The supply curve (= sum of all firms' MC curves) shows the minimum firms would accept for each unit — anything above that is their gain.
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────
+       4. SOCIAL GAIN & THE BENEVOLENT DICTATOR
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="social gain SG welfare benevolent dictator maximize pie CS PS sum efficiency neutral distribution output optimal alpha beta gamma marginal willingness pay progressive tax redistribute">
+    <div class="section-title">Social gain &amp; the benevolent dictator</div>
+
+    <!-- Core definition -->
+    <div class="card">
+      <div class="val" style="margin-bottom:6px;">SG = CS + PS &nbsp;— the "size of the pie"</div>
+      <div class="eq">SG = CS + PS &nbsp;→ maximized at Q꜀ where D intersects S (competitive equilibrium)</div>
+      <div class="val-sm muted" style="margin-top:8px;">Social gain aggregates the net benefits to every party in the market. When there is no government, those parties are just consumers and producers. SG is the economist's measure of how efficient an allocation is — not who got what, but how big the total gain was.</div>
+    </div>
+
+    <!-- Who is the BD -->
+    <div class="card">
+      <div class="val" style="margin-bottom:8px;">Who is the benevolent dictator?</div>
+      <div class="val-sm muted">A thought-experiment character introduced to help us reason about efficiency. The BD:</div>
+      <div style="margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:9px;">
+        <div class="card-sm" style="margin:0;">
+          <div class="badge b-teal">Power</div>
+          <div class="val-sm">Can dictate any allocation — who produces, who consumes, what price is charged.</div>
+        </div>
+        <div class="card-sm" style="margin:0;">
+          <div class="badge b-purple">Goal</div>
+          <div class="val-sm">Maximizes total SG — the size of the pie. The BD does <em>not</em> care about the distribution between CS and PS.</div>
+        </div>
+        <div class="card-sm" style="margin:0;">
+          <div class="badge b-blue">Neutrality</div>
+          <div class="val-sm">$1 of CS counts the same as $1 of PS. No favourites. The BD would never sacrifice pie size to shift slices around.</div>
+        </div>
+        <div class="card-sm" style="margin:0;">
+          <div class="badge b-amber">Logic</div>
+          <div class="val-sm">A pie of 100 beats a pie of 99 — always. If you want a different split, redistribute later. First, maximise the pie.</div>
+        </div>
+      </div>
+      <blockquote class="blockquote">"The benevolent dictator is not out to push people around. She just wants to see society get the most efficient outcome. Make the pie as large as possible — then if society wants to redistribute, go ahead and cut it with a very sharp knife later."</blockquote>
+    </div>
+
+    <!-- Price neutrality insight -->
+    <div class="card">
+      <div class="val" style="margin-bottom:6px;">Key insight: price only decides who gets the surplus, not the total</div>
+      <div class="val-sm muted">At a given output α where WTP = $10 and MC = $2:</div>
+      <div style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+        <div class="card-muted">
+          <div class="label">If P = $8</div>
+          <div class="eq" style="margin:4px 0;">CS = 10 − 8 = 2</div>
+          <div class="eq" style="margin:4px 0;">PS = 8 − 2 = 6</div>
+          <div class="eq" style="margin:4px 0;">SG = 2 + 6 = <strong>8</strong></div>
+        </div>
+        <div class="card-muted">
+          <div class="label">If P = $5</div>
+          <div class="eq" style="margin:4px 0;">CS = 10 − 5 = 5</div>
+          <div class="eq" style="margin:4px 0;">PS = 5 − 2 = 3</div>
+          <div class="eq" style="margin:4px 0;">SG = 5 + 3 = <strong>8</strong></div>
+        </div>
+      </div>
+      <div class="val-sm muted" style="margin-top:10px;">The price just slides the split. SG is always the full vertical gap (WTP − MC) = $8. The BD doesn't care whether price is $5 or $8.</div>
+    </div>
+
+    <!-- BD's optimal output rule -->
+    <div class="card">
+      <div class="val" style="margin-bottom:6px;">The BD's decision rule: produce every unit where WTP &gt; MC</div>
+      <div class="val-sm muted">At each potential output level, the BD asks: does this unit generate more value to consumers than it costs society in resources? If yes — produce it. If no — stop.</div>
+      <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+        <div class="flow-row" style="margin-bottom:0;">
+          <span class="badge b-teal" style="margin:0;">α to γ</span>
+          <span class="arrow-span">→</span>
+          <span class="flow-text">WTP &gt; MC at every unit</span>
+          <span class="arrow-span">→</span>
+          <span class="flow-text">each unit adds to SG</span>
+          <span class="arrow-span">→</span>
+          <span class="flow-text">produce it</span>
+        </div>
+        <div class="flow-row" style="margin-bottom:0;">
+          <span class="badge b-purple" style="margin:0;">at γ (= Q꜀)</span>
+          <span class="arrow-span">→</span>
+          <span class="flow-text">WTP = MC exactly</span>
+          <span class="arrow-span">→</span>
+          <span class="flow-text">last unit adds zero net SG</span>
+          <span class="arrow-span">→</span>
+          <span class="flow-text">stop here</span>
+        </div>
+        <div class="flow-row" style="margin-bottom:0;">
+          <span class="badge b-red" style="margin:0;">past γ</span>
+          <span class="arrow-span">→</span>
+          <span class="flow-text">MC &gt; WTP</span>
+          <span class="arrow-span">→</span>
+          <span class="flow-text">unit destroys SG</span>
+          <span class="arrow-span">→</span>
+          <span class="flow-text">don't produce</span>
+        </div>
+      </div>
+      <blockquote class="blockquote">"Every time we add another unit before γ, I get social gain in excess of social cost. Keep going right. Each time gaining, each time gaining. I don't want to stop short of γ — there's still gain left on the table."</blockquote>
+    </div>
+
+    <!-- SG diagram showing full pie at competitive equilibrium -->
+    <div class="card" style="padding:1rem 1.3rem 1.1rem;">
+      <div class="label" style="margin-bottom:8px;">Social gain at competitive equilibrium — full pie</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 500 270" role="img" id="sg-svg">
+          <title>Social gain equals CS plus PS at competitive equilibrium — the full pie</title>
+          <!--
+            D: (60,30) → (430,230).  S: (60,230) → (400,50)
+            Intersection: x=246.9, y=131.0  (computed exactly)
+            CS triangle: (60,30), (247,131), (60,131)
+            PS triangle: (60,230), (60,131), (247,131)
+            All three corners of each polygon lie exactly on the respective curves/lines.
+          -->
+          <defs>
+            <pattern id="sg-cs-hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#185FA5" stroke-width="1.1" stroke-opacity="0.4"/>
+            </pattern>
+            <pattern id="sg-ps-hatch" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(135)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#0F6E56" stroke-width="1.1" stroke-opacity="0.4"/>
+            </pattern>
+          </defs>
+          <!-- Axes -->
+          <line class="axis-line" x1="60" y1="15" x2="60" y2="240"/>
+          <line class="axis-line" x1="60" y1="240" x2="465" y2="240"/>
+          <text class="svg-label" x="34" y="19">P ($)</text>
+          <text class="svg-label" x="460" y="255">Q</text>
+
+          <!-- CS triangle — (60,30)→(247,131)→(60,131) -->
+          <polygon points="60,30 247,131 60,131" fill="url(#sg-cs-hatch)" opacity="1"/>
+          <polygon points="60,30 247,131 60,131" fill="#185FA5" opacity="0.11"/>
+
+          <!-- PS triangle — (60,230)→(60,131)→(247,131) -->
+          <polygon points="60,230 60,131 247,131" fill="url(#sg-ps-hatch)" opacity="1"/>
+          <polygon points="60,230 60,131 247,131" fill="#0F6E56" opacity="0.11"/>
+
+          <!-- Demand: (60,30) → (430,230) -->
+          <line class="curve-d" x1="60" y1="30" x2="430" y2="230"/>
+          <!-- Supply: (60,230) → (400,50) -->
+          <line class="curve-mc" x1="60" y1="230" x2="400" y2="50"/>
+
+          <!-- P꜀ horizontal reference — y=131 from axis to equil x=247 -->
+          <line class="ref-line" x1="60" y1="131" x2="247" y2="131"/>
+          <!-- Q꜀ vertical drop — x=247 from equil y=131 to x-axis y=240 -->
+          <line class="ref-line" x1="247" y1="131" x2="247" y2="240"/>
+
+          <!-- Equilibrium dot — exactly at D∩S = (247,131) -->
+          <circle cx="247" cy="131" r="5.5" fill="#534AB7"/>
+
+          <!-- Axis labels -->
+          <text class="svg-label" x="28" y="134">P꜀</text>
+          <text class="svg-label" x="239" y="255">Q꜀</text>
+          <text class="svg-label" x="412" y="228" fill="#185FA5">D</text>
+          <text class="svg-label" x="382" y="47" fill="#993C1D">S₀</text>
+          <text class="svg-label" x="252" y="122" fill="#534AB7">E꜀</text>
+
+          <!-- CS label -->
+          <text class="svg-label-bold" x="85" y="88" fill="#185FA5">CS</text>
+          <text class="svg-label-sm" x="85" y="102" fill="#185FA5">(consumer surplus)</text>
+
+          <!-- PS label -->
+          <text class="svg-label-bold" x="80" y="205" fill="#0F6E56">PS</text>
+          <text class="svg-label-sm" x="80" y="219" fill="#0F6E56">(producer surplus)</text>
+
+          <!-- SG annotation right side -->
+          <line x1="280" y1="30" x2="280" y2="230" stroke="#534AB7" stroke-width="0.8" stroke-dasharray="4 3"/>
+          <text class="svg-label-bold" x="288" y="100" fill="#534AB7">SG =</text>
+          <text class="svg-label-bold" x="288" y="115" fill="#534AB7">CS + PS</text>
+          <text class="svg-label-sm" x="288" y="131">"the full pie"</text>
+
+          <!-- Unit gain illustration at x=115 -->
+          <!-- D at x=115: y = 30 + 200*(115-60)/(430-60) = 30 + 200*55/370 = 30+29.7 = 59.7 -->
+          <!-- S at x=115: y = 230 + (50-230)*(115-60)/(400-60) = 230 - 180*55/340 = 230-29.1 = 200.9 -->
+          <line x1="115" y1="60" x2="115" y2="201" stroke="#534AB7" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <line x1="110" y1="60" x2="120" y2="60" stroke="#534AB7" stroke-width="1"/>
+          <line x1="110" y1="201" x2="120" y2="201" stroke="#534AB7" stroke-width="1"/>
+          <text class="svg-label-sm" x="122" y="118" fill="#534AB7">WTP−MC</text>
+          <text class="svg-label-sm" x="122" y="131" fill="#534AB7">= unit gain</text>
+          <text class="svg-label-sm" x="115" y="255">α</text>
+        </svg>
+      </div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--text-secondary);margin-top:8px;">
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#E6F1FB;border:1px solid #185FA5;border-radius:2px;display:inline-block;"></span>Consumer Surplus (CS)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#E1F5EE;border:1px solid #0F6E56;border-radius:2px;display:inline-block;"></span>Producer Surplus (PS)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;background:#534AB7;border-radius:50%;display:inline-block;"></span>Competitive equilibrium E꜀</span>
+      </div>
+    </div>
+
+    <!-- BD and redistribution -->
+    <div class="card-muted">
+      <div class="label">Why the BD supports redistribution — but after, not instead</div>
+      <div class="val-sm">A progressive income tax, food stamps, housing vouchers — these are all sharp-knife policies that redistribute the pie after the market has baked it as large as possible. The BD supports these redistribution tools. What the BD opposes is <em>shrinking the pie</em> in the name of fairness. You can't cut up a smaller pie and make everyone better off.</div>
+    </div>
+
+    <div class="card-muted" style="margin-top:0;">
+      <div class="label">BD verdict on competitive equilibrium</div>
+      <div class="val-sm">The perfectly competitive market delivers exactly what the BD wants — output Q꜀ where D = S, maximising SG. No other output level produces a larger pie. This is why competitive markets are the benchmark against which all other market structures (monopoly, oligopoly) are judged.</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ─────────────────────────────────────────────────────
+       5. WHAT IS A MONOPOLY?
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="monopoly definition sole supplier no threat of entry price maker price taker competitive firm">
+    <div class="section-title">What is a monopoly?</div>
+    <div class="card">
+      <div class="val">A monopoly is a sole supplier with no threat of entry</div>
+      <div class="val-sm muted" style="margin-top:6px;">Competitive firms are <strong>price takers</strong> — they observe the market price. A monopolist is a <strong>price maker</strong> — it sets its own price. Since the firm IS the market, firm output q = market output Q.</div>
+    </div>
+    <div class="two-col">
+      <div class="card-muted" style="margin-bottom:0;">
+        <div class="label">Competitive firm</div>
+        <div class="val-sm">Price taker · MR = P · Horizontal demand curve</div>
+      </div>
+      <div class="card-sm" style="background:var(--fill-red);border-color:var(--ink-red);margin-bottom:0;">
+        <div class="label" style="color:var(--ink-red);">Monopolist</div>
+        <div class="val-sm">Price maker · MR &lt; P · Faces full downward-sloping D</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────
+       5b. ATTRIBUTES OF A MONOPOLY MARKET
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="attributes characteristics features monopoly market sole seller price maker downward demand MR less than P barriers entry long run profit no substitute high market power control quantity pricing strategy">
+    <div class="section-title">Attributes of a monopoly market</div>
+
+    <!-- 6-attribute grid -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-bottom:0.65rem;">
+
+      <div class="card-sm" style="margin:0;border-left:3px solid var(--ink-red);">
+        <div class="badge b-red">1</div>
+        <div class="val">Single seller</div>
+        <div class="val-sm muted" style="margin-top:4px;">One firm supplies the entire market. The firm <em>is</em> the industry — firm output q equals market output Q. There is no distinction between the firm's demand curve and the market demand curve.</div>
+      </div>
+
+      <div class="card-sm" style="margin:0;border-left:3px solid var(--ink-coral);">
+        <div class="badge b-coral">2</div>
+        <div class="val">No close substitutes</div>
+        <div class="val-sm muted" style="margin-top:4px;">The product has no adequate alternatives. Consumers cannot switch to a comparable good if price rises. This gives the monopolist control over price — if substitutes existed, customers would simply leave.</div>
+      </div>
+
+      <div class="card-sm" style="margin:0;border-left:3px solid var(--ink-amber);">
+        <div class="badge b-amber">3</div>
+        <div class="val">Price maker (not price taker)</div>
+        <div class="val-sm muted" style="margin-top:4px;">The monopolist sets price — it does not take the price as given. It faces the full downward-sloping market demand curve and chooses any (Q, P) combination on that curve. It maximises profit by choosing output, then reading price off the demand curve.</div>
+      </div>
+
+      <div class="card-sm" style="margin:0;border-left:3px solid var(--ink-purple);">
+        <div class="badge b-purple">4</div>
+        <div class="val">MR &lt; P (always)</div>
+        <div class="val-sm muted" style="margin-top:4px;">Because the monopolist must lower price to sell one more unit — and must do so for <em>all</em> existing units — marginal revenue is always below price. For a linear demand P = a − bQ, marginal revenue is MR = a − 2bQ (same intercept, twice the slope).</div>
+        <div class="eq" style="font-size:11.5px;margin-top:6px;">MR = a − 2bQ &lt; a − bQ = P</div>
+      </div>
+
+      <div class="card-sm" style="margin:0;border-left:3px solid var(--ink-teal);">
+        <div class="badge b-teal">5</div>
+        <div class="val">High barriers to entry</div>
+        <div class="val-sm muted" style="margin-top:4px;">No new competitor can enter the market — whether due to patents, ownership of a critical resource, massive economies of scale, or government licence. This is what distinguishes a monopoly from a firm that is temporarily large. Without barriers, profits would attract entry and erode.</div>
+      </div>
+
+      <div class="card-sm" style="margin:0;border-left:3px solid var(--ink-blue);">
+        <div class="badge b-blue">6</div>
+        <div class="val">Positive economic profit — permanently</div>
+        <div class="val-sm muted" style="margin-top:4px;">Because barriers block entry, positive profits (P &gt; ATC) are not competed away. In a competitive market π → 0 as firms enter. In a monopoly, π &gt; 0 holds in <em>both</em> short run and long run — the monopolist keeps printing money every period.</div>
+        <div class="eq" style="font-size:11.5px;margin-top:6px;">π = Q × (Pₘ − ATC) &gt; 0 every period</div>
+      </div>
+
+    </div>
+
+    <!-- Comparison strip -->
+    <div class="card" style="margin-top:0.5rem;">
+      <div class="label" style="margin-bottom:10px;">Head-to-head: competitive firm vs. monopolist</div>
+      <table class="neat">
+        <thead>
+          <tr><th>Attribute</th><th>Perfect competition</th><th>Monopoly</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Number of sellers</td>
+            <td>Very many (N large)</td>
+            <td><strong>One</strong></td>
+          </tr>
+          <tr>
+            <td>Product substitutes</td>
+            <td>Homogeneous — perfect subs</td>
+            <td>None / negligible</td>
+          </tr>
+          <tr>
+            <td>Demand curve faced</td>
+            <td>Perfectly flat (horizontal)</td>
+            <td>Full downward-sloping D</td>
+          </tr>
+          <tr>
+            <td>Price setting</td>
+            <td>Price taker (P given)</td>
+            <td>Price maker (sets P)</td>
+          </tr>
+          <tr>
+            <td>MR vs. price</td>
+            <td>MR = P</td>
+            <td>MR &lt; P (always)</td>
+          </tr>
+          <tr>
+            <td>Barriers to entry</td>
+            <td>None (free entry/exit)</td>
+            <td>High / absolute</td>
+          </tr>
+          <tr>
+            <td>Long-run profit</td>
+            <td>π = 0</td>
+            <td>π &gt; 0 (permanent)</td>
+          </tr>
+          <tr>
+            <td>Output vs. optimal</td>
+            <td>Q꜀ (efficient)</td>
+            <td>Qₘ &lt; Q꜀ (restricted)</td>
+          </tr>
+          <tr>
+            <td>Social efficiency</td>
+            <td><span class="check">✓</span> Maximises SG</td>
+            <td><span class="cross">✗</span> DWL — inefficient</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Demand & pricing power visual -->
+    <div class="card" style="padding:1rem 1.3rem 1.1rem;margin-top:0.65rem;">
+      <div class="label" style="margin-bottom:8px;">Monopolist's pricing power — choosing any point on D</div>
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 480 240" role="img" id="mono-attr-svg">
+          <title>Monopolist chooses any price-quantity combination on the downward-sloping demand curve</title>
+          <defs>
+            <marker id="dot-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <!-- Axes -->
+          <line class="axis-line" x1="55" y1="15" x2="55" y2="215"/>
+          <line class="axis-line" x1="55" y1="215" x2="435" y2="215"/>
+          <text class="svg-label" x="30" y="19">P</text>
+          <text class="svg-label" x="430" y="230">Q</text>
+
+          <!-- Demand curve -->
+          <line class="curve-d" x1="55" y1="30" x2="420" y2="215"/>
+          <text class="svg-label" x="400" y="212" fill="#185FA5">D (= AR)</text>
+
+          <!-- Three candidate points on D -->
+          <!-- High price, low Q: point A at (120, 73) -->
+          <circle cx="120" cy="73" r="5" fill="#993C1D"/>
+          <line class="ref-line" x1="55" y1="73" x2="120" y2="73"/>
+          <line class="ref-line" x1="120" y1="73" x2="120" y2="215"/>
+          <text class="svg-label-sm" x="30" y="76" fill="#993C1D">P_A</text>
+          <text class="svg-label-sm" x="113" y="228" fill="#993C1D">Q_A</text>
+          <text class="svg-label-sm" x="126" y="68" fill="#993C1D">A (high P, low Q)</text>
+
+          <!-- Mid point B — profit max: (240, 138) -->
+          <circle cx="240" cy="138" r="6" fill="#534AB7"/>
+          <line class="ref-line" x1="55" y1="138" x2="240" y2="138"/>
+          <line class="ref-line" x1="240" y1="138" x2="240" y2="215"/>
+          <text class="svg-label-sm" x="30" y="141" fill="#534AB7">Pₘ</text>
+          <text class="svg-label-sm" x="230" y="228" fill="#534AB7">Qₘ</text>
+          <text class="svg-label-bold" x="248" y="130" fill="#534AB7">B (profit max)</text>
+          <text class="svg-label-sm" x="248" y="143" fill="#534AB7">MR = MC here</text>
+
+          <!-- Low price, high Q: point C at (355, 195) -->
+          <circle cx="355" cy="195" r="5" fill="#0F6E56"/>
+          <line class="ref-line" x1="55" y1="195" x2="355" y2="195"/>
+          <line class="ref-line" x1="355" y1="195" x2="355" y2="215"/>
+          <text class="svg-label-sm" x="30" y="198" fill="#0F6E56">P_C</text>
+          <text class="svg-label-sm" x="346" y="228" fill="#0F6E56">Q_C</text>
+          <text class="svg-label-sm" x="220" y="198" fill="#0F6E56">C (low P, high Q)</text>
+
+          <!-- Arrows between points -->
+          <line x1="133" y1="80" x2="225" y2="128" stroke="#534AB7" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#dot-arr)"/>
+          <text class="svg-label-sm" x="160" y="96" fill="#534AB7">monopolist</text>
+          <text class="svg-label-sm" x="160" y="108" fill="#534AB7">picks B</text>
+
+          <!-- Annotation box -->
+          <rect x="58" y="22" width="158" height="36" rx="5" fill="var(--surface-muted)" stroke="var(--border-med)" stroke-width="0.5"/>
+          <text class="svg-label-sm" x="65" y="36">Unlike a competitive firm,</text>
+          <text class="svg-label-sm" x="65" y="50">monopolist chooses Q → P</text>
+        </svg>
+      </div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:8px;">
+        The monopolist is not constrained to a single price — it can choose any point on D. It picks the output Q*ₘ where MR = MC, then charges the highest price consumers will pay for that quantity (point B). This is the profit-maximising combination.
+      </div>
+    </div>
+
+    <!-- Barriers detail cards -->
+    <div class="card-muted" style="margin-top:0.5rem;">
+      <div class="label" style="margin-bottom:8px;">Why barriers to entry are the defining attribute</div>
+      <div class="val-sm muted">Remove any barrier and the monopoly unravels. Positive profits attract new entrants → supply increases → price falls → π → 0. The monopoly can only <em>stay</em> a monopoly as long as entry is blocked. This is why the source of barriers matters so much legally:</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:10px;">
+        <div style="border:0.5px solid var(--border-med);border-radius:8px;padding:8px 10px;background:var(--surface);">
+          <div class="badge b-teal" style="margin-bottom:4px;font-size:10px;">Legal / Earned</div>
+          <div class="val-sm" style="font-size:12px;">Patent, superior product (Skill, Foresight &amp; Industry), natural monopoly cost structure. Courts allow these.</div>
+        </div>
+        <div style="border:0.5px solid var(--border-med);border-radius:8px;padding:8px 10px;background:var(--surface);">
+          <div class="badge b-amber" style="margin-bottom:4px;font-size:10px;">Resource Control</div>
+          <div class="val-sm" style="font-size:12px;">Owning the critical input (ALCOA / bauxite). Legally ambiguous — depends on how control was acquired.</div>
+        </div>
+        <div style="border:0.5px solid var(--border-med);border-radius:8px;padding:8px 10px;background:var(--surface);">
+          <div class="badge b-red" style="margin-bottom:4px;font-size:10px;">Predatory</div>
+          <div class="val-sm" style="font-size:12px;">Dynamiting rivals' refineries (Standard Oil), exclusionary contracts, predatory pricing. Illegal under Sherman Act §2.</div>
+        </div>
+      </div>
+    </div>
+
+    <blockquote class="blockquote" style="margin:0.65rem 0 0;">"The key defining characteristic isn't just that there's one seller — it's that no one can come in and compete, even when profits are sky-high. That's what makes the distortion permanent."</blockquote>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────
+       6. CAUSES OF MONOPOLY
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="causes monopoly natural economies scale government patent control natural resource ALCOA Xerox water utility">
+    <div class="section-title">3 causes of monopoly</div>
+    <div class="card">
+      <div class="cond-row">
+        <span class="cond-num">1</span>
+        <div class="cond-body">
+          <div class="val">Natural monopoly</div>
+          <div class="val-sm muted" style="margin-top:3px;">Economies of scale so large that one firm can serve the whole market at lower cost than two or more. Classic example: water utilities. Duplicate pipes under every street is wildly inefficient — so the government grants one company a regulated monopoly.</div>
+        </div>
+      </div>
+      <div class="cond-row">
+        <span class="cond-num">2</span>
+        <div class="cond-body">
+          <div class="val">Government grants — especially patents</div>
+          <div class="val-sm muted" style="margin-top:3px;">A patent gives exclusive rights for ~17–20 years to incentivize R&amp;D. Xerox (xerography), pharmaceuticals after FDA trials. Without patents, a competitor could reverse-engineer a copy machine in 5 days and flood the market in 2 weeks — eliminating all incentive to invent.</div>
+        </div>
+      </div>
+      <div class="cond-row" style="margin-bottom:0;">
+        <span class="cond-num">3</span>
+        <div class="cond-body">
+          <div class="val">Control of a natural resource</div>
+          <div class="val-sm muted" style="margin-top:3px;">ALCOA acquired mineral rights to most of the world's bauxite (required to make aluminum). No bauxite access = no aluminum production. WWII ended the case before it resolved — the government built its own plants and sold them to Kaiser &amp; Reynolds after the war.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ─────────────────────────────────────────────────────
+       7. MONOPOLIST MR < P
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="marginal revenue MR price monopolist less than one price simple linear demand slope twice intercept same">
+    <div class="section-title">Why MR &lt; P for a monopolist</div>
+    <div class="card">
+      <div class="val">To sell one more unit, the monopolist must lower price for everyone</div>
+      <div class="val-sm muted" style="margin-top:6px;">At P = $100, 50 units sell. To sell the 51st unit, price drops to $99. The monopolist gets $99 from the new buyer — but also loses $1 on each of the original 50. Net MR = $99 − $50 = <strong>$49</strong>, not $99.</div>
+      <div class="eq">MR = 99 − 50 = 49 &nbsp;→&nbsp; MR &lt; P always for a one-price monopolist</div>
+    </div>
+    <div class="card">
+      <div class="val" style="margin-bottom:6px;">MR curve: same intercept as D, twice the slope</div>
+      <div class="val-sm muted">With linear demand P = a − bQ, total revenue TR = aQ − bQ². Taking the derivative: MR = a − 2bQ. Same vertical intercept <em>a</em>, but slope is −2b (twice as steep as demand).</div>
+      <div class="eq">If D: P = a − bQ &nbsp;→&nbsp; MR = a − 2bQ</div>
+      <div class="eq">Example: D: P = 100 − 6Q &nbsp;→&nbsp; MR = 100 − 12Q</div>
+      <div class="blockquote">"You don't need to use calculus. As long as demand is linear, just remember: MR has the same intercept as D and goes down at twice the slope."</div>
+    </div>
+
+    <!-- SVG: MR curve diagram -->
+    <div class="card" style="padding:1rem;">
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 420 200" role="img" id="mr-svg">
+          <title>Monopolist marginal revenue curve with same intercept as demand but twice the slope</title>
+          <line class="axis-line" x1="40" y1="10" x2="40" y2="180"/>
+          <line class="axis-line" x1="40" y1="180" x2="400" y2="180"/>
+          <text class="svg-label" x="18" y="14">P</text>
+          <text class="svg-label" x="396" y="194">Q</text>
+          <!-- Demand: from (40,20) to (380,180) -->
+          <line class="curve-d" x1="40" y1="20" x2="380" y2="180"/>
+          <!-- MR: same intercept (40,20), twice slope → hits axis at midpoint x=210 -->
+          <line class="curve-mr" x1="40" y1="20" x2="210" y2="180"/>
+          <!-- vertical intercept label -->
+          <text class="svg-label" x="14" y="23">a</text>
+          <line class="ref-line" x1="40" y1="20" x2="44" y2="20"/>
+          <!-- midpoint line -->
+          <line class="ref-line" x1="210" y1="100" x2="210" y2="180"/>
+          <text class="svg-label-sm" x="205" y="195">α</text>
+          <text class="svg-label-sm" x="370" y="195">2α</text>
+          <!-- labels -->
+          <text class="svg-label" x="355" y="176" fill="#185FA5">D</text>
+          <text class="svg-label" x="205" y="172" fill="#534AB7">MR</text>
+          <!-- annotation -->
+          <text class="svg-label-sm" x="230" y="60">Slope = −b</text>
+          <text class="svg-label-sm" x="100" y="110">Slope = −2b</text>
+          <text class="svg-label-sm" x="230" y="74">(demand)</text>
+          <text class="svg-label-sm" x="100" y="124">(MR)</text>
+        </svg>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text-secondary);margin-top:6px;">
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:18px;height:2px;background:#185FA5;display:inline-block;"></span>Demand (D)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:18px;height:2px;background:#534AB7;border-top:2px dashed #534AB7;display:inline-block;"></span>Marginal Revenue (MR)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────
+       8. MONOPOLY EQUILIBRIUM
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="monopoly equilibrium profit maximization MR=MC output QM price PM ATC rectangle positive profit long run no entry">
+    <div class="section-title">Monopoly equilibrium &amp; profit</div>
+    <div class="card">
+      <div class="val" style="margin-bottom:6px;">Profit maximization: set MR = MC → find Q*ₘ → read price off demand</div>
+      <div class="eq">π = Q × (P − ATC) &nbsp;&gt; 0 in both short and long run</div>
+      <div class="val-sm muted" style="margin-top:8px;">Unlike competition, positive profits don't erode. No threat of entry means the monopolist earns these returns every period. Xerox earned positive profits for 17 years under patent protection.</div>
+    </div>
+    <div class="card-grid">
+      <div class="card-sm">
+        <div class="badge b-amber">Step 1</div>
+        <div class="val-sm">Draw D and MR (same intercept, twice slope). Draw MC.</div>
+      </div>
+      <div class="card-sm">
+        <div class="badge b-coral">Step 2</div>
+        <div class="val-sm">Find Q*ₘ where MR intersects MC.</div>
+      </div>
+      <div class="card-sm">
+        <div class="badge b-purple">Step 3</div>
+        <div class="val-sm">Go up from Q*ₘ to the demand curve → read off Pₘ.</div>
+      </div>
+      <div class="card-sm">
+        <div class="badge b-red">Step 4</div>
+        <div class="val-sm">π = (Pₘ − ATC) × Q*ₘ = area of the profit rectangle.</div>
+      </div>
+    </div>
+    <div class="card-muted">
+      <div class="label">Long-run distinction from competition</div>
+      <div class="val-sm">In competition: π &gt; 0 → entry → π = 0 eventually. In monopoly: no threat of entry, so π &gt; 0 is <em>permanent</em>. The monopolist just keeps printing money.</div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ─────────────────────────────────────────────────────
+       9. DEADWEIGHT LOSS
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="deadweight loss DWL social cost monopoly welfare loss triangle Qm Qc competitive output restricted inefficient allocation">
+    <div class="section-title">Deadweight loss — the social cost of monopoly</div>
+    <div class="card">
+      <div class="val" style="margin-bottom:6px;">Monopolist restricts output from Q꜀ to Qₘ → creates deadweight loss</div>
+      <div class="val-sm muted" style="margin-top:0;">When the industry merges to monopoly (e.g., J.P. Morgan's U.S. Steel, 1905), the new monopolist raises price and cuts output. Some CS is transferred to PS (the monopolist gets richer), but a triangle of surplus disappears entirely — it's not captured by anyone. That's deadweight loss.</div>
+      <div class="eq">SG_monopoly = CS_M + PS_M &lt; CS_C + PS_C = SG_competitive</div>
+    </div>
+
+    <!-- SVG: Deadweight Loss diagram -->
+    <div class="card" style="padding:1rem;">
+      <div class="diagram-wrap">
+        <svg viewBox="0 0 460 250" role="img" id="dwl-svg">
+          <title>Deadweight loss triangle between competitive and monopoly equilibrium</title>
+          <!--
+            D:  (50,25)→(380,215).  Slope = 190/330 px/px
+            MR: (50,25)→(215,215).  Same intercept, twice slope (x-intercept at midpoint of D)
+            MC: (50,168)→(370,102).  Gently downward sloping (approximating constant/slightly falling MC)
+
+            Computed intersections:
+              MR∩MC → Qm: x=155, y≈146  → Pm on D: y≈86
+              D∩MC  → Qc: x=233, y≈130  (= Pc)
+              ATC placed at y=116 (between Pm=86 and MC@Qm=146)
+
+            Shading:
+              CS_M  triangle: (50,25),(155,86),(50,86)              — under D above Pm
+              Profit rect:    (50,86),(155,86),(155,116),(50,116)   — under Pm above ATC
+              PS_M  polygon:  (50,168),(155,146),(155,116),(50,116) — under ATC above MC
+              DWL   triangle: (155,86),(155,146),(233,130)          — between Qm and Qc, D on top, MC on bottom
+          -->
+          <line class="axis-line" x1="50" y1="10" x2="50" y2="220"/>
+          <line class="axis-line" x1="50" y1="220" x2="430" y2="220"/>
+          <text class="svg-label" x="26" y="14">P</text>
+          <text class="svg-label" x="425" y="234">Q</text>
+
+          <!-- ① CS_M: triangle under D, above Pm (y=86), left of Qm (x=155) -->
+          <polygon class="cs-fill" points="50,25 155,86 50,86"/>
+
+          <!-- ② Monopolist profit rectangle: between Pm (y=86) and ATC (y=116), Q=0 to Qm=155 -->
+          <polygon class="profit-fill" points="50,86 155,86 155,116 50,116"/>
+
+          <!-- ③ PS_M: between ATC (y=116) and MC curve, Q=0 to Qm=155 -->
+          <!-- MC at x=50 → y=168; MC at x=155 → y=146 -->
+          <polygon class="ps-fill" points="50,168 155,146 155,116 50,116"/>
+
+          <!-- ④ DWL: triangle between Qm and Qc, bounded above by D, below by MC -->
+          <!-- D at x=155: y=86.  MC at x=155: y=146.  D∩MC at (233,130) -->
+          <polygon class="dwl-fill" points="155,86 155,146 233,130"/>
+
+          <!-- Curves — drawn on top of shading -->
+          <!-- Demand: (50,25) → (380,215) -->
+          <line class="curve-d" x1="50" y1="25" x2="380" y2="215"/>
+          <!-- MR: (50,25) → (215,215) -->
+          <line class="curve-mr" x1="50" y1="25" x2="215" y2="215"/>
+          <!-- MC: (50,168) → (370,102) -->
+          <line class="curve-mc" x1="50" y1="168" x2="370" y2="102"/>
+          <!-- ATC: dashed horizontal at y=116 from y-axis to Qm=155 -->
+          <line class="curve-atc" x1="50" y1="116" x2="155" y2="116"/>
+
+          <!-- Reference lines -->
+          <!-- Pₘ horizontal from y-axis to Qm -->
+          <line class="ref-line" x1="50" y1="86" x2="155" y2="86"/>
+          <!-- Qm vertical from Pm down to x-axis -->
+          <line class="ref-line" x1="155" y1="86" x2="155" y2="220"/>
+          <!-- P꜀ horizontal from y-axis to Qc -->
+          <line class="ref-line" x1="50" y1="130" x2="233" y2="130"/>
+          <!-- Qc vertical from Pc down to x-axis -->
+          <line class="ref-line" x1="233" y1="130" x2="233" y2="220"/>
+
+          <!-- Key intersection dots -->
+          <!-- MR∩MC = Qm determination point (155,146) -->
+          <circle cx="155" cy="146" r="3.5" fill="#534AB7"/>
+          <!-- Monopoly equilibrium on D (155,86) = Pm -->
+          <circle cx="155" cy="86" r="4" fill="#993C1D"/>
+          <!-- Competitive equilibrium D∩MC (233,130) -->
+          <circle cx="233" cy="130" r="4" fill="#0F6E56"/>
+
+          <!-- Axis labels -->
+          <text class="svg-label" x="24" y="89">Pₘ</text>
+          <text class="svg-label" x="24" y="119">ATC</text>
+          <text class="svg-label" x="24" y="133">P꜀</text>
+          <text class="svg-label" x="147" y="234">Qₘ</text>
+          <text class="svg-label" x="226" y="234">Q꜀</text>
+
+          <!-- Curve labels -->
+          <text class="svg-label" x="362" y="212" fill="#185FA5">D</text>
+          <text class="svg-label" x="200" y="212" fill="#534AB7">MR</text>
+          <text class="svg-label" x="352" y="100" fill="#993C1D">MC</text>
+          <text class="svg-label" x="160" y="113" fill="#BA7517">ATC</text>
+
+          <!-- MR=MC annotation -->
+          <text class="svg-label-sm" x="160" y="144" fill="#534AB7">MR=MC</text>
+
+          <!-- Area labels -->
+          <text class="svg-label-bold" x="58" y="62" fill="#185FA5">CS_M</text>
+          <text class="svg-label-bold" x="58" y="104" fill="#534AB7">Profit</text>
+          <text class="svg-label-bold" x="58" y="146" fill="#0F6E56">PS_M</text>
+          <text class="svg-label-bold" x="163" y="125" fill="#BA7517">DWL</text>
+        </svg>
+      </div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text-secondary);margin-top:8px;">
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#E6F1FB;border:1px solid #185FA5;border-radius:2px;display:inline-block;"></span>CS_M (consumer surplus)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#EEEDFE;border:1px solid #534AB7;border-radius:2px;display:inline-block;"></span>Monopoly profit (Pₘ−ATC)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#E1F5EE;border:1px solid #0F6E56;border-radius:2px;display:inline-block;"></span>PS_M (producer surplus)</span>
+        <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#FAEEDA;border:1px solid #BA7517;border-radius:2px;display:inline-block;"></span>DWL (deadweight loss)</span>
+      </div>
+    </div>
+
+    <div class="card-muted">
+      <div class="label">What happens to each piece?</div>
+      <div class="val-sm">Part of the old CS is <em>transferred</em> to the monopolist as higher PS (Pₘ &gt; P꜀ on existing units). The DWL triangle is destroyed — no one gets it. The pie shrinks from the competitive size by exactly the DWL triangle.</div>
+    </div>
+    <blockquote class="blockquote" style="margin:0;">"The monopolist just takes a lot of output off the market to push up price and line its own pockets. But that triangle in the middle? Nobody gets it. Left on the table. That's the social cost."</blockquote>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────
+       10. COMPETITIVE vs MONOPOLY COMPARISON
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="comparison competitive monopoly price output welfare CS PS DWL efficiency inefficient">
+    <div class="section-title">Competitive vs. monopoly equilibrium</div>
+    <div class="card">
+      <table class="neat">
+        <thead><tr><th>Metric</th><th>Perfect competition</th><th>Monopoly</th></tr></thead>
+        <tbody>
+          <tr><td>Price</td><td>P꜀ (= min ATC)</td><td>Pₘ &gt; P꜀</td></tr>
+          <tr><td>Output</td><td>Q꜀ (efficient)</td><td>Qₘ &lt; Q꜀</td></tr>
+          <tr><td>Firm profit</td><td>π = 0 (long run)</td><td>π &gt; 0 (permanent)</td></tr>
+          <tr><td>Consumer surplus</td><td>Large triangle</td><td>Smaller triangle CS_M</td></tr>
+          <tr><td>Producer surplus</td><td>Triangle below P꜀</td><td>Larger PS_M (captures some CS)</td></tr>
+          <tr><td>Deadweight loss</td><td><span class="check">✓</span> None</td><td><span class="cross">✗</span> DWL triangle exists</td></tr>
+          <tr><td>Social gain (SG)</td><td>Maximized</td><td>Below maximum</td></tr>
+          <tr><td>BD verdict</td><td><span class="check">✓</span> Efficient</td><td><span class="cross">✗</span> Inefficient</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ─────────────────────────────────────────────────────
+       11. ANTITRUST LAWS
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="antitrust Sherman Act monopolization price fixing Section 1 2 rule of reason skill foresight industry Standard Oil Kodak ALCOA structural relief breakup market definition">
+    <div class="section-title">Antitrust laws</div>
+    <div class="card">
+      <div class="val" style="margin-bottom:8px;">Sherman Antitrust Act (1890) — the original law</div>
+      <div class="two-col">
+        <div class="card-sm">
+          <div class="badge b-coral">§1 Price fixing</div>
+          <div class="val-sm">Firms cannot enter any contract in restraint of trade — no price-fixing agreements, no agreed advertising budgets, no collusive behavior of any kind.</div>
+        </div>
+        <div class="card-sm">
+          <div class="badge b-red">§2 Monopolization</div>
+          <div class="val-sm">Having or attempting to acquire monopoly power is illegal. Must meet two requirements to win a case.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="val" style="margin-bottom:8px;">2 requirements to prove monopolization</div>
+      <div class="cond-row">
+        <span class="cond-num">1</span>
+        <div class="cond-body">
+          <div class="val">Establish the existence of monopoly power</div>
+          <div class="val-sm muted" style="margin-top:3px;">Must define the relevant market correctly. Glass jar case: company had 90% of glass jars but only ~30% of the <em>containers</em> market. Court dismissed — no monopoly established. Market definition is everything.</div>
+        </div>
+      </div>
+      <div class="cond-row" style="margin-bottom:0;">
+        <span class="cond-num">2</span>
+        <div class="cond-body">
+          <div class="val">Rule of Reason — it must be a "bad" monopoly</div>
+          <div class="val-sm muted" style="margin-top:3px;">Supreme Court (Standard Oil, 1911) said monopoly via <strong>Skill, Foresight, and Industry</strong> is legal — if you have the best product, you deserve your market share. Kodak won on this ground (superior film quality). But Standard Oil lost because of evidence of dynamiting competitors' refineries.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-muted">
+      <div class="label">Structural relief — the punishment</div>
+      <div class="val-sm">If found guilty, the remedy is <strong>structural relief</strong>: break up the company into competing parts. Standard Oil → ~15 separate firms we know today (Standard, Mobil, Esso, etc.). The goal: restore competitive market structure.</div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────
+       12. QUICK VOCAB
+  ───────────────────────────────────────────────────────── -->
+  <section class="section" data-section="vocab glossary consumer surplus producer surplus social gain deadweight loss welfare benevolent dictator MR price maker one-price simple monopolist antitrust Sherman Act Rule of Reason structural relief">
+    <div class="section-title">Quick vocab</div>
+    <div class="pill-row">
+      <span class="pill">CS = area below D, above P</span>
+      <span class="pill">PS = area below P, above MC</span>
+      <span class="pill">SG = CS + PS</span>
+      <span class="pill">Benevolent dictator = maximize SG, neutral on distribution</span>
+      <span class="pill">Monopoly: sole supplier, no threat of entry</span>
+      <span class="pill">MR = a − 2bQ (same intercept, twice slope of D)</span>
+      <span class="pill">MR &lt; P always for a simple monopolist</span>
+      <span class="pill">Monopoly profit: π = Q(P − ATC) &gt; 0 forever</span>
+      <span class="pill">DWL = destroyed surplus — nobody gets it</span>
+      <span class="pill">Sherman Act §1 = price fixing, §2 = monopolization</span>
+      <span class="pill">Rule of Reason = "bad monopoly" test</span>
+      <span class="pill">Structural relief = break up the firm</span>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* ════════════════════════════════
+   THEME SYSTEM
+════════════════════════════════ */
+(function() {
+  const html = document.documentElement;
+  const btn  = document.getElementById('theme-toggle');
+
+  function paintSVGs(theme) {
+    const dark = theme === 'dark';
+    const tPrimary   = dark ? '#E8E6DF' : '#1A1917';
+    const tSecondary = dark ? '#9C9A92' : '#6B6960';
+    // Update all uncoloured svg-label text to match theme
+    document.querySelectorAll('.svg-label').forEach(el => {
+      const fill = el.getAttribute('fill');
+      // Only repaint labels that are using the theme colour (no explicit brand colour)
+      if (!fill || fill === '#1A1917' || fill === '#E8E6DF') {
+        el.setAttribute('fill', tPrimary);
+      }
+    });
+    document.querySelectorAll('.svg-label-bold').forEach(el => {
+      const fill = el.getAttribute('fill');
+      if (!fill || fill === '#1A1917' || fill === '#E8E6DF') {
+        el.setAttribute('fill', tPrimary);
+      }
+    });
+    document.querySelectorAll('.svg-label-sm').forEach(el => {
+      const fill = el.getAttribute('fill');
+      if (!fill || fill === '#6B6960' || fill === '#9C9A92') {
+        el.setAttribute('fill', tSecondary);
+      }
+    });
+  }
+
+  function applyTheme(theme, save) {
+    html.setAttribute('data-theme', theme);
+    paintSVGs(theme);
+    if (save) localStorage.setItem('econ-theme', theme);
+  }
+
+  const saved  = localStorage.getItem('econ-theme');
+  const prefer = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  applyTheme(saved || prefer, false);
+
+  btn.addEventListener('click', function() {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next, true);
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem('econ-theme')) {
+      applyTheme(e.matches ? 'dark' : 'light', false);
+    }
+  });
+})();
+
+/* ════════════════════════════════
+   SEARCH
+════════════════════════════════ */
+(function() {
+  const input    = document.getElementById('search-input');
+  const counter  = document.getElementById('search-count');
+  const noRes    = document.getElementById('no-results');
+  const header   = document.getElementById('page-header');
+  const sections = Array.from(document.querySelectorAll('.section'));
+  const originals = sections.map(s => s.innerHTML);
+
+  function highlight(node, term) {
+    if (node.nodeType === 3) {
+      const idx = node.nodeValue.toLowerCase().indexOf(term);
+      if (idx === -1) return;
+      const before = document.createTextNode(node.nodeValue.slice(0, idx));
+      const mk     = document.createElement('mark');
+      mk.textContent = node.nodeValue.slice(idx, idx + term.length);
+      const after  = document.createTextNode(node.nodeValue.slice(idx + term.length));
+      const p      = node.parentNode;
+      p.insertBefore(before, node); p.insertBefore(mk, node); p.insertBefore(after, node); p.removeChild(node);
+    } else if (node.nodeType === 1 && !['SCRIPT','STYLE','MARK','SVG','svg'].includes(node.nodeName)) {
+      Array.from(node.childNodes).forEach(c => highlight(c, term));
+    }
+  }
+
+  input.addEventListener('input', function() {
+    const term = this.value.trim().toLowerCase();
+    if (!term) {
+      sections.forEach((s, i) => { s.innerHTML = originals[i]; s.classList.remove('hidden'); });
+      header.classList.remove('hidden');
+      noRes.style.display = counter.style.display = 'none';
+      return;
+    }
+    header.classList.add('hidden');
+    sections.forEach((s, i) => { s.innerHTML = originals[i]; });
+    let total = 0, visible = 0;
+    sections.forEach(s => {
+      const hay = (s.dataset.section + ' ' + s.textContent).toLowerCase();
+      if (hay.includes(term)) {
+        s.classList.remove('hidden');
+        s.querySelectorAll('.val,.val-sm,.eq,.blockquote,.badge,.pill,td,th,.label').forEach(el => highlight(el, term));
+        total += s.querySelectorAll('mark').length;
+        visible++;
+      } else { s.classList.add('hidden'); }
+    });
+    noRes.style.display   = visible === 0 ? 'block' : 'none';
+    counter.style.display = total   > 0   ? 'block' : 'none';
+    if (total > 0) counter.textContent = total + (total === 1 ? ' match' : ' matches');
+  });
+})();
+</script>
+</body>
+</html>
