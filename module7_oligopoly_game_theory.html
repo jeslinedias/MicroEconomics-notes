@@ -1,0 +1,975 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e2a;--bg4:#222638;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#e8e6df;--text2:#9b9990;--text3:#6b6960;
+  --accent:#7c9fff;--accent2:#4a6fd4;
+  --gold:#d4a843;--gold2:#f0c060;
+  --coral:#e05a4a;--coral2:#f07060;
+  --teal:#3db89a;--teal2:#5acfb0;
+  --purple:#9b7de8;--green:#4a9b6a;
+  --hl:rgba(124,159,255,0.12);
+  --card-bg:var(--bg2);--card-border:var(--border);
+  --svg-axis:#3a3e50;--svg-text:#9b9990;
+  --toggle-bg:#1a1e2a;
+}
+[data-theme="light"]{
+  --bg:#f5f4f0;--bg2:#ffffff;--bg3:#f0eeea;--bg4:#e5e3de;
+  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.18);
+  --text:#1a1916;--text2:#5a5955;--text3:#8a8880;
+  --accent:#2a5fd4;--accent2:#1a4ab0;
+  --gold:#b8860b;--gold2:#a07020;
+  --coral:#c03020;--coral2:#d04030;
+  --teal:#1a8a6a;--teal2:#0a7a5a;
+  --purple:#6a4db8;--green:#2a7a4a;
+  --hl:rgba(42,95,212,0.08);
+  --card-bg:var(--bg2);--card-border:var(--border);
+  --svg-axis:#c0bdb5;--svg-text:#5a5955;
+  --toggle-bg:#e5e3de;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;line-height:1.6;transition:background .25s,color .25s}
+
+/* ── HEADER ── */
+.site-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:20px 28px 14px;position:sticky;top:0;z-index:100;transition:background .25s}
+.header-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.header-label{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:3px}
+.header-title{font-size:22px;font-weight:600;color:var(--text)}
+.header-title em{color:var(--gold);font-style:italic}
+.header-controls{display:flex;align-items:center;gap:10px}
+
+/* dark mode toggle */
+.dm-toggle{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;font-size:12px;color:var(--text2)}
+.dm-track{width:36px;height:20px;border-radius:10px;background:var(--toggle-bg);border:1px solid var(--border2);position:relative;transition:background .2s;flex-shrink:0}
+.dm-thumb{width:14px;height:14px;border-radius:50%;background:var(--accent);position:absolute;top:2px;left:2px;transition:transform .2s}
+[data-theme="light"] .dm-thumb{transform:translateX(16px)}
+
+/* search */
+.search-wrap{position:relative}
+.search-wrap input{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:7px 10px 7px 30px;color:var(--text);font-size:12px;outline:none;width:180px;transition:border .2s}
+.search-wrap input:focus{border-color:var(--accent2)}
+.search-wrap input::placeholder{color:var(--text3)}
+.s-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none}
+
+/* tabs */
+.nav-tabs{display:flex;gap:4px;margin-top:12px;flex-wrap:wrap}
+.tab-btn{background:none;border:1px solid var(--border);border-radius:5px;color:var(--text2);cursor:pointer;font-size:11px;font-weight:500;padding:4px 10px;transition:all .15s}
+.tab-btn:hover{border-color:var(--border2);color:var(--text)}
+.tab-btn.active{background:var(--accent2);border-color:var(--accent2);color:#fff}
+
+/* main */
+.main{max-width:860px;margin:0 auto;padding:28px 20px 60px}
+.section{margin-bottom:44px}
+.section.hidden{display:none}
+
+/* section header */
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.sec-num{background:var(--accent2);color:#fff;font-size:10px;font-weight:700;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-title{font-size:19px;font-weight:600;color:var(--text)}
+
+/* cards */
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:18px;margin-bottom:10px;transition:background .25s}
+.card-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--accent);margin-bottom:10px}
+
+/* concept box */
+.concept{background:var(--hl);border:1px solid rgba(124,159,255,.2);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:10px;font-size:13px}
+[data-theme="light"] .concept{background:rgba(42,95,212,0.06);border-color:rgba(42,95,212,.15);border-left-color:var(--accent)}
+.c-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+
+/* quote */
+.quote{border-left:2px solid var(--gold);padding:8px 14px;margin:10px 0;font-style:italic;color:var(--text2);font-size:13px}
+.quote cite{font-style:normal;font-size:11px;color:var(--text3);display:block;margin-top:3px}
+
+/* grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mini{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;transition:background .25s}
+.mini-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text2);margin-bottom:6px}
+
+/* badge */
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.05em}
+.b-gold{background:rgba(212,168,67,.18);color:var(--gold2)}
+.b-coral{background:rgba(224,90,74,.18);color:var(--coral2)}
+.b-teal{background:rgba(61,184,154,.18);color:var(--teal2)}
+.b-blue{background:rgba(124,159,255,.18);color:var(--accent)}
+[data-theme="light"] .b-gold{background:rgba(184,134,11,.12);color:var(--gold)}
+[data-theme="light"] .b-coral{background:rgba(192,48,32,.12);color:var(--coral)}
+[data-theme="light"] .b-teal{background:rgba(26,138,106,.12);color:var(--teal)}
+[data-theme="light"] .b-blue{background:rgba(42,95,212,.12);color:var(--accent)}
+
+/* task */
+.task{display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--bg3);border-radius:8px;margin-bottom:7px;border:1px solid var(--border);transition:background .25s}
+.t-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.t-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.t-desc{font-size:12px;color:var(--text2);line-height:1.55}
+
+/* svg wrap */
+.svg-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;overflow:hidden;transition:background .25s}
+.svg-cap{font-size:11px;color:var(--text3);text-align:center;margin-top:6px}
+
+/* payoff matrix */
+.matrix-wrap{text-align:center;overflow-x:auto}
+.matrix-title{font-size:12px;color:var(--text2);text-align:center;margin-bottom:8px}
+.mx-table{border-collapse:collapse;display:inline-table}
+.mx-table td,.mx-table th{padding:0;text-align:center;vertical-align:middle}
+.mx-hdr{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text3);padding:5px 10px}
+.mx-plabel{font-size:11px;font-weight:600;writing-mode:vertical-rl;transform:rotate(180deg);padding:6px 5px}
+.mx-cell{width:105px;height:82px;position:relative;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;transition:background .15s}
+.mx-cell:hover{background:var(--bg4)}
+.mx-cell.nash-cell{border:2px solid var(--gold)}
+.mx-cell svg{position:absolute;top:0;left:0;width:100%;height:100%}
+.nash-lbl{position:absolute;top:3px;right:3px;font-size:7px;font-weight:700;color:var(--gold2);background:rgba(212,168,67,.2);border-radius:3px;padding:1px 3px}
+.p-a{position:absolute;bottom:7px;left:7px;font-size:13px;font-weight:600}
+.p-b{position:absolute;top:7px;right:7px;font-size:13px;font-weight:600}
+.c-good{color:var(--teal2)}
+.c-med{color:var(--gold2)}
+.c-bad{color:var(--coral2)}
+[data-theme="light"] .c-good{color:var(--teal)}
+[data-theme="light"] .c-med{color:var(--gold)}
+[data-theme="light"] .c-bad{color:var(--coral)}
+.p-jt{position:absolute;bottom:3px;right:3px;font-size:8px;color:var(--teal2)}
+
+/* term table */
+.term-row{display:grid;grid-template-columns:160px 1fr;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);align-items:start}
+.term-row:last-child{border-bottom:none}
+.term-name{font-family:monospace;font-size:12px;color:var(--accent);font-weight:500}
+.term-def{font-size:12px;color:var(--text2);line-height:1.55}
+
+/* goal */
+.goal{display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text2)}
+.goal:last-child{border-bottom:none}
+.g-icon{color:var(--teal2);flex-shrink:0;margin-top:2px}
+
+/* nash solve */
+.nash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.ns-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;transition:background .25s}
+.ns-out{font-size:12px;font-weight:600;margin-bottom:5px}
+.ns-desc{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:5px}
+.sv{font-size:10px;padding:3px 7px;border-radius:4px;font-weight:600;display:inline-block}
+.sv-no{background:rgba(224,90,74,.18);color:var(--coral2)}
+.sv-yes{background:rgba(212,168,67,.2);color:var(--gold2)}
+[data-theme="light"] .sv-no{background:rgba(192,48,32,.12);color:var(--coral)}
+[data-theme="light"] .sv-yes{background:rgba(184,134,11,.12);color:var(--gold)}
+
+/* game theory interactive */
+.gt-panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;transition:background .25s}
+.gt-tabs{display:flex;border-bottom:1px solid var(--border)}
+.gt-tab{flex:1;padding:10px;font-size:12px;font-weight:500;text-align:center;cursor:pointer;color:var(--text2);border:none;background:none;transition:all .15s}
+.gt-tab.active{color:var(--accent);border-bottom:2px solid var(--accent);background:var(--hl)}
+.gt-content{padding:18px}
+.gt-sub{font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.55}
+
+/* step builder */
+.step-item{display:flex;gap:10px;align-items:flex-start;padding:8px;border-radius:6px;border:1px solid var(--border);margin-bottom:6px;background:var(--bg3);transition:background .25s,border .15s}
+.step-item.highlight{border-color:var(--accent);background:var(--hl)}
+.step-dot{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* no results */
+.no-results{text-align:center;color:var(--text3);padding:40px;font-size:13px;display:none}
+
+/* responsive */
+@media(max-width:600px){
+  .grid2,.nash-grid{grid-template-columns:1fr}
+  .header-row{flex-wrap:wrap}
+  .search-wrap input{width:140px}
+}
+
+/* SVG axis/text colors via CSS vars */
+.ax{stroke:var(--svg-axis)}
+.at{fill:var(--svg-text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:11px}
+.cv{fill:none}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-row">
+    <div>
+      <div class="header-label">ECON 528 · Module 3</div>
+      <div class="header-title">Oligopoly &amp; <em>Game Theory</em></div>
+    </div>
+    <div class="header-controls">
+      <div class="search-wrap">
+        <span class="s-icon">⌕</span>
+        <input type="text" id="searchInput" placeholder="Search notes…" oninput="doSearch(this.value)">
+      </div>
+      <label class="dm-toggle" onclick="toggleTheme()" title="Toggle dark/light mode">
+        <div class="dm-track"><div class="dm-thumb"></div></div>
+        <span id="dm-lbl">Light</span>
+      </label>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showTab('all',this)">All</button>
+    <button class="tab-btn" onclick="showTab('overview',this)">Overview</button>
+    <button class="tab-btn" onclick="showTab('oligopoly',this)">Oligopoly</button>
+    <button class="tab-btn" onclick="showTab('collusion',this)">Collusion</button>
+    <button class="tab-btn" onclick="showTab('gametheory',this)">Game Theory</button>
+    <button class="tab-btn" onclick="showTab('nash',this)">Nash</button>
+    <button class="tab-btn" onclick="showTab('terms',this)">Key Terms</button>
+  </div>
+</header>
+
+<main class="main" id="main-content">
+
+<!-- ══ SECTION 0: OVERVIEW ══ -->
+<section class="section" data-tab="overview">
+  <div class="sec-hdr"><div class="sec-num">0</div><h2 class="sec-title">Overview &amp; Goals</h2></div>
+  <div class="concept">
+    <div class="c-label">Core Idea</div>
+    Oligopoly markets have a <strong>small number of large rivals</strong> whose strategic choices directly affect each other — unlike perfect competition (too small to matter) or monopoly (no rivals). Capturing <strong>conjectural interdependence</strong> requires collusion theory and game theory.
+  </div>
+  <div class="card">
+    <div class="card-title">Learning Objectives</div>
+    <div class="goal"><span class="g-icon">✓</span>Describe how and why cartels and collusive organizations are formed</div>
+    <div class="goal"><span class="g-icon">✓</span>Model cartel behavior — three key tasks</div>
+    <div class="goal"><span class="g-icon">✓</span>Understand antitrust law (Sherman Act §1) and its role in correcting distortions</div>
+    <div class="goal"><span class="g-icon">✓</span>Describe the game theory approach in non-cooperative situations</div>
+    <div class="goal"><span class="g-icon">✓</span>Apply Nash equilibrium as a solution concept</div>
+  </div>
+
+  <!-- Number line SVG -->
+  <div class="svg-wrap">
+    <svg width="100%" viewBox="0 0 680 105" role="img">
+      <title>Market structure number line from Monopoly (1 firm) through Oligopoly to Perfect Competition (N firms)</title>
+      <defs><marker id="ar0" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+      <!-- Track -->
+      <line x1="60" y1="58" x2="620" y2="58" stroke="var(--svg-axis)" stroke-width="1.5"/>
+      <!-- Monopoly -->
+      <circle cx="80" cy="58" r="9" fill="var(--coral)"/>
+      <text class="at" x="80" y="82" text-anchor="middle" font-weight="600" fill="var(--coral2)">Monopoly</text>
+      <text class="at" x="80" y="95" text-anchor="middle" fill="var(--text3)">1 firm</text>
+      <!-- Perfect competition -->
+      <circle cx="600" cy="58" r="9" fill="var(--teal)"/>
+      <text class="at" x="600" y="82" text-anchor="middle" font-weight="600" fill="var(--teal2)">Perfect Competition</text>
+      <text class="at" x="600" y="95" text-anchor="middle" fill="var(--text3)">N large</text>
+      <!-- Oligopoly bracket -->
+      <line x1="140" y1="38" x2="540" y2="38" stroke="var(--accent)" stroke-width="1.5"/>
+      <line x1="140" y1="38" x2="140" y2="50" stroke="var(--accent)" stroke-width="1.5"/>
+      <line x1="540" y1="38" x2="540" y2="50" stroke="var(--accent)" stroke-width="1.5"/>
+      <text class="at" x="340" y="28" text-anchor="middle" font-weight="600" fill="var(--accent)">Oligopoly (2 → ???)</text>
+      <!-- Dots -->
+      <circle cx="140" cy="58" r="5" fill="var(--accent)" opacity=".5"/>
+      <circle cx="260" cy="58" r="4" fill="var(--accent)" opacity=".35"/>
+      <circle cx="340" cy="58" r="4" fill="var(--accent)" opacity=".35"/>
+      <circle cx="440" cy="58" r="4" fill="var(--accent)" opacity=".35"/>
+      <circle cx="540" cy="58" r="5" fill="var(--accent)" opacity=".5"/>
+    </svg>
+    <div class="svg-cap">Figure 1 — Market structure spectrum. Oligopoly occupies the difficult middle zone where firms must model rival behavior.</div>
+  </div>
+</section>
+
+<!-- ══ SECTION 1: OLIGOPOLY ══ -->
+<section class="section" data-tab="oligopoly">
+  <div class="sec-hdr"><div class="sec-num">1</div><h2 class="sec-title">The Oligopoly Problem</h2></div>
+  <div class="concept">
+    <div class="c-label">Conjectural Interdependence</div>
+    Honda must conjecture Toyota's response when considering a 10% output increase. Toyota could match it (depressing prices further), hold steady, or cut back. The problem loops: <em>what does Honda think Toyota thinks Honda thinks Toyota thinks…</em>
+  </div>
+  <div class="card">
+    <div class="card-title">Two Solution Paths</div>
+    <div class="grid2">
+      <div class="mini"><div class="mini-title">Path 1 <span class="badge b-gold">Collusion</span></div>Firms coordinate output/prices — act like a monopoly. OPEC is the canonical example. Illegal in the US under Sherman Act §1.</div>
+      <div class="mini"><div class="mini-title">Path 2 <span class="badge b-teal">Game Theory</span></div>Formally model strategic interactions. Born in math, adopted widely. Models equilibrium without coordination.</div>
+    </div>
+  </div>
+  <div class="quote">"When Honda thinks about increasing production by 10%, Honda has to think — <em>I wonder what Toyota's going to do.</em>" <cite>— Prof. DeBrock</cite></div>
+</section>
+
+<!-- ══ SECTION 2: COLLUSION ══ -->
+<section class="section" data-tab="collusion">
+  <div class="sec-hdr"><div class="sec-num">2</div><h2 class="sec-title">Collusion &amp; Cartels</h2></div>
+  <div class="concept">
+    <div class="c-label">Setup — OPEC 1973</div>
+    Competitive oil price = <strong>$3/barrel</strong> (1945–1973). OPEC wanted $10–$12 by restricting output. Three tasks must be solved.
+  </div>
+
+  <!-- SUPPLY/DEMAND GRAPH — accurate intersection -->
+  <div class="svg-wrap">
+    <svg width="100%" viewBox="0 0 680 300" role="img">
+      <title>Side-by-side market and firm graphs showing competitive equilibrium and cartel price increase with incentive to cheat gap</title>
+      <defs>
+        <marker id="ar1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+      </defs>
+
+      <!-- LEFT PANEL: Market -->
+      <text class="at" x="175" y="18" text-anchor="middle" font-weight="600" fill="var(--text2)">MARKET</text>
+      <!-- Axes -->
+      <line x1="55" y1="260" x2="55" y2="28" stroke="var(--svg-axis)" stroke-width="1.5" marker-end="url(#ar1)"/>
+      <line x1="55" y1="260" x2="305" y2="260" stroke="var(--svg-axis)" stroke-width="1.5" marker-end="url(#ar1)"/>
+      <text class="at" x="44" y="32" text-anchor="middle" fill="var(--text2)">P</text>
+      <text class="at" x="310" y="264" fill="var(--text2)">Q</text>
+
+      <!--
+        Supply line: passes through (55,260) and (285,55)
+        Equation: P = 260 - (205/230)*Q_px  where Q_px is x-55
+        Demand line: passes through (55,55) and (285,260)
+        Equation: P = 55 + (205/230)*Q_px
+        Intersection: set equal → 260-(205/230)*q = 55+(205/230)*q
+        205 = 2*(205/230)*q → q = 230/2 = 115 → x=55+115=170, y=260-(205/230)*115=260-102.5=157.5≈158
+        So competitive eq is at pixel (170, 158), which maps to price $3, output Q_c
+      -->
+
+      <!-- Supply S: from (55,260) to (285,55) -->
+      <line x1="55" y1="260" x2="285" y2="55" stroke="var(--teal)" stroke-width="2" fill="none"/>
+      <text class="at" x="289" y="52" fill="var(--teal)">S</text>
+
+      <!-- Demand D: from (55,55) to (285,260) -->
+      <line x1="55" y1="55" x2="285" y2="260" stroke="var(--accent)" stroke-width="2" fill="none"/>
+      <text class="at" x="289" y="262" fill="var(--accent)">D₀</text>
+
+      <!-- Competitive equilibrium: exact intersection at (170,158) -->
+      <circle cx="170" cy="158" r="4" fill="var(--text)"/>
+      <!-- Dashed guides to axes -->
+      <line x1="55" y1="158" x2="170" y2="158" stroke="var(--text2)" stroke-width="0.8" stroke-dasharray="4 3"/>
+      <line x1="170" y1="158" x2="170" y2="260" stroke="var(--text2)" stroke-width="0.8" stroke-dasharray="4 3"/>
+      <text class="at" x="50" y="162" text-anchor="end" fill="var(--text2)">$3</text>
+      <text class="at" x="170" y="273" text-anchor="middle" fill="var(--text2)">Qc</text>
+
+      <!--
+        Cartel point: on demand line at x=110, which is Q_px=55
+        y = 55 + (205/230)*55 = 55 + 49.02 ≈ 104
+        So cartel point = (110, 104)
+      -->
+      <circle cx="110" cy="104" r="4" fill="var(--gold)"/>
+      <line x1="55" y1="104" x2="110" y2="104" stroke="var(--gold)" stroke-width="0.9" stroke-dasharray="4 3"/>
+      <line x1="110" y1="104" x2="110" y2="260" stroke="var(--gold)" stroke-width="0.9" stroke-dasharray="4 3"/>
+      <text class="at" x="50" y="108" text-anchor="end" fill="var(--gold)">P*</text>
+      <text class="at" x="110" y="273" text-anchor="middle" fill="var(--gold)">Q*</text>
+
+      <!-- Reduce-output arrow -->
+      <path d="M162 282 L118 282" stroke="var(--coral)" stroke-width="1.5" marker-end="url(#ar1)" fill="none"/>
+      <text class="at" x="140" y="294" text-anchor="middle" fill="var(--coral)">Output ↓</text>
+
+      <!-- RIGHT PANEL: Individual Firm -->
+      <text class="at" x="500" y="18" text-anchor="middle" font-weight="600" fill="var(--text2)">INDIVIDUAL FIRM</text>
+      <!-- Axes -->
+      <line x1="360" y1="260" x2="360" y2="28" stroke="var(--svg-axis)" stroke-width="1.5" marker-end="url(#ar1)"/>
+      <line x1="360" y1="260" x2="640" y2="260" stroke="var(--svg-axis)" stroke-width="1.5" marker-end="url(#ar1)"/>
+      <text class="at" x="349" y="32" text-anchor="middle" fill="var(--text2)">P</text>
+      <text class="at" x="645" y="264" fill="var(--text2)">q</text>
+
+      <!--
+        MC curve: from (360,270) steeply upward through (560,55)
+        Using line: (360,270) to (580,60)  → slope = (60-270)/(580-360) = -210/220 ≈ -0.955 per px
+        Actually MC slopes UP: y decreases as x increases.
+        Let MC go from (360,265) to (600,55): slope = (55-265)/(600-360) = -210/240 = -0.875
+        At x=420 (q_fix): y = 265 + (-0.875)*(420-360) = 265-52.5 = 212.5 ≈ 213
+        At x=480 (competitive): y = 265 + (-0.875)*(480-360) = 265-105 = 160
+        Cartel price line at y=104 (same as left panel P*)
+        Competitive price line at y=158 (same as left panel $3)
+        MC=cartel price intersection: 265-0.875*(x-360)=104 → 0.875*(x-360)=161 → x-360=184 → x=544
+        So quota = x=544, y=104
+        MC=competitive price: 265-0.875*(x-360)=158 → 0.875*(x-360)=107 → x=482
+        So competitive output = x=482, y=158
+      -->
+
+      <!-- MC curve -->
+      <line x1="360" y1="265" x2="605" y2="55" stroke="var(--purple)" stroke-width="2"/>
+      <text class="at" x="609" y="52" fill="var(--purple)">MC</text>
+
+      <!-- Competitive price line (horizontal at y=158) -->
+      <line x1="360" y1="158" x2="625" y2="158" stroke="var(--text2)" stroke-width="1" stroke-dasharray="4 3"/>
+      <text class="at" x="355" y="162" text-anchor="end" fill="var(--text2)">$3</text>
+      <text class="at" x="628" y="162" fill="var(--text2)">MRc</text>
+
+      <!-- Competitive output on MC: (482,158) -->
+      <circle cx="482" cy="158" r="3.5" fill="var(--text)"/>
+      <line x1="482" y1="158" x2="482" y2="260" stroke="var(--text2)" stroke-width="0.8" stroke-dasharray="3 3"/>
+      <text class="at" x="482" y="273" text-anchor="middle" fill="var(--text2)">qc</text>
+
+      <!-- Cartel price line (horizontal at y=104) -->
+      <line x1="360" y1="104" x2="625" y2="104" stroke="var(--gold)" stroke-width="1.3" stroke-dasharray="5 3"/>
+      <text class="at" x="355" y="108" text-anchor="end" fill="var(--gold)">P*</text>
+
+      <!-- Cartel quota on MC: (544,104) -->
+      <circle cx="544" cy="104" r="4" fill="var(--gold)"/>
+      <line x1="544" y1="104" x2="544" y2="260" stroke="var(--gold)" stroke-width="0.9" stroke-dasharray="4 3"/>
+      <text class="at" x="544" y="273" text-anchor="middle" fill="var(--gold)">q*fix</text>
+
+      <!-- At quota, MC value = 104 but also mark MC at quota (same point) -->
+      <!-- Incentive to cheat: gap between P* (y=104) and MC at quota -->
+      <!-- MC at quota is exactly at (544,104) — the intersection IS the quota point -->
+      <!-- Show cheat zone: from MC evaluated slightly left of quota -->
+      <!-- At x=500 (some output less than quota), MC = 265-0.875*(500-360) = 265-122.5 = 142.5 -->
+      <!-- The cheat incentive is between P*(104) and MC at quota(104) at the QUOTA point -->
+      <!-- Better: show between P* and the lower MC at a point left of quota -->
+      <!-- At q*fix=544, MC=104 exactly. To show the gap meaningfully: mark price vs MC at some q_cheat to right -->
+      <!-- Instead, show the canonical gap: at q*fix, price P*=104 received per barrel, MC of producing quota = lower -->
+      <!-- Re-setup: MC at quota should be BELOW P* to show incentive. Let quota be at x=480, MC at (480, y_mc) -->
+      <!-- At x=480: MC_y = 265 - 0.875*(480-360) = 265-105=160. But P* line is at y=104. Since y=104 < y=160 in screen coords (lower y = higher price), P*=104 is ABOVE MC=160 on screen. That's correct! -->
+      <!-- So let q*fix = x=480, P*_line=y=104 (=high price), MC at quota = y=160 (lower price) -->
+      <!-- The gap on screen from y=104 to y=160 = INCENTIVE TO CHEAT -->
+
+      <!-- Redefine: cartel quota at x=480 (not where MC=P*, but imposed quota) -->
+      <!-- Remove old quota circle and redraw -->
+      <!-- Remove circle at 544 and redo -->
+      <!-- Actually let's redraw cleanly with q*fix at x=470: -->
+      <!-- MC at x=470: y=265-0.875*(470-360)=265-96.25=168.75≈169 -->
+      <!-- P* line at y=104. Gap = 104 to 169 on screen = firm sells at P* but MC is lower → incentive to produce more -->
+
+      <!-- Cartel quota mark at x=470 -->
+      <line x1="470" y1="104" x2="470" y2="260" stroke="var(--gold)" stroke-width="0.9" stroke-dasharray="4 3" opacity=".7"/>
+      <text class="at" x="470" y="273" text-anchor="middle" fill="var(--gold)">q*</text>
+
+      <!-- MC at q* = (470, 169) -->
+      <circle cx="470" cy="169" r="3.5" fill="var(--purple)"/>
+      <!-- P* at q* = (470, 104) -->
+      <circle cx="470" cy="104" r="3.5" fill="var(--gold)"/>
+
+      <!-- Incentive to cheat bracket -->
+      <line x1="590" y1="104" x2="590" y2="169" stroke="var(--coral2)" stroke-width="1.5"/>
+      <line x1="585" y1="104" x2="595" y2="104" stroke="var(--coral2)" stroke-width="1.5"/>
+      <line x1="585" y1="169" x2="595" y2="169" stroke="var(--coral2)" stroke-width="1.5"/>
+      <text class="at" x="600" y="118" fill="var(--coral2)" font-size="10px">Incentive</text>
+      <text class="at" x="600" y="131" fill="var(--coral2)" font-size="10px">to cheat</text>
+      <text class="at" x="600" y="144" fill="var(--coral2)" font-size="10px">(P* &gt; MC)</text>
+
+      <!-- Remove the 544 quota elements by overwriting with background (can't delete, so just don't redraw them) -->
+    </svg>
+    <div class="svg-cap">Figure 2 — Left: market reduces Q from Qc to Q* raising price from $3 to P*. Right: at firm's quota q*, the cartel price P* exceeds the firm's marginal cost — creating the "incentive to cheat" gap.</div>
+  </div>
+
+  <!-- Three Cartel Tasks -->
+  <div class="card">
+    <div class="card-title">The Three Cartel Tasks</div>
+    <div class="task"><div class="t-num" style="background:#4a6fd4;color:#fff">1</div><div><div class="t-title">Determine Q*_fix and P*_fix</div><div class="t-desc">Find the output level that maximizes cartel profit — act like a monopolist (set MR = ΣMC). Hard politically: members disagree on how aggressive to be. Saudi Arabia vs. smaller OPEC members.</div></div></div>
+    <div class="task"><div class="t-num" style="background:var(--gold);color:#000">2</div><div><div class="t-title">Build a quota system</div><div class="t-desc">Assign each firm i a quota q*_fix,i so that Q*_fix = Σq*_fix,i. Politically brutal — Saudis cut 15M → 7.5M barrels/day to make it work. Smaller states resisted any cuts.</div></div></div>
+    <div class="task"><div class="t-num" style="background:var(--coral);color:#fff">3</div><div><div class="t-title">Construct a policing mechanism</div><div class="t-desc"><strong>Detect:</strong> OPEC used satellites to measure tanker waterline depth — heavier load = lower waterline = cheating caught. <br><strong>Deter:</strong> Punishment must be credible. "We'll flood the market" was not credible — no one would kill the golden goose.</div></div></div>
+  </div>
+
+  <!-- DEADWEIGHT LOSS GRAPH — Fixed triangle -->
+  <div class="svg-wrap">
+    <svg width="100%" viewBox="0 0 680 310" role="img">
+      <title>Welfare analysis graph showing consumer surplus, producer surplus, and deadweight loss triangle under cartel pricing</title>
+      <defs>
+        <marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+      </defs>
+      <!-- Axes -->
+      <line x1="80" y1="265" x2="80" y2="32" stroke="var(--svg-axis)" stroke-width="1.5" marker-end="url(#ar2)"/>
+      <line x1="80" y1="265" x2="560" y2="265" stroke="var(--svg-axis)" stroke-width="1.5" marker-end="url(#ar2)"/>
+      <text class="at" x="70" y="36" text-anchor="middle" fill="var(--text2)">P</text>
+      <text class="at" x="565" y="269" fill="var(--text2)">Q</text>
+
+      <!--
+        Supply: (80,265) to (500,55) — slope=(55-265)/(500-80)=-210/420=-0.5
+        Demand: (80,55) to (500,265) — slope=(265-55)/(500-80)=210/420=0.5
+        Intersection: 265-0.5*(x-80) = 55+0.5*(x-80)
+        210 = (x-80) → x=290, y=265-0.5*210=265-105=160
+        Competitive eq: (290, 160)
+
+        Cartel point on demand at x=175:
+        y = 55 + 0.5*(175-80) = 55+47.5 = 102.5 ≈ 103
+        Cartel: (175, 103)
+
+        DWL triangle vertices:
+          - Cartel point on demand: (175, 103)  ← top-left vertex (price P*)
+          - Competitive eq: (290, 160)           ← right vertex (where S and D cross)
+          - Point on supply at x=175: y=265-0.5*(175-80)=265-47.5=217.5≈218 ← NOT USED
+          
+        Actually DWL is bounded by:
+          - Top: horizontal line at P* from cartel output to competitive output
+          - Left: vertical line at Q*
+          - Right: the region between S and D curves from Q* to Qc
+          
+        The DWL triangle has vertices:
+          A = (Q*,P*) = (175,103) on demand curve
+          B = (Qc,Pc) = (290,160) equilibrium point
+          C = (Q*,Pc_supply) = point on supply at Q* → y=265-0.5*(175-80)=217.5≈218
+          
+        Wait — standard DWL: triangle with vertices at:
+          (Q*, P*) on demand = (175,103)
+          (Qc, Pc) equilibrium = (290,160)  
+          (Q*, Pc_supply_at_Q*) on supply = (175,218)
+          
+        That's a large triangle. The correct DWL triangle in a standard S&D graph is:
+          Top vertex: (Q*, P*) = cartel price at cartel quantity, on demand curve = (175,103)
+          Bottom vertex on supply: supply price at Q*_supply side = (175,218)
+          Right vertex: competitive equilibrium = (290,160)
+          
+        Let me verify: from Q*=175 to Qc=290, the "lost" trades are those where demand > supply.
+        At any Q between Q* and Qc: 
+          Demand price = 55+0.5*(Q-80)
+          Supply price = 265-0.5*(Q-80)
+          Gap closes from (P*=103 at demand, 218 at supply) to (160,160) at equilibrium.
+          
+        So DWL triangle: (175,103), (290,160), (175,218) — this is correct!
+        But visually this is a triangle pointing LEFT, with the two left vertices at Q* and the right vertex at Qc.
+      -->
+
+      <!-- Supply S -->
+      <line x1="80" y1="265" x2="500" y2="55" stroke="var(--teal)" stroke-width="2"/>
+      <text class="at" x="504" y="52" fill="var(--teal)">S</text>
+
+      <!-- Demand D -->
+      <line x1="80" y1="55" x2="500" y2="265" stroke="var(--accent)" stroke-width="2"/>
+      <text class="at" x="504" y="265" fill="var(--accent)">D</text>
+
+      <!-- Competitive equilibrium at (290,160) -->
+      <circle cx="290" cy="160" r="4" fill="var(--text)"/>
+      <!-- P_c horizontal -->
+      <line x1="80" y1="160" x2="290" y2="160" stroke="var(--text2)" stroke-width="0.8" stroke-dasharray="3 3"/>
+      <!-- Q_c vertical -->
+      <line x1="290" y1="160" x2="290" y2="265" stroke="var(--text2)" stroke-width="0.8" stroke-dasharray="3 3"/>
+      <text class="at" x="75" y="164" text-anchor="end" fill="var(--text2)">Pc</text>
+      <text class="at" x="290" y="279" text-anchor="middle" fill="var(--text2)">Qc</text>
+
+      <!-- Cartel price P* line at y=103 -->
+      <line x1="80" y1="103" x2="290" y2="103" stroke="var(--gold)" stroke-width="0.9" stroke-dasharray="4 3"/>
+      <text class="at" x="75" y="107" text-anchor="end" fill="var(--gold)">P*</text>
+      <!-- Q* vertical at x=175 -->
+      <line x1="175" y1="103" x2="175" y2="265" stroke="var(--gold)" stroke-width="0.9" stroke-dasharray="4 3"/>
+      <text class="at" x="175" y="279" text-anchor="middle" fill="var(--gold)">Q*</text>
+
+      <!-- Cartel point on demand at (175,103) -->
+      <circle cx="175" cy="103" r="4" fill="var(--gold)"/>
+      <!-- Supply at Q*=x=175: y=265-0.5*(175-80)=217.5 → (175,218) -->
+      <circle cx="175" cy="218" r="3.5" fill="var(--teal)"/>
+
+      <!-- Consumer Surplus: triangle (80,55), (80,103), (175,103) -->
+      <polygon points="80,55 80,103 175,103" fill="rgba(124,159,255,0.25)" stroke="rgba(124,159,255,0.4)" stroke-width="0.5"/>
+      <text class="at" x="104" y="88" text-anchor="middle" fill="var(--accent)">CS</text>
+
+      <!-- Producer Surplus: trapezoid under P* above supply, from x=80 to x=175 -->
+      <!-- Bounded by: P* line (y=103), left axis (x=80), supply line, Q* (x=175) -->
+      <!-- Supply at x=80: y=265. At x=175: y=218. -->
+      <!-- PS polygon: (80,103), (175,103), (175,218), (80,265) -->
+      <polygon points="80,103 175,103 175,218 80,265" fill="rgba(61,184,154,0.2)" stroke="rgba(61,184,154,0.35)" stroke-width="0.5"/>
+      <text class="at" x="112" y="180" text-anchor="middle" fill="var(--teal)">PS</text>
+
+      <!-- DWL triangle: (175,103), (290,160), (175,218) -->
+      <polygon points="175,103 290,160 175,218" fill="rgba(212,168,67,0.35)" stroke="var(--gold)" stroke-width="1.5"/>
+      <text class="at" x="216" y="162" text-anchor="middle" font-weight="600" fill="var(--gold)">DWL</text>
+
+      <!-- Label: original CS area (greyed out) to show shrinkage -->
+      <!-- Arrow and DWL label -->
+      <line x1="330" y1="145" x2="218" y2="155" stroke="var(--gold)" stroke-width="0.8" marker-end="url(#ar2)" fill="none"/>
+      <text class="at" x="380" y="125" text-anchor="middle" fill="var(--gold)">Deadweight loss</text>
+      <text class="at" x="380" y="139" text-anchor="middle" fill="var(--gold)">triangle</text>
+      <text class="at" x="380" y="153" fill="var(--text3)" text-anchor="middle">Neither CS nor PS</text>
+    </svg>
+    <div class="svg-cap">Figure 3 — Welfare analysis. Cartel restricts output to Q*, raising price to P*. The gold DWL triangle (vertices at Q*/P*, equilibrium, and Q*/supply) represents welfare permanently destroyed. CS shrinks to the small blue triangle; PS becomes the green trapezoid.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Sherman Act §1 — Antitrust</div>
+    <div class="grid2">
+      <div>
+        <div class="task" style="margin-bottom:7px"><div class="t-num" style="background:var(--coral);color:#fff;font-size:10px">✗</div><div><div class="t-title">Illegal per se</div><div class="t-desc">No "rule of reason" defense. Proving the fix happened = automatic conviction.</div></div></div>
+        <div class="task"><div class="t-num" style="background:var(--accent2);color:#fff;font-size:10px">!</div><div><div class="t-title">Criminal penalties</div><div class="t-desc">Since late 1970s: executives go to jail, not just company fines. Career-ending deterrence.</div></div></div>
+      </div>
+      <div class="mini">
+        <div class="mini-title">Limit: Sovereign Nations</div>
+        <div style="font-size:12px;color:var(--text2)">Sherman Act has no jurisdiction over sovereign nations. OPEC countries cannot be prosecuted — their agreements are international treaties.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 3: GAME THEORY INTERACTIVE ══ -->
+<section class="section" data-tab="gametheory">
+  <div class="sec-hdr"><div class="sec-num">3</div><h2 class="sec-title">Game Theory — Interactive Diagram</h2></div>
+
+  <div class="gt-panel">
+    <div class="gt-tabs">
+      <button class="gt-tab active" onclick="gtTab('foundations',this)">Foundations</button>
+      <button class="gt-tab" onclick="gtTab('types',this)">Game Types</button>
+      <button class="gt-tab" onclick="gtTab('entry',this)">Entry Game</button>
+      <button class="gt-tab" onclick="gtTab('prisoner',this)">Prisoner's Dilemma</button>
+    </div>
+
+    <!-- FOUNDATIONS TAB -->
+    <div class="gt-content" id="gt-foundations">
+      <div class="gt-sub">Game theory formally models <strong>strategic interactions</strong> between rational players. Each player chooses a strategy to maximize their own payoff — knowing that rivals are doing the same.</div>
+      <svg width="100%" viewBox="0 0 680 200" role="img">
+        <title>Game theory foundations: Players, Strategies, Payoffs, and Equilibrium in sequence</title>
+        <defs><marker id="ar3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <!-- Four boxes in a flow -->
+        <!-- Box 1: Players -->
+        <rect x="30" y="70" width="130" height="60" rx="8" fill="var(--bg3)" stroke="var(--accent2)" stroke-width="1.2"/>
+        <text class="at" x="95" y="96" text-anchor="middle" font-weight="600" fill="var(--accent)">Players</text>
+        <text class="at" x="95" y="113" text-anchor="middle" fill="var(--text2)">Firms, nations</text>
+        <text class="at" x="95" y="126" text-anchor="middle" fill="var(--text2)">individuals</text>
+        <!-- Arrow -->
+        <line x1="162" y1="100" x2="188" y2="100" stroke="var(--text2)" stroke-width="1.2" marker-end="url(#ar3)"/>
+        <!-- Box 2: Strategies -->
+        <rect x="190" y="70" width="130" height="60" rx="8" fill="var(--bg3)" stroke="var(--gold)" stroke-width="1.2"/>
+        <text class="at" x="255" y="96" text-anchor="middle" font-weight="600" fill="var(--gold)">Strategies</text>
+        <text class="at" x="255" y="113" text-anchor="middle" fill="var(--text2)">Cheat / cooperate</text>
+        <text class="at" x="255" y="126" text-anchor="middle" fill="var(--text2)">High / low output</text>
+        <!-- Arrow -->
+        <line x1="322" y1="100" x2="348" y2="100" stroke="var(--text2)" stroke-width="1.2" marker-end="url(#ar3)"/>
+        <!-- Box 3: Payoffs -->
+        <rect x="350" y="70" width="130" height="60" rx="8" fill="var(--bg3)" stroke="var(--teal)" stroke-width="1.2"/>
+        <text class="at" x="415" y="96" text-anchor="middle" font-weight="600" fill="var(--teal)">Payoffs</text>
+        <text class="at" x="415" y="113" text-anchor="middle" fill="var(--text2)">Profit, jail time</text>
+        <text class="at" x="415" y="126" text-anchor="middle" fill="var(--text2)">years, market share</text>
+        <!-- Arrow -->
+        <line x1="482" y1="100" x2="508" y2="100" stroke="var(--text2)" stroke-width="1.2" marker-end="url(#ar3)"/>
+        <!-- Box 4: Equilibrium -->
+        <rect x="510" y="70" width="140" height="60" rx="8" fill="var(--bg3)" stroke="var(--purple)" stroke-width="1.2"/>
+        <text class="at" x="580" y="96" text-anchor="middle" font-weight="600" fill="var(--purple)">Equilibrium</text>
+        <text class="at" x="580" y="113" text-anchor="middle" fill="var(--text2)">Nash / Dominant</text>
+        <text class="at" x="580" y="126" text-anchor="middle" fill="var(--text2)">Strategy outcome</text>
+        <!-- Question above -->
+        <text class="at" x="340" y="45" text-anchor="middle" font-weight="600" fill="var(--text2)">The oligopoly problem: how to predict rational strategic behavior?</text>
+        <!-- Feedback arrow: outcome informs future strategies -->
+        <path d="M650 130 Q650 175 340 175 Q30 175 30 130" fill="none" stroke="var(--text3)" stroke-width="0.8" stroke-dasharray="4 3" marker-end="url(#ar3)"/>
+        <text class="at" x="340" y="192" text-anchor="middle" fill="var(--text3)">Repeated game: today's outcome shapes tomorrow's strategy</text>
+      </svg>
+    </div>
+
+    <!-- TYPES TAB -->
+    <div class="gt-content" id="gt-types" style="display:none">
+      <div class="gt-sub">Two key classifications shape how we solve a game.</div>
+      <svg width="100%" viewBox="0 0 680 220" role="img">
+        <title>Game theory types: Cooperative vs Non-cooperative and Extensive form vs Normal form</title>
+        <defs><marker id="ar4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+        <!-- Column 1: Cooperative -->
+        <text class="at" x="170" y="32" text-anchor="middle" font-weight="600" fill="var(--text2)">By contract ability</text>
+        <rect x="30" y="45" width="160" height="75" rx="8" fill="var(--bg3)" stroke="var(--teal2)" stroke-width="1.2"/>
+        <text class="at" x="110" y="68" text-anchor="middle" font-weight="600" fill="var(--teal)">Cooperative</text>
+        <text class="at" x="110" y="85" text-anchor="middle" fill="var(--text2)">Binding contracts</text>
+        <text class="at" x="110" y="99" text-anchor="middle" fill="var(--text3)">e.g. Labor negotiations</text>
+        <text class="at" x="110" y="112" text-anchor="middle" fill="var(--text3)">Union &amp; management</text>
+
+        <rect x="200" y="45" width="160" height="75" rx="8" fill="var(--bg3)" stroke="var(--coral2)" stroke-width="1.2"/>
+        <text class="at" x="280" y="68" text-anchor="middle" font-weight="600" fill="var(--coral)">Non-cooperative</text>
+        <text class="at" x="280" y="85" text-anchor="middle" fill="var(--text2)">No binding contracts</text>
+        <text class="at" x="280" y="99" text-anchor="middle" fill="var(--text3)">e.g. Honda vs Toyota</text>
+        <text class="at" x="280" y="112" text-anchor="middle" fill="var(--text2)">← This is our focus</text>
+
+        <!-- Column 2: Timing -->
+        <text class="at" x="530" y="32" text-anchor="middle" font-weight="600" fill="var(--text2)">By timing of play</text>
+        <rect x="390" y="45" width="130" height="75" rx="8" fill="var(--bg3)" stroke="var(--accent2)" stroke-width="1.2"/>
+        <text class="at" x="455" y="68" text-anchor="middle" font-weight="600" fill="var(--accent)">Extensive form</text>
+        <text class="at" x="455" y="85" text-anchor="middle" fill="var(--text2)">Sequential play</text>
+        <text class="at" x="455" y="99" text-anchor="middle" fill="var(--text3)">A moves → B responds</text>
+        <text class="at" x="455" y="113" text-anchor="middle" fill="var(--text3)">Entry game, chess</text>
+
+        <rect x="530" y="45" width="130" height="75" rx="8" fill="var(--bg3)" stroke="var(--purple)" stroke-width="1.2"/>
+        <text class="at" x="595" y="68" text-anchor="middle" font-weight="600" fill="var(--purple)">Normal form</text>
+        <text class="at" x="595" y="85" text-anchor="middle" fill="var(--text2)">Simultaneous play</text>
+        <text class="at" x="595" y="99" text-anchor="middle" fill="var(--text3)">Payoff matrix</text>
+        <text class="at" x="595" y="113" text-anchor="middle" fill="var(--text3)">Prisoner's dilemma</text>
+
+        <!-- Examples row -->
+        <rect x="30" y="150" width="620" height="50" rx="8" fill="var(--hl)" stroke="var(--border)" stroke-width="0.8"/>
+        <text class="at" x="340" y="170" text-anchor="middle" fill="var(--text2)">Our focus: <tspan font-weight="600" fill="var(--text)">Non-cooperative games</tspan> — firms compete without coordination</text>
+        <text class="at" x="340" y="188" text-anchor="middle" fill="var(--text3)">Solved via: Dominant strategy equilibrium (DSE) or Nash equilibrium</text>
+      </svg>
+    </div>
+
+    <!-- ENTRY GAME TAB -->
+    <div class="gt-content" id="gt-entry" style="display:none">
+      <div class="gt-sub">The <strong>entry game</strong> is an extensive-form (sequential) game. The entrant moves first; the incumbent responds. The incumbent's goal: make entry look unprofitable before it happens.</div>
+      <!-- Fixed layout: no overlaps, clear vertical spacing -->
+      <svg width="100%" viewBox="0 0 680 340" role="img">
+        <title>Entry game decision tree: Potential Entrant chooses to enter or not. If they enter, Incumbent chooses output strategy. Incumbent aims for entrant profit below zero.</title>
+        <defs><marker id="ar5" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+        <!-- ROOT: Potential Entrant at (150, 45) -->
+        <rect x="60" y="26" width="180" height="42" rx="8" fill="var(--bg3)" stroke="var(--accent)" stroke-width="1.5"/>
+        <text class="at" x="150" y="44" text-anchor="middle" font-weight="600" fill="var(--accent)">Potential Entrant</text>
+        <text class="at" x="150" y="59" text-anchor="middle" fill="var(--text2)">First mover</text>
+
+        <!-- Branch 1: Not Enter → down-left to (80, 135) -->
+        <line x1="100" y1="68" x2="80" y2="128" stroke="var(--text3)" stroke-width="1.3" marker-end="url(#ar5)"/>
+        <text class="at" x="56" y="103" text-anchor="middle" fill="var(--text3)">Not enter</text>
+
+        <!-- Terminal: Status Quo at (80,140) -->
+        <rect x="22" y="130" width="116" height="36" rx="6" fill="var(--bg4)" stroke="var(--border2)" stroke-width="0.8"/>
+        <text class="at" x="80" y="145" text-anchor="middle" fill="var(--text2)">Status quo</text>
+        <text class="at" x="80" y="159" text-anchor="middle" fill="var(--text3)">Incumbent keeps market</text>
+
+        <!-- Branch 2: Enter → down-right to (380, 135) -->
+        <line x1="200" y1="68" x2="380" y2="128" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#ar5)"/>
+        <text class="at" x="320" y="98" text-anchor="middle" fill="var(--accent)">Enter!</text>
+
+        <!-- INCUMBENT node at (380, 150) -->
+        <rect x="295" y="130" width="170" height="42" rx="8" fill="var(--bg3)" stroke="var(--gold)" stroke-width="1.5"/>
+        <text class="at" x="380" y="148" text-anchor="middle" font-weight="600" fill="var(--gold)">Incumbent</text>
+        <text class="at" x="380" y="163" text-anchor="middle" fill="var(--text2)">Responds to entry</text>
+
+        <!-- Incumbent has 3 choices, placed at y=240 with good spacing: x=160, 380, 580 -->
+
+        <!-- Choice A: Cut output (x=160) -->
+        <line x1="332" y1="172" x2="200" y2="228" stroke="var(--teal)" stroke-width="1.2" marker-end="url(#ar5)"/>
+        <text class="at" x="234" y="210" text-anchor="middle" fill="var(--teal)">Q ↓ cut</text>
+        <rect x="110" y="230" width="140" height="62" rx="7" fill="var(--bg3)" stroke="var(--teal)" stroke-width="1"/>
+        <text class="at" x="180" y="249" text-anchor="middle" font-weight="600" fill="var(--teal)">Reduce output</text>
+        <text class="at" x="180" y="264" text-anchor="middle" fill="var(--text2)">Accommodates entrant</text>
+        <text class="at" x="180" y="280" text-anchor="middle" fill="var(--text3)">(πE &gt; 0 possible)</text>
+
+        <!-- Choice B: Hold output (x=380) -->
+        <line x1="380" y1="172" x2="380" y2="228" stroke="var(--text2)" stroke-width="1.2" marker-end="url(#ar5)"/>
+        <text class="at" x="408" y="205" fill="var(--text2)">Q = hold</text>
+        <rect x="295" y="230" width="170" height="62" rx="7" fill="var(--bg3)" stroke="var(--text2)" stroke-width="1"/>
+        <text class="at" x="380" y="249" text-anchor="middle" font-weight="600" fill="var(--text2)">Hold steady</text>
+        <text class="at" x="380" y="264" text-anchor="middle" fill="var(--text2)">Split market share</text>
+        <text class="at" x="380" y="280" text-anchor="middle" fill="var(--text3)">(moderate πE)</text>
+
+        <!-- Choice C: Expand output (x=560) -->
+        <line x1="428" y1="172" x2="530" y2="228" stroke="var(--coral)" stroke-width="1.5" marker-end="url(#ar5)"/>
+        <text class="at" x="508" y="207" text-anchor="middle" fill="var(--coral)">Q ↑ expand</text>
+        <rect x="450" y="230" width="170" height="62" rx="7" fill="var(--bg3)" stroke="var(--coral)" stroke-width="1.5"/>
+        <text class="at" x="535" y="249" text-anchor="middle" font-weight="600" fill="var(--coral)">Flood the market</text>
+        <text class="at" x="535" y="264" text-anchor="middle" fill="var(--text2)">Price collapses</text>
+        <text class="at" x="535" y="280" text-anchor="middle" fill="var(--coral2)">πE &lt; 0 → entrant loses</text>
+
+        <!-- Key insight box at bottom, well below the three choice boxes (y=310) -->
+        <rect x="50" y="308" width="580" height="28" rx="6" fill="var(--hl)" stroke="var(--border)" stroke-width="0.8"/>
+        <text class="at" x="340" y="327" text-anchor="middle" fill="var(--text)">Strategy: build excess capacity (60% utilization) so expanding output is <tspan font-weight="600" fill="var(--coral)">credible</tspan> — entrant stays out</text>
+      </svg>
+    </div>
+
+    <!-- PRISONER'S DILEMMA TAB -->
+    <div class="gt-content" id="gt-prisoner" style="display:none">
+      <div class="gt-sub">Two bank robbers caught and separated. Each must independently choose: <strong>Confess</strong> or stick to the <strong>Alibi</strong>. The DA sets payoffs so confessing is always individually rational — even though both would be better off staying silent.</div>
+      <svg width="100%" viewBox="0 0 680 240" role="img">
+        <title>Prisoner's dilemma: timeline showing the DA's strategy to make confessing dominant for both Larry and Tim</title>
+        <defs><marker id="ar6" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+
+        <!-- Timeline bar -->
+        <line x1="50" y1="80" x2="630" y2="80" stroke="var(--svg-axis)" stroke-width="1.5" marker-end="url(#ar6)"/>
+
+        <!-- Step 1: Arrest -->
+        <circle cx="80" cy="80" r="8" fill="var(--coral)"/>
+        <line x1="80" y1="72" x2="80" y2="45" stroke="var(--coral)" stroke-width="0.8"/>
+        <rect x="30" y="22" width="100" height="22" rx="4" fill="var(--bg3)" stroke="var(--coral)" stroke-width="0.8"/>
+        <text class="at" x="80" y="37" text-anchor="middle" fill="var(--coral)">Arrest</text>
+        <text class="at" x="80" y="104" text-anchor="middle" fill="var(--text3)">Bank robbed</text>
+        <text class="at" x="80" y="117" text-anchor="middle" fill="var(--text3)">ski masks found</text>
+
+        <!-- Step 2: Separate rooms -->
+        <circle cx="210" cy="80" r="8" fill="var(--gold)"/>
+        <line x1="210" y1="88" x2="210" y2="115" stroke="var(--gold)" stroke-width="0.8"/>
+        <rect x="148" y="115" width="124" height="22" rx="4" fill="var(--bg3)" stroke="var(--gold)" stroke-width="0.8"/>
+        <text class="at" x="210" y="130" text-anchor="middle" fill="var(--gold)">Separate rooms</text>
+        <text class="at" x="210" y="59" text-anchor="middle" fill="var(--text3)">No communication</text>
+        <text class="at" x="210" y="72" text-anchor="middle" fill="var(--text3)">possible</text>
+
+        <!-- Step 3: DA offers deal -->
+        <circle cx="360" cy="80" r="8" fill="var(--accent)"/>
+        <line x1="360" y1="72" x2="360" y2="45" stroke="var(--accent)" stroke-width="0.8"/>
+        <rect x="296" y="22" width="128" height="22" rx="4" fill="var(--bg3)" stroke="var(--accent)" stroke-width="0.8"/>
+        <text class="at" x="360" y="37" text-anchor="middle" fill="var(--accent)">DA offers deal</text>
+        <text class="at" x="360" y="104" text-anchor="middle" fill="var(--text3)">Confess → walk free</text>
+        <text class="at" x="360" y="117" text-anchor="middle" fill="var(--text3)">if partner alibis</text>
+
+        <!-- Step 4: Each decides -->
+        <circle cx="500" cy="80" r="8" fill="var(--purple)"/>
+        <line x1="500" y1="88" x2="500" y2="115" stroke="var(--purple)" stroke-width="0.8"/>
+        <rect x="435" y="115" width="130" height="22" rx="4" fill="var(--bg3)" stroke="var(--purple)" stroke-width="0.8"/>
+        <text class="at" x="500" y="130" text-anchor="middle" fill="var(--purple)">Both decide</text>
+        <text class="at" x="500" y="60" text-anchor="middle" fill="var(--text3)">Simultaneously</text>
+        <text class="at" x="500" y="73" text-anchor="middle" fill="var(--text3)">independently</text>
+
+        <!-- Step 5: Outcome -->
+        <circle cx="620" cy="80" r="8" fill="var(--teal)"/>
+        <line x1="620" y1="72" x2="620" y2="45" stroke="var(--teal)" stroke-width="0.8"/>
+        <rect x="558" y="22" width="114" height="22" rx="4" fill="var(--bg3)" stroke="var(--teal)" stroke-width="0.8"/>
+        <text class="at" x="615" y="37" text-anchor="middle" fill="var(--teal)">Both confess!</text>
+        <text class="at" x="615" y="104" text-anchor="middle" fill="var(--text3)">5 yrs each</text>
+        <text class="at" x="615" y="117" text-anchor="middle" fill="var(--text3)">(could have had 1 yr)</text>
+
+        <!-- Bottom insight -->
+        <rect x="50" y="160" width="580" height="60" rx="8" fill="var(--bg3)" stroke="var(--border)" stroke-width="0.8"/>
+        <text class="at" x="340" y="183" text-anchor="middle" font-weight="600" fill="var(--text)">Dominant strategy: Confess is always better regardless of what the partner does</text>
+        <text class="at" x="340" y="200" text-anchor="middle" fill="var(--text2)">If partner confesses: confess (5 yr) beats alibi (20 yr)</text>
+        <text class="at" x="340" y="215" text-anchor="middle" fill="var(--text2)">If partner alibis: confess (0 yr) beats alibi (1 yr)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="mini"><div class="mini-title"><span class="badge b-blue">Extensive Form</span> Sequential</div>One firm moves, rival responds. Modeled as a decision tree. Entry game: incumbent vs. potential entrant. Best for analyzing commitment and credible threats.</div>
+    <div class="mini"><div class="mini-title"><span class="badge b-gold">Normal Form</span> Simultaneous</div>Both firms announce simultaneously. Solved with payoff matrices. Honda &amp; Toyota output announcements. Best for single-shot strategic interactions.</div>
+  </div>
+</section>
+
+<!-- ══ SECTION 4: PRISONER'S DILEMMA MATRIX ══ -->
+<section class="section" data-tab="gametheory">
+  <div class="sec-hdr"><div class="sec-num">4</div><h2 class="sec-title">Collusion Game Payoff Matrix</h2></div>
+  <div class="concept">
+    <div class="c-label">Prisoner's Dilemma → Firm Version</div>
+    Replace jail time with profit. Replace confess/alibi with cheat/cooperate. The same logic forces both firms to cheat — even though cooperating yields higher joint profit.
+  </div>
+  <div class="matrix-wrap">
+    <div class="matrix-title">Collusion Game — Profit Payoffs (upper-right = Firm B, lower-left = Firm A)</div>
+    <table class="mx-table">
+      <tr>
+        <td colspan="2" rowspan="2" style="width:50px"></td>
+        <th colspan="2" style="padding-bottom:8px;font-size:12px;font-weight:600;color:var(--accent)">Firm B</th>
+      </tr>
+      <tr>
+        <th class="mx-hdr">Cheat</th>
+        <th class="mx-hdr">Cooperate</th>
+      </tr>
+      <tr>
+        <th rowspan="2" class="mx-plabel" style="color:var(--gold)">Firm A</th>
+        <th class="mx-hdr">Cheat</th>
+        <td class="mx-cell">
+          <svg viewBox="0 0 105 82"><line x1="0" y1="0" x2="105" y2="82" stroke="var(--border2)" stroke-width="0.8"/></svg>
+          <div class="p-a c-med">$10</div><div class="p-b c-med">$10</div>
+          <div class="nash-lbl">DSE ★</div>
+        </td>
+        <td class="mx-cell">
+          <svg viewBox="0 0 105 82"><line x1="0" y1="0" x2="105" y2="82" stroke="var(--border2)" stroke-width="0.8"/></svg>
+          <div class="p-a c-good">$50</div><div class="p-b c-bad">$0</div>
+        </td>
+      </tr>
+      <tr>
+        <th class="mx-hdr">Cooperate</th>
+        <td class="mx-cell">
+          <svg viewBox="0 0 105 82"><line x1="0" y1="0" x2="105" y2="82" stroke="var(--border2)" stroke-width="0.8"/></svg>
+          <div class="p-a c-bad">$0</div><div class="p-b c-good">$50</div>
+        </td>
+        <td class="mx-cell" style="border:1.5px solid rgba(61,184,154,.5)">
+          <svg viewBox="0 0 105 82"><line x1="0" y1="0" x2="105" y2="82" stroke="var(--border2)" stroke-width="0.8"/></svg>
+          <div class="p-a c-good">$30</div><div class="p-b c-good">$30</div>
+          <div class="p-jt">Joint best ($60)</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="concept" style="margin-top:12px">
+    <div class="c-label">Why Both Cheat</div>
+    B cheats if A cheats: $10 &gt; $0. B cheats if A cooperates: $50 &gt; $30. Cheat dominates regardless. Same logic applies to A. Result: (Cheat, Cheat) = $10 each — even though (Cooperate, Cooperate) = $30 each.
+  </div>
+</section>
+
+<!-- ══ SECTION 5: NASH ══ -->
+<section class="section" data-tab="nash">
+  <div class="sec-hdr"><div class="sec-num">5</div><h2 class="sec-title">Nash Equilibrium</h2></div>
+  <div class="concept">
+    <div class="c-label">Definition</div>
+    <strong>"Do the best you can, given what your rival is doing."</strong> Drop into a cell. Ask each player: "Given your rival's strategy, do you want to stay?" If both say yes → Nash. If either says no → not Nash.
+  </div>
+  <div class="matrix-wrap">
+    <div class="matrix-title">Advertising Game (modified) — Coke vs Pepsi. Coke's payoff = lower-left; Pepsi's = upper-right</div>
+    <table class="mx-table">
+      <tr>
+        <td colspan="2" rowspan="2" style="width:60px"></td>
+        <th colspan="2" style="padding-bottom:8px;font-size:12px;font-weight:600;color:var(--accent)">Pepsi</th>
+      </tr>
+      <tr>
+        <th class="mx-hdr">High Ads</th>
+        <th class="mx-hdr">Low Ads</th>
+      </tr>
+      <tr>
+        <th rowspan="2" class="mx-plabel" style="color:var(--gold)">Coke</th>
+        <th class="mx-hdr">High Ads</th>
+        <td class="mx-cell nash-cell">
+          <svg viewBox="0 0 105 82"><line x1="0" y1="0" x2="105" y2="82" stroke="var(--border2)" stroke-width="0.8"/></svg>
+          <div class="p-a c-med">1</div><div class="p-b c-med">1</div>
+          <div class="nash-lbl">NASH ★</div>
+        </td>
+        <td class="mx-cell">
+          <svg viewBox="0 0 105 82"><line x1="0" y1="0" x2="105" y2="82" stroke="var(--border2)" stroke-width="0.8"/></svg>
+          <div class="p-a c-good">8</div><div class="p-b c-bad">0</div>
+        </td>
+      </tr>
+      <tr>
+        <th class="mx-hdr">Low Ads</th>
+        <td class="mx-cell">
+          <svg viewBox="0 0 105 82"><line x1="0" y1="0" x2="105" y2="82" stroke="var(--border2)" stroke-width="0.8"/></svg>
+          <div class="p-a c-bad">0</div><div class="p-b c-good">4</div>
+        </td>
+        <td class="mx-cell" style="border:1.5px solid rgba(61,184,154,.5)">
+          <svg viewBox="0 0 105 82"><line x1="0" y1="0" x2="105" y2="82" stroke="var(--border2)" stroke-width="0.8"/></svg>
+          <div class="p-a c-good">5</div><div class="p-b c-good">5</div>
+          <div class="p-jt">Joint best</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="card-title">Checking Nash — Drop Into Each Cell</div>
+    <div class="nash-grid">
+      <div class="ns-item"><div class="ns-out">(High,High) → Coke=1, Pepsi=1</div><div class="ns-desc">Coke: Pepsi at High → stay (1) or switch Low (0)? <strong>Stay.</strong> Pepsi: Coke at High → stay (1) or switch Low (4)? <strong>Leave!</strong></div><span class="sv sv-no">✗ Not Nash — Pepsi wants out</span></div>
+      <div class="ns-item"><div class="ns-out">(High,Low) → Coke=8, Pepsi=0</div><div class="ns-desc">Pepsi: Coke at High → stay (0) or switch High (1)? <strong>Leave!</strong></div><span class="sv sv-no">✗ Not Nash — Pepsi wants out</span></div>
+      <div class="ns-item"><div class="ns-out">(Low,High) → Coke=0, Pepsi=4</div><div class="ns-desc">Coke: Pepsi at High → stay (0) or switch High (1)? <strong>Leave!</strong></div><span class="sv sv-no">✗ Not Nash — Coke wants out</span></div>
+      <div class="ns-item"><div class="ns-out">(Low,Low) → Coke=5, Pepsi=5</div><div class="ns-desc">Coke: stay (5) or switch High (8)? <strong>Leave!</strong></div><span class="sv sv-no">✗ Not Nash — Coke defects</span></div>
+    </div>
+    <div style="margin-top:10px;padding:10px;background:rgba(212,168,67,.1);border:1px solid rgba(212,168,67,.3);border-radius:7px;font-size:12px">
+      <strong style="color:var(--gold2)">Result:</strong> The only Nash equilibrium is <strong>(High Ads, High Ads) = (1,1)</strong>. Both firms advertise heavily despite earning only $1 each, because unilaterally switching to Low Ads earns even less ($0). This is <em>defensive advertising</em> — a textbook prisoner's dilemma.
+    </div>
+  </div>
+</section>
+
+<!-- ══ SECTION 6: KEY TERMS ══ -->
+<section class="section" data-tab="terms">
+  <div class="sec-hdr"><div class="sec-num">6</div><h2 class="sec-title">Key Terms Glossary</h2></div>
+  <div class="card">
+    <div class="term-row"><span class="term-name">oligopoly</span><span class="term-def">Market with 2 to some small number of large firms, each able to directly affect rivals. Neither pure competition nor monopoly.</span></div>
+    <div class="term-row"><span class="term-name">conjectural interdependence</span><span class="term-def">Firms must guess how rivals will respond to their actions — the core oligopoly challenge. Leads to the "infinite regress" problem.</span></div>
+    <div class="term-row"><span class="term-name">cartel</span><span class="term-def">Collusive arrangement coordinating output/prices to act like a monopoly. OPEC is the canonical example. Illegal in the US under Sherman Act §1.</span></div>
+    <div class="term-row"><span class="term-name">Q*_fix / P*_fix</span><span class="term-def">The cartel's chosen output and resulting price. Q*_fix &lt; Q_competitive forces price above the competitive level.</span></div>
+    <div class="term-row"><span class="term-name">incentive to cheat</span><span class="term-def">At quota output, each firm's marginal cost is below the cartel price. The profit gap P* − MC creates an irresistible temptation to secretly produce more.</span></div>
+    <div class="term-row"><span class="term-name">deadweight loss</span><span class="term-def">The welfare triangle destroyed by cartel pricing. Output restricted below Qc means some mutually beneficial trades never occur — welfare simply vanishes.</span></div>
+    <div class="term-row"><span class="term-name">Sherman Act §1</span><span class="term-def">US antitrust law prohibiting restraint of trade. Price fixing is illegal per se — no "rule of reason" defense. Criminal penalties since the late 1970s.</span></div>
+    <div class="term-row"><span class="term-name">extensive form</span><span class="term-def">Sequential-play game. One firm moves, the rival responds. Modeled as a decision tree. Captures commitment and credible threats (e.g. entry game).</span></div>
+    <div class="term-row"><span class="term-name">normal form</span><span class="term-def">Simultaneous-play game. Both firms act at once. Solved with a payoff matrix. Honda and Toyota simultaneous output decisions.</span></div>
+    <div class="term-row"><span class="term-name">prisoner's dilemma</span><span class="term-def">A game where individual rationality leads to collective irrationality. Both players have a dominant strategy that makes both worse off than cooperation would.</span></div>
+    <div class="term-row"><span class="term-name">dominant strategy</span><span class="term-def">"One play is always correct regardless of what your rival chooses." No need to know rival's probability — the dominant play always wins.</span></div>
+    <div class="term-row"><span class="term-name">Nash equilibrium</span><span class="term-def">"Do the best you can, given what your rival is doing." A cell where no player wants to deviate. May or may not coincide with dominant strategy equilibrium.</span></div>
+    <div class="term-row"><span class="term-name">defensive advertising</span><span class="term-def">Firms spend heavily on ads to prevent losing customers — not to gain new ones. Classic prisoner's dilemma: both advertise heavily, both earn less than if both held back.</span></div>
+  </div>
+</section>
+
+<div class="no-results" id="no-results">No matching notes found. Try a different search term.</div>
+</main>
+
+<script>
+var currentTheme = 'dark';
+document.documentElement.setAttribute('data-theme','dark');
+
+function toggleTheme(){
+  currentTheme = currentTheme==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',currentTheme);
+  document.getElementById('dm-lbl').textContent = currentTheme==='dark'?'Light':'Dark';
+}
+
+function gtTab(id,btn){
+  document.querySelectorAll('.gt-content').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.gt-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('gt-'+id).style.display='block';
+  btn.classList.add('active');
+}
+
+function showTab(tab,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.section').forEach(s=>{
+    s.classList.toggle('hidden',tab!=='all'&&s.dataset.tab!==tab);
+  });
+  document.getElementById('no-results').style.display='none';
+  document.getElementById('searchInput').value='';
+}
+
+function doSearch(q){
+  q=q.trim().toLowerCase();
+  if(!q){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('hidden'));
+    document.getElementById('no-results').style.display='none';
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.tab-btn').classList.add('active');
+    return;
+  }
+  var any=false;
+  document.querySelectorAll('.section').forEach(s=>{
+    var show=s.textContent.toLowerCase().includes(q);
+    s.classList.toggle('hidden',!show);
+    if(show)any=true;
+  });
+  document.getElementById('no-results').style.display=any?'none':'block';
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+}
+</script>
+</body>
+</html>
