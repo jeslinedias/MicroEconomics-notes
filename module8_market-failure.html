@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECON 528 · Module 8 — Market Failures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────── RESET & TOKENS ─────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:    #0d0f12;
+  --bg2:   #141720;
+  --bg3:   #1a1e28;
+  --line:  rgba(255,255,255,0.07);
+  --line2: rgba(255,255,255,0.13);
+  --txt:   #e8eaf0;
+  --txt2:  #8d92a8;
+  --txt3:  #5a607a;
+  --accent:#4f7cff;
+  --amber: #f5a623;
+  --red:   #ff5b5b;
+  --green: #3ecf8e;
+  --teal:  #38bdf8;
+  --font-display:'DM Serif Display',Georgia,serif;
+  --font-body:'Manrope',system-ui,sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --r:8px;--r2:14px;
+  --nav-h:56px;
+  --transition:0.18s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:var(--font-body);font-size:15px;
+  line-height:1.7;min-height:100vh;
+}
+
+/* ─────────────────────────── TOP NAV BAR ─────────────────────────── */
+#topnav{
+  position:sticky;top:0;z-index:200;
+  height:var(--nav-h);
+  background:rgba(13,15,18,0.92);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line2);
+  display:flex;align-items:center;
+  overflow-x:auto;
+  scrollbar-width:none;
+  padding:0 24px;
+  gap:0;
+}
+#topnav::-webkit-scrollbar{display:none}
+
+.nav-brand{
+  display:flex;flex-direction:column;justify-content:center;
+  padding-right:20px;border-right:1px solid var(--line2);
+  margin-right:6px;flex-shrink:0;
+}
+.nav-brand-eyebrow{
+  font-size:9px;font-weight:600;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);font-family:var(--font-mono);
+  line-height:1;margin-bottom:3px;
+}
+.nav-brand-title{
+  font-size:13px;font-weight:600;color:var(--txt);
+  font-family:var(--font-body);line-height:1;white-space:nowrap;
+}
+
+.nav-sections{
+  display:flex;align-items:center;gap:2px;
+  padding-left:4px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav-sections::-webkit-scrollbar{display:none}
+
+.nav-item{
+  position:relative;
+  display:flex;align-items:center;gap:5px;
+  padding:6px 12px;border-radius:var(--r);
+  cursor:pointer;text-decoration:none;
+  transition:all var(--transition);
+  white-space:nowrap;flex-shrink:0;
+}
+.nav-item:hover{background:rgba(255,255,255,.05)}
+.nav-item.active{background:rgba(79,124,255,.12)}
+.nav-item::after{
+  content:'';
+  position:absolute;bottom:-1px;left:12px;right:12px;
+  height:2px;border-radius:1px;
+  background:var(--accent);
+  transform:scaleX(0);
+  transition:transform var(--transition);
+  transform-origin:left;
+}
+.nav-item.active::after{transform:scaleX(1)}
+
+.nav-num{font-size:9px;font-weight:600;color:var(--txt3);font-family:var(--font-mono)}
+.nav-item.active .nav-num{color:var(--accent)}
+.nav-label{font-size:12px;font-weight:500;color:var(--txt2)}
+.nav-item.active .nav-label{color:var(--txt)}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:var(--line2);flex-shrink:0;margin:0 3px}
+
+/* ─────────────────────────── MAIN CONTENT ─────────────────────────── */
+#main{max-width:820px;margin:0 auto;padding:0 40px 100px}
+
+/* ─────────────────────────── PAGE HERO ─────────────────────────── */
+.page-hero{padding:52px 0 40px;border-bottom:1px solid var(--line);margin-bottom:44px}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--accent);font-family:var(--font-mono);margin-bottom:16px;
+}
+.hero-eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--accent)}
+.page-hero h1{font-family:var(--font-display);font-size:46px;line-height:1.1;color:var(--txt);margin-bottom:14px;max-width:600px}
+.hero-desc{font-size:14px;color:var(--txt2);max-width:560px;line-height:1.7;margin-bottom:22px}
+.hero-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;border:1px solid;font-family:var(--font-mono)}
+.tag-blue{background:rgba(79,124,255,.12);border-color:rgba(79,124,255,.3);color:var(--accent)}
+.tag-amber{background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.3);color:var(--amber)}
+.tag-green{background:rgba(62,207,142,.1);border-color:rgba(62,207,142,.3);color:var(--green)}
+.tag-red{background:rgba(255,91,91,.1);border-color:rgba(255,91,91,.3);color:var(--red)}
+
+/* ─────────────────────────── SECTION ─────────────────────────── */
+.section{margin-bottom:52px;scroll-margin-top:calc(var(--nav-h) + 20px)}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.section-icon{width:32px;height:32px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.si-blue{background:rgba(79,124,255,.15)}
+.si-amber{background:rgba(245,166,35,.12)}
+.si-green{background:rgba(62,207,142,.12)}
+.si-red{background:rgba(255,91,91,.12)}
+.section-head h2{font-size:19px;font-weight:600;color:var(--txt)}
+
+/* ─────────────────────────── CARDS ─────────────────────────── */
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r2);padding:18px 20px;margin-bottom:14px}
+.card-title{font-size:12px;font-weight:600;color:var(--txt);text-transform:uppercase;letter-spacing:.06em;font-family:var(--font-mono);margin-bottom:8px}
+.card-body{font-size:13.5px;color:var(--txt2);line-height:1.7}
+.card-body strong{color:var(--txt);font-weight:500}
+.card-body em{color:var(--teal);font-style:normal}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+
+/* ─────────────────────────── CALLOUTS ─────────────────────────── */
+.callout{border-radius:var(--r);padding:14px 16px;margin-bottom:14px;border-left:2px solid}
+.callout p{font-size:13.5px;line-height:1.65;margin:0}
+.callout-blue{background:rgba(79,124,255,.08);border-color:var(--accent)}
+.callout-blue p{color:#8aacff}
+.callout-amber{background:rgba(245,166,35,.08);border-color:var(--amber)}
+.callout-amber p{color:#f5c06a}
+.callout-green{background:rgba(62,207,142,.08);border-color:var(--green)}
+.callout-green p{color:#6edfb4}
+.callout-red{background:rgba(255,91,91,.08);border-color:var(--red)}
+.callout-red p{color:#ff8585}
+.callout-attr{font-size:11px;font-weight:600;font-style:normal;display:block;margin-top:6px;opacity:.7;font-family:var(--font-mono)}
+
+/* ─────────────────────────── STEPS ─────────────────────────── */
+.steps{margin-bottom:14px}
+.step-item{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(79,124,255,.15);color:var(--accent);font-size:11px;font-weight:600;font-family:var(--font-mono);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step-num.green{background:rgba(62,207,142,.12);color:var(--green)}
+.step-text{font-size:13.5px;color:var(--txt2);line-height:1.65}
+.step-text strong{color:var(--txt);font-weight:500}
+
+/* ─────────────────────────── GRAPHS ─────────────────────────── */
+.graph-wrap{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r2);padding:16px;margin-bottom:16px;overflow:hidden}
+.graph-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);font-family:var(--font-mono);margin-bottom:12px}
+
+/* ─────────────────────────── TABLE ─────────────────────────── */
+.data-table{width:100%;border-collapse:collapse;font-size:13px}
+.data-table th{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line2);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font-mono);color:var(--txt3)}
+.data-table td{padding:8px 12px;border-bottom:1px solid var(--line);font-size:13px;color:var(--txt2);vertical-align:top}
+.data-table td:first-child{color:var(--txt);font-weight:500}
+.data-table tr:last-child td{border-bottom:none}
+
+/* ─────────────────────────── MISC ─────────────────────────── */
+.divider{height:1px;background:linear-gradient(to right,var(--line2),transparent);margin:40px 0}
+.formula{display:inline-block;font-family:var(--font-mono);font-size:14px;background:var(--bg3);border:1px solid var(--line2);color:var(--teal);padding:8px 16px;border-radius:var(--r);margin:8px 0 12px}
+
+/* ─────────────────────────── SCROLL ANIMATION ─────────────────────────── */
+.section{opacity:0;transform:translateY(18px);transition:opacity .45s ease,transform .45s ease}
+.section.visible{opacity:1;transform:none}
+
+/* ─────────────────────────── RESPONSIVE ─────────────────────────── */
+@media(max-width:700px){
+  #main{padding:0 18px 80px}
+  .page-hero h1{font-size:32px}
+  .two-col{grid-template-columns:1fr}
+  .nav-brand-title{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ STICKY TOP NAV ═══════════════════ -->
+<nav id="topnav">
+  <div class="nav-brand">
+    <div class="nav-brand-eyebrow">ECON 528 · Mod 8</div>
+    <div class="nav-brand-title">Market Failures</div>
+  </div>
+  <div class="nav-sections">
+    <a class="nav-item" href="#s1"><span class="nav-num">§1</span><span class="nav-label">Overview</span></a>
+    <div class="nav-dot"></div>
+    <a class="nav-item" href="#s2"><span class="nav-num">§2</span><span class="nav-label">Winner's Curse</span></a>
+    <div class="nav-dot"></div>
+    <a class="nav-item" href="#s3"><span class="nav-num">§3</span><span class="nav-label">Lemons Problem</span></a>
+    <div class="nav-dot"></div>
+    <a class="nav-item" href="#s4"><span class="nav-num">§4</span><span class="nav-label">Adverse Selection</span></a>
+    <div class="nav-dot"></div>
+    <a class="nav-item" href="#s5"><span class="nav-num">§5</span><span class="nav-label">Externalities</span></a>
+    <div class="nav-dot"></div>
+    <a class="nav-item" href="#s6"><span class="nav-num">§6</span><span class="nav-label">Positive Ext.</span></a>
+    <div class="nav-dot"></div>
+    <a class="nav-item" href="#s7"><span class="nav-num">§7</span><span class="nav-label">Negative Ext.</span></a>
+    <div class="nav-dot"></div>
+    <a class="nav-item" href="#s8"><span class="nav-num">§8</span><span class="nav-label">Cap &amp; Trade</span></a>
+    <div class="nav-dot"></div>
+    <a class="nav-item" href="#summary"><span class="nav-num">★</span><span class="nav-label">Cheatsheet</span></a>
+  </div>
+</nav>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main id="main">
+
+  <header class="page-hero">
+    <div class="hero-eyebrow">Module 8 · Market Failures</div>
+    <h1>When Markets<br><em style="font-style:italic;color:var(--accent)">Break Down</em></h1>
+    <p class="hero-desc">Information problems, asymmetries, adverse selection, externalities, and cap &amp; trade — how markets that <span style="color:var(--teal)">look</span> competitive can still produce deeply inefficient outcomes.</p>
+    <div class="hero-tags">
+      <span class="tag tag-blue">Winner's Curse</span>
+      <span class="tag tag-blue">Lemons Problem</span>
+      <span class="tag tag-red">Adverse Selection</span>
+      <span class="tag tag-amber">Positive Externality</span>
+      <span class="tag tag-red">Negative Externality</span>
+      <span class="tag tag-green">Cap &amp; Trade</span>
+    </div>
+  </header>
+
+  <!-- §1 -->
+  <section class="section" id="s1">
+    <div class="section-head">
+      <div class="section-icon si-blue">⚠</div>
+      <h2>What Is a Market Failure?</h2>
+    </div>
+    <div class="card">
+      <div class="card-title">Core Definition</div>
+      <div class="card-body">A market failure occurs when markets that <em>look</em> well-suited to efficient outcomes get derailed along the way — not because of monopoly, but because of <strong>information problems</strong>. The result: the benevolent dictator's social gain is not maximized.</div>
+    </div>
+    <div class="callout callout-red">
+      <p><strong>Key insight:</strong> Markets can appear competitive and still produce deeply inefficient outcomes when information is incomplete or unevenly distributed between buyers and sellers.</p>
+    </div>
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Type 1 — Monopoly</div>
+        <div class="card-body">Already studied. Addressed through antitrust law (except natural monopolies like water mains where duplication makes no sense).</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Type 2 — Information Problems</div>
+        <div class="card-body">Focus of this module. Includes Winner's Curse, Lemons Markets, Adverse Selection, and Externalities.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §2 -->
+  <section class="section" id="s2">
+    <div class="section-head">
+      <div class="section-icon si-blue">🏆</div>
+      <h2>The Winner's Curse</h2>
+    </div>
+    <div class="callout callout-blue">
+      <p>"The person who wins the auction is the most overly optimistic bidder out of all the bidders — they realize too late that 99 other experts valued it lower."</p>
+      <span class="callout-attr">— Prof. DeBrock</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Real-World Example: Outer Continental Shelf Oil Auctions</div>
+      <div class="card-body">Post-OPEC (1973+), the US Government auctioned mineral rights to offshore tracts in the Gulf of Mexico via <strong>sealed-bid auctions</strong>. Oil companies hired geologists to estimate oil reserves, but <em>deterministic bidding</em> — just using the geologist's raw estimate — led to systematic overbidding and losses. Winners went out, built derricks, dropped pipes — and found far less oil than they paid for.</div>
+    </div>
+
+    <div class="graph-wrap">
+      <div class="graph-label">Bid Distribution — Bell Curve Diagram</div>
+      <svg width="100%" viewBox="0 0 620 200" role="img">
+        <title>Winner's Curse Bell Curve</title>
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <line x1="30" y1="160" x2="600" y2="160" stroke="#3a4060" stroke-width="1"/>
+        <text x="30" y="178" font-size="11" fill="#5a607a" font-family="Manrope,sans-serif">Low bids</text>
+        <text x="555" y="178" font-size="11" fill="#5a607a" font-family="Manrope,sans-serif">High bids</text>
+        <path d="M50,158 Q100,158 160,145 Q210,125 265,78 Q305,42 322,34 Q340,42 378,78 Q430,120 480,143 Q530,158 575,158" fill="none" stroke="#8d92a8" stroke-width="1.5"/>
+        <path d="M480,143 Q530,158 575,158 L575,160 L480,160 Z" fill="rgba(255,91,91,0.18)"/>
+        <line x1="322" y1="34" x2="322" y2="160" stroke="#4f7cff" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="322" y="27" font-size="11" fill="#4f7cff" text-anchor="middle" font-family="DM Mono,monospace">μ (Mean)</text>
+        <text x="322" y="185" font-size="10" fill="#4f7cff" text-anchor="middle" font-family="Manrope,sans-serif">Most accurate bid</text>
+        <circle cx="552" cy="157" r="8" fill="rgba(255,91,91,.15)" stroke="#ff5b5b" stroke-width="1.5"/>
+        <text x="557" y="145" font-size="11" fill="#ff5b5b" font-family="Manrope,sans-serif" font-weight="600">Winner</text>
+        <text x="527" y="133" font-size="10" fill="#ff7a7a" font-family="Manrope,sans-serif">most overly optimistic</text>
+        <line x1="322" y1="100" x2="552" y2="100" stroke="#ff5b5b" stroke-width="0.8" stroke-dasharray="3 3" marker-end="url(#a1)" marker-start="url(#a1)"/>
+        <text x="437" y="92" font-size="10" fill="#ff8585" text-anchor="middle" font-family="Manrope,sans-serif">n−1 others bid less</text>
+      </svg>
+    </div>
+
+    <div class="steps">
+      <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>100 bidders</strong>, each with their own geologist's estimate → bids form a bell curve by the Central Limit Theorem (n ≥ 35)</div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-text">The <strong>highest bidder wins</strong> — but this person is by definition the most overly optimistic out of all n bidders</div></div>
+      <div class="step-item"><div class="step-num">3</div><div class="step-text">After winning, they realize <strong>n−1 other experts</strong> were less optimistic — the real value is closer to μ, not the winning bid</div></div>
+      <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Overbidding = losses.</strong> Oil comes out, but not as much as they paid for. People were using "deterministic bidding" — wrong approach.</div></div>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>Solution — Strategic Bidding (Nash Outcome):</strong> Create a bid function <em>conditional on being the winner</em>. If you win, it means n−1 others bid less → revise your estimate downward accordingly before submitting. Never bid your raw expected value directly.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §3 -->
+  <section class="section" id="s3">
+    <div class="section-head">
+      <div class="section-icon si-blue">🍋</div>
+      <h2>The Lemons Problem (George Akerlof)</h2>
+    </div>
+    <div class="card">
+      <div class="card-title">Definition: Asymmetric Information</div>
+      <div class="card-body">Some market participants have <em>more information than others</em> — and this asymmetry can produce bad outcomes. Akerlof's Nobel Prize paper "The Market for Lemons" showed how incomplete information breaks markets entirely.</div>
+    </div>
+    <div class="card" style="border-left:2px solid var(--green)">
+      <div class="card-title" style="color:var(--green)">Level 1 — Solvable: Sick Crabapple Tree</div>
+      <div class="card-body">Homeowner vs. tree surgeon. The surgeon has more information about sick trees, but the homeowner can get <strong>multiple quotes</strong> to verify. Second opinions correct the asymmetry. Problem is mild and fixable.</div>
+    </div>
+    <div class="card" style="border-left:2px solid var(--amber)">
+      <div class="card-title" style="color:var(--amber)">Level 2 — Annoying Inefficiency: Curbside Depreciation</div>
+      <div class="card-body">Buy a new car Friday. Try to sell it back Tuesday with 180 miles on it. The dealer offers only ~83 cents on the dollar — a <strong>~17% instant depreciation</strong>. Why? The dealer knows nothing about those 180 miles; you know everything. They price it as if it might be a lemon. This isn't dealers colluding — it's information economics.</div>
+    </div>
+    <div class="card" style="border-left:2px solid var(--red)">
+      <div class="card-title" style="color:var(--red)">Level 3 — Very Bad: Insider Trading</div>
+      <div class="card-body">Why is insider trading illegal? Not just unfairness — because widespread asymmetry makes stock markets <strong>illiquid like maple syrup</strong>. Everyone wonders what the other side knows → fewer transactions → inefficient, thin markets. The market for information collapses trust in the market itself.</div>
+    </div>
+    <div class="card" style="background:var(--bg3)">
+      <div class="card-title">Worked Example: 1968 Dodge Dart</div>
+      <div class="card-body">Consumer Reports says: 50% chance "Good" ($10,000 value), 50% chance "Bad" ($5,000 value).<br>Expected value = <strong>$7,500</strong>. You offer $6,000 (a lowball). Seller accepts immediately.<br><br><strong>Implication:</strong> A seller with a good car ($10,000) would never accept $6,000. The seller only accepts because she knows it's worth $5,000 — less than your offer. You just paid $6,000 for a $5,000 car.<br><br><strong>Market collapse logic:</strong> Knowing this, rational buyers offer only $5,000 (the lemon price). Good car sellers refuse. Only lemons trade. The market for quality cars ceases to exist.</div>
+    </div>
+    <div class="callout callout-amber">
+      <p>Markets for lemons: transactions either <em>don't happen</em> (good cars won't sell at lemon prices) or happen at <em>inefficiently low prices</em>. The market severely shrinks or disappears entirely.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §4 -->
+  <section class="section" id="s4">
+    <div class="section-head">
+      <div class="section-icon si-red">⚕</div>
+      <h2>Adverse Selection — Unraveling Insurance Markets</h2>
+    </div>
+    <div class="callout callout-blue">
+      <p>"Adverse selection means the people selecting your product are not the people that are going to make things work for you."</p>
+      <span class="callout-attr">— Prof. DeBrock</span>
+    </div>
+    <div class="card">
+      <div class="card-title">Setup: Health Insurance with One Pooled Rate</div>
+      <div class="card-body">An insurer quotes one average rate to 100 people. The actuary calculates it will exactly cover expected claims — works perfectly <strong>if everyone stays in the pool</strong>. But individuals know their own health; the insurer doesn't. This asymmetry destroys the market.</div>
+    </div>
+
+    <div class="graph-wrap">
+      <div class="graph-label">Adverse Selection — The Death Spiral</div>
+      <svg width="100%" viewBox="0 0 620 200" role="img">
+        <title>Adverse Selection Death Spiral</title>
+        <defs>
+          <marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <rect x="10" y="24" width="155" height="110" rx="8" fill="rgba(79,124,255,.1)" stroke="rgba(79,124,255,.3)" stroke-width="0.8"/>
+        <text x="88" y="44" font-size="12" fill="#8aacff" text-anchor="middle" font-weight="600" font-family="Manrope,sans-serif">Full Pool (100)</text>
+        <path d="M28,126 Q55,126 78,98 Q88,82 88,76 Q88,82 98,98 Q120,122 148,126" fill="none" stroke="#8aacff" stroke-width="1.2"/>
+        <path d="M118,112 Q128,126 148,126 L148,128 L118,128 Z" fill="rgba(79,124,255,.4)"/>
+        <text x="88" y="150" font-size="10" fill="#8aacff" text-anchor="middle" font-family="Manrope,sans-serif">Average rate set</text>
+        <line x1="168" y1="80" x2="210" y2="80" stroke="#ff5b5b" stroke-width="1.5" marker-end="url(#a2)"/>
+        <text x="189" y="72" font-size="10" fill="#ff8585" text-anchor="middle" font-family="Manrope,sans-serif">Healthy exit</text>
+        <rect x="213" y="40" width="155" height="95" rx="8" fill="rgba(245,166,35,.1)" stroke="rgba(245,166,35,.3)" stroke-width="0.8"/>
+        <text x="290" y="60" font-size="12" fill="#f5c06a" text-anchor="middle" font-weight="600" font-family="Manrope,sans-serif">Sicker Pool (90)</text>
+        <path d="M230,125 Q258,125 278,100 Q286,87 288,82 Q292,87 300,100 Q320,122 365,125" fill="none" stroke="#f5c06a" stroke-width="1.2"/>
+        <text x="290" y="148" font-size="10" fill="#f5a623" text-anchor="middle" font-family="Manrope,sans-serif">Rate must rise ↑</text>
+        <line x1="371" y1="80" x2="413" y2="80" stroke="#ff5b5b" stroke-width="1.5" marker-end="url(#a2)"/>
+        <text x="392" y="72" font-size="10" fill="#ff8585" text-anchor="middle" font-family="Manrope,sans-serif">More exit</text>
+        <rect x="416" y="54" width="155" height="72" rx="8" fill="rgba(255,91,91,.1)" stroke="rgba(255,91,91,.3)" stroke-width="0.8"/>
+        <text x="493" y="74" font-size="12" fill="#ff8585" text-anchor="middle" font-weight="600" font-family="Manrope,sans-serif">Sickest Pool (≪90)</text>
+        <text x="493" y="94" font-size="11" fill="#ff5b5b" text-anchor="middle" font-family="Manrope,sans-serif">Rate rises further</text>
+        <text x="493" y="112" font-size="11" fill="#ff5b5b" text-anchor="middle" font-family="Manrope,sans-serif">→ Market collapses</text>
+        <path d="M493 130 Q493 180 290 180 Q170 180 170 130" fill="none" stroke="#ff5b5b" stroke-width="1" stroke-dasharray="4 3" marker-end="url(#a2)"/>
+        <text x="330" y="192" font-size="10" fill="#ff8585" text-anchor="middle" font-family="Manrope,sans-serif">Death spiral repeats until market unravels</text>
+      </svg>
+    </div>
+
+    <div class="callout callout-green">
+      <p><strong>ACA Solution — Individual Mandate:</strong> The Affordable Care Act requires everyone to buy insurance. This keeps healthy people in the pool, stabilizing the risk distribution. Supreme Court upheld it as constitutional in June 2012. Without it, young healthy adults opt out and the spiral begins.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §5 -->
+  <section class="section" id="s5">
+    <div class="section-head">
+      <div class="section-icon si-amber">↗</div>
+      <h2>Externalities — Definition &amp; Types</h2>
+    </div>
+    <div class="card">
+      <div class="card-title">Definition</div>
+      <div class="card-body">A cost (or benefit) imposed on others <em>without economic implications on the agent making the decision</em>. The person causing the effect feels none of the consequences. Also called <strong>spillover effects</strong>.<br><br><strong>Root cause:</strong> Lack of well-defined property rights. No one "owns" the air above their house or the water in a river → firms use these as free disposal sites.</div>
+    </div>
+    <div class="callout callout-amber">
+      <p>Anytime the benevolent dictator is unhappy, the market has not achieved the efficiency we want. The BD just wants to maximize the size of the pie — externalities shrink the pie.</p>
+    </div>
+    <div class="two-col">
+      <div class="card" style="border-top:2px solid var(--red)">
+        <div class="card-title" style="color:var(--red)">Negative Externality</div>
+        <div class="card-body">Your behavior hurts others at no cost to you.<br><br><strong>Examples:</strong><br>• Loud neighbor at 2:30am before your exam<br>• O'Hare new runway → planes over housing subdivision, property values fall, shingles ripped<br>• US Steel Gary, IN — SO₂ → more repainting, car rust, lower health outcomes<br>• Hudson River factories using river as free sewer<br>• Cuyahoga River in Cleveland caught fire (1960s–70s)</div>
+      </div>
+      <div class="card" style="border-top:2px solid var(--green)">
+        <div class="card-title" style="color:var(--green)">Positive Externality</div>
+        <div class="card-body">Your behavior benefits others at no gain to you.<br><br><strong>Examples:</strong><br>• Honeybee farms near orchards — pollinators help both parties<br>• Home landscaping → neighbors' property values rise (2+ houses down, statistically significant)<br>• College education → fewer crimes, better health, higher incomes for whole state<br>• Public universities subsidize tuition to maximize educated population benefit</div>
+      </div>
+    </div>
+    <div class="card" style="background:var(--bg3)">
+      <div class="card-title">Historical Fix: The EPA (1970)</div>
+      <div class="card-body">The EPA was created because no one owned rivers or air. The Cuyahoga River burning in Cleveland was the tipping point. EPA said: <strong>"We now own that river. We own the air over Gary. You can't use them for free anymore."</strong> Factories that once drained waste directly into the Hudson River now face real costs for disposal.</div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §6 -->
+  <section class="section" id="s6">
+    <div class="section-head">
+      <div class="section-icon si-blue">📈</div>
+      <h2>Graphing Positive Externalities</h2>
+    </div>
+    <div class="formula">MSB = MPB + External Social Benefit</div>
+    <p style="font-size:13.5px;color:var(--txt2);line-height:1.7;margin-bottom:14px;">The market demand curve represents <strong style="color:var(--txt)">Marginal Private Benefit (MPB)</strong> — what buyers personally value. With a positive externality, others also benefit. The <strong style="color:var(--txt)">Marginal Social Benefit (MSB)</strong> includes both the buyer's value and the spillover to others. MSB lies to the right of MPB.</p>
+
+    <div class="graph-wrap">
+      <div class="graph-label">Positive Externality — Underproduction &amp; DWL Triangle</div>
+      <svg width="100%" viewBox="0 0 620 300" role="img">
+        <title>Positive Externality Graph</title>
+        <line x1="55" y1="24" x2="55" y2="265" stroke="#3a4060" stroke-width="1.5"/>
+        <line x1="55" y1="265" x2="580" y2="265" stroke="#3a4060" stroke-width="1.5"/>
+        <text x="28" y="145" font-size="12" fill="#5a607a" text-anchor="middle" font-family="Manrope,sans-serif" transform="rotate(-90,28,145)">Price (P)</text>
+        <text x="572" y="280" font-size="12" fill="#5a607a" font-family="Manrope,sans-serif">Q</text>
+        <line x1="70" y1="255" x2="440" y2="52" stroke="#4f7cff" stroke-width="2"/>
+        <text x="447" y="50" font-size="12" fill="#4f7cff" font-family="DM Mono,monospace">S₀</text>
+        <line x1="70" y1="70" x2="480" y2="253" stroke="#ff5b5b" stroke-width="2"/>
+        <text x="485" y="258" font-size="12" fill="#ff5b5b" font-family="DM Mono,monospace">D₀=MPB</text>
+        <line x1="145" y1="70" x2="548" y2="245" stroke="#3ecf8e" stroke-width="2" stroke-dasharray="7 3"/>
+        <text x="520" y="235" font-size="12" fill="#3ecf8e" font-family="DM Mono,monospace">MSB</text>
+        <line x1="263" y1="156" x2="263" y2="265" stroke="#8d92a8" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="258" y="281" font-size="11" fill="#8d92a8" text-anchor="middle" font-family="DM Mono,monospace">Q₀</text>
+        <line x1="370" y1="143" x2="370" y2="265" stroke="#3ecf8e" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="370" y="281" font-size="11" fill="#3ecf8e" text-anchor="middle" font-family="DM Mono,monospace">Q_soc</text>
+        <polygon points="263,156 370,143 263,200" fill="rgba(245,166,35,0.2)" stroke="rgba(245,166,35,0.5)" stroke-width="0.8"/>
+        <text x="286" y="183" font-size="11" fill="#f5a623" font-family="Manrope,sans-serif" font-weight="600">DWL</text>
+        <line x1="55" y1="156" x2="263" y2="156" stroke="#3a4060" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <text x="46" y="159" font-size="11" fill="#5a607a" text-anchor="end" font-family="DM Mono,monospace">P₀</text>
+        <text x="316" y="298" font-size="11" fill="#3ecf8e" text-anchor="middle" font-family="Manrope,sans-serif">Q₀ &lt; Q_soc → market underproduces</text>
+      </svg>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <div class="card-title">Why Underproduction?</div>
+        <div class="card-body">The market stops at Q₀ (where S meets MPB). But MSB is higher — more production would benefit society. The benevolent dictator wants output at Q_soc. The gap creates deadweight loss.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Policy Fix: Subsidize</div>
+        <div class="card-body">Push output toward Q_soc by making it cheaper to produce or consume:<br>• Community landscaping grants<br>• Subsidized public university tuition<br>• R&amp;D tax credits</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §7 -->
+  <section class="section" id="s7">
+    <div class="section-head">
+      <div class="section-icon si-red">📉</div>
+      <h2>Graphing Negative Externalities</h2>
+    </div>
+    <div class="formula">MSC = MPC (S₀) + Pollution Cost</div>
+    <p style="font-size:13.5px;color:var(--txt2);line-height:1.7;margin-bottom:14px;">Firms only see their <strong style="color:var(--txt)">Marginal Private Cost (MPC)</strong> — wages, materials, factory costs. The <strong style="color:var(--txt)">Marginal Social Cost (MSC)</strong> includes the pollution cost borne by others. MSC lies above and to the left of MPC. Because firms don't pay the pollution cost, they overproduce.</p>
+
+    <div class="graph-wrap">
+      <div class="graph-label">Negative Externality — Overproduction &amp; DWL Triangle</div>
+      <svg width="100%" viewBox="0 0 620 300" role="img">
+        <title>Negative Externality Graph</title>
+        <defs>
+          <marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </marker>
+        </defs>
+        <line x1="55" y1="24" x2="55" y2="265" stroke="#3a4060" stroke-width="1.5"/>
+        <line x1="55" y1="265" x2="580" y2="265" stroke="#3a4060" stroke-width="1.5"/>
+        <text x="28" y="145" font-size="12" fill="#5a607a" text-anchor="middle" font-family="Manrope,sans-serif" transform="rotate(-90,28,145)">Price (P)</text>
+        <text x="572" y="280" font-size="12" fill="#5a607a" font-family="Manrope,sans-serif">Q</text>
+        <line x1="70" y1="252" x2="468" y2="52" stroke="#4f7cff" stroke-width="2"/>
+        <text x="473" y="50" font-size="12" fill="#4f7cff" font-family="DM Mono,monospace">S₀=MPC</text>
+        <line x1="70" y1="202" x2="370" y2="50" stroke="#ff5b5b" stroke-width="2" stroke-dasharray="7 3"/>
+        <text x="375" y="48" font-size="12" fill="#ff5b5b" font-family="DM Mono,monospace">MSC</text>
+        <text x="350" y="36" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">(MPC + pollution cost)</text>
+        <line x1="70" y1="60" x2="505" y2="258" stroke="#f5a623" stroke-width="2"/>
+        <text x="510" y="260" font-size="12" fill="#f5a623" font-family="DM Mono,monospace">D₀</text>
+        <line x1="310" y1="152" x2="310" y2="265" stroke="#4f7cff" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="306" y="281" font-size="11" fill="#4f7cff" text-anchor="middle" font-family="DM Mono,monospace">Q₀</text>
+        <line x1="200" y1="144" x2="200" y2="265" stroke="#ff5b5b" stroke-width="1" stroke-dasharray="4 3"/>
+        <text x="200" y="281" font-size="11" fill="#ff5b5b" text-anchor="middle" font-family="DM Mono,monospace">Q_soc</text>
+        <polygon points="200,144 310,152 200,200" fill="rgba(255,91,91,0.18)" stroke="rgba(255,91,91,0.5)" stroke-width="0.8"/>
+        <text x="226" y="178" font-size="11" fill="#ff5b5b" font-family="Manrope,sans-serif" font-weight="600">DWL</text>
+        <line x1="55" y1="152" x2="310" y2="152" stroke="#3a4060" stroke-width="0.5" stroke-dasharray="3 3"/>
+        <text x="46" y="155" font-size="11" fill="#5a607a" text-anchor="end" font-family="DM Mono,monospace">P₀</text>
+        <line x1="340" y1="100" x2="340" y2="142" stroke="#ff5b5b" stroke-width="1.2" marker-end="url(#a4)" marker-start="url(#a4)"/>
+        <text x="356" y="121" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">Pollution</text>
+        <text x="356" y="133" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">cost gap</text>
+        <text x="255" y="298" font-size="11" fill="#ff5b5b" text-anchor="middle" font-family="Manrope,sans-serif">Q₀ &gt; Q_soc → market overproduces</text>
+      </svg>
+    </div>
+
+    <div class="steps">
+      <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Direct control on emissions</strong> — regulators place meters on smokestacks, set a legal maximum. Some states enforce this.</div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Tax production of Q</strong> — taxing output raises the effective cost curve, shifting S₀ up toward MSC, reducing output toward Q_soc.</div></div>
+      <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Tax emissions directly</strong> — for every unit of pollution emitted, a fee is charged. The preferred economic option: it internalizes the externality — firms now "see" the cost they were imposing on others.</div></div>
+    </div>
+    <div class="callout callout-green">
+      <p><strong>"Internalize the externality"</strong> = make the firm pay for the pollution cost. Their private cost curve shifts up to match MSC. Once they feel the full cost, they naturally reduce output to Q_soc.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- §8 -->
+  <section class="section" id="s8">
+    <div class="section-head">
+      <div class="section-icon si-green">♻</div>
+      <h2>Cap &amp; Trade System</h2>
+    </div>
+    <div class="callout callout-blue">
+      <p>"We're putting a price on pollution so people recognize that while it's important to get stuff out of the factory, they're also putting a burden on the community — it's just another input cost."</p>
+      <span class="callout-attr">— Prof. DeBrock</span>
+    </div>
+
+    <div class="steps">
+      <div class="step-item"><div class="step-num green">1</div><div class="step-text"><strong>Determine the "cap"</strong> — Scientists across disciplines determine the maximum acceptable level of a pollutant. You can't set it at zero (that would halt steel production), but you can set a feasible target and reduce it incrementally year over year.</div></div>
+      <div class="step-item"><div class="step-num green">2</div><div class="step-text"><strong>Issue permits</strong> — Government issues exactly enough permits to match the cap. Each permit authorizes a firm to emit a specific quantity. No permits = no legal pollution. EPA actively monitors smokestacks.</div></div>
+      <div class="step-item"><div class="step-num green">3</div><div class="step-text"><strong>Allow permit trading</strong> — A firm that wins a new contract and needs to run a third shift can buy spare permits from a firm that doesn't need them. Creates a market that allocates pollution rights efficiently to their highest-value uses.</div></div>
+    </div>
+
+    <div class="graph-wrap">
+      <div class="graph-label">EPA Annual Permit Reduction Path (SO₂ Cap &amp; Trade, 1993+)</div>
+      <svg width="100%" viewBox="0 0 620 160" role="img">
+        <title>Cap and Trade Annual Reduction</title>
+        <line x1="55" y1="20" x2="55" y2="120" stroke="#3a4060" stroke-width="1"/>
+        <line x1="55" y1="120" x2="570" y2="120" stroke="#3a4060" stroke-width="1"/>
+        <text x="30" y="72" font-size="10" fill="#5a607a" text-anchor="middle" font-family="DM Mono,monospace" transform="rotate(-90,30,72)">Permits issued</text>
+        <line x1="55" y1="100" x2="570" y2="100" stroke="#3ecf8e" stroke-width="0.8" stroke-dasharray="5 4"/>
+        <text x="540" y="96" font-size="10" fill="#3ecf8e" font-family="Manrope,sans-serif">Target</text>
+        <polyline points="55,34 110,34 110,50 200,50 200,64 295,64 295,78 395,78 395,92 520,92" fill="none" stroke="#ff5b5b" stroke-width="2.5" stroke-linejoin="round"/>
+        <text x="82" y="136" font-size="10" fill="#5a607a" text-anchor="middle" font-family="DM Mono,monospace">1993</text>
+        <text x="155" y="136" font-size="10" fill="#5a607a" text-anchor="middle" font-family="DM Mono,monospace">Yr 2</text>
+        <text x="247" y="136" font-size="10" fill="#5a607a" text-anchor="middle" font-family="DM Mono,monospace">Yr 3</text>
+        <text x="345" y="136" font-size="10" fill="#5a607a" text-anchor="middle" font-family="DM Mono,monospace">Yr 4</text>
+        <text x="457" y="136" font-size="10" fill="#5a607a" text-anchor="middle" font-family="DM Mono,monospace">Yr 5+</text>
+        <text x="60" y="30" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">Current level</text>
+      </svg>
+    </div>
+
+    <div class="card">
+      <div class="card-title">US EPA SO₂ Cap &amp; Trade History</div>
+      <div class="card-body">
+        The EPA began cap and trade in <strong>1993 for sulfur dioxide (SO₂)</strong> to address acid rain. The <strong>Chicago Board of Trade</strong> ran annual permit auctions for 13+ years each April. Anyone could buy and retire permits — including the Sierra Club. Today the EPA runs it in-house with eBay-style auction software.<br><br>
+        • Firms invested in <strong>more efficient furnaces</strong> to need fewer permits<br>
+        • Technology changed — pollution became a real input cost<br>
+        • Permits became an actively traded commodity (WSJ tracked the price)<br>
+        • Total SO₂ emissions dropped substantially over the period
+      </div>
+    </div>
+    <div class="callout callout-amber">
+      <p><strong>Permits can't be zero</strong> — the law of conservation of matter means some emissions from any industrial process are unavoidable. The goal is a feasible, declining cap that approaches but never reaches zero.</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Summary -->
+  <section class="section" id="summary">
+    <div class="section-head">
+      <div class="section-icon si-amber">★</div>
+      <h2>Summary &amp; Exam Cheatsheet</h2>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-title">Positive vs. Negative Externality</div>
+      <table class="data-table">
+        <thead>
+          <tr><th> </th><th style="color:var(--green)">Positive</th><th style="color:var(--red)">Negative</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Market outcome vs. optimum</td><td style="color:var(--green)">Q₀ &lt; Q_soc (under)</td><td style="color:var(--red)">Q₀ &gt; Q_soc (over)</td></tr>
+          <tr><td>Curve relationship</td><td style="color:var(--green)">MSB right of D₀=MPB</td><td style="color:var(--red)">MSC left of S₀=MPC</td></tr>
+          <tr><td>Policy fix</td><td style="color:var(--green)">Subsidize (push Q up)</td><td style="color:var(--red)">Tax / Cap &amp; Trade (pull Q down)</td></tr>
+          <tr><td>Benevolent dictator</td><td style="color:var(--green)">Unhappy — wants more produced</td><td style="color:var(--red)">Very unhappy — wants less produced</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Information Problems Cheatsheet</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Concept</th><th>Core Problem</th><th>Fix</th></tr>
+        </thead>
+        <tbody>
+          <tr><td style="color:var(--accent)">Winner's Curse</td><td>Highest bidder = most optimistic → overpaid</td><td>Strategic bidding conditional on winning</td></tr>
+          <tr><td style="color:var(--amber)">Lemons Market</td><td>Seller knows quality; buyer doesn't → bad products dominate</td><td>Signaling, warranties, reputation, disclosures</td></tr>
+          <tr><td style="color:var(--red)">Adverse Selection</td><td>Only high-risk people buy insurance at average rate → spiral</td><td>Individual mandate; forced pooling</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// Scroll spy — highlight active nav item
+const sections = document.querySelectorAll('.section[id]');
+const navItems = document.querySelectorAll('.nav-item');
+const navH = document.getElementById('topnav').offsetHeight;
+
+function updateActiveNav(){
+  let current = '';
+  sections.forEach(sec => {
+    if(sec.getBoundingClientRect().top <= navH + 48) current = sec.id;
+  });
+  navItems.forEach(item => {
+    const href = item.getAttribute('href').replace('#','');
+    item.classList.toggle('active', href === current);
+  });
+  // Scroll active nav item into view within the nav bar
+  const activeItem = document.querySelector('.nav-item.active');
+  if(activeItem) activeItem.scrollIntoView({inline:'nearest',block:'nearest',behavior:'smooth'});
+}
+
+window.addEventListener('scroll', updateActiveNav, {passive:true});
+updateActiveNav();
+
+// Scroll-reveal animation
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.07,rootMargin:`-${navH}px 0px 0px 0px`});
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
