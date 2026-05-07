@@ -444,27 +444,65 @@ body{
 
     <div class="graph-wrap">
       <div class="graph-label">Positive Externality — Underproduction &amp; DWL Triangle</div>
-      <svg width="100%" viewBox="0 0 620 300" role="img">
+      <!--
+        All intersection points computed algebraically from line endpoints:
+          S0  : (70,255)→(440,52)    slope=-0.5486
+          MPB : (70,70) →(480,253)   slope=+0.4463
+          MSB : (145,70)→(548,245)   slope=+0.4342  (parallel right-shift of MPB)
+          Q0  = S0∩MPB  → (256, 153)
+          Qsoc= S0∩MSB  → (291, 134)
+          MSB@Q0         → y=118
+        DWL triangle: A(256,153) B(291,134) C(256,118)
+          A = market equilibrium on both S0 and MPB
+          B = social optimum on both S0 and MSB
+          C = MSB curve value at Q0 quantity (directly above A)
+      -->
+      <svg width="100%" viewBox="0 0 620 308" role="img">
         <title>Positive Externality Graph</title>
+        <!-- Axes -->
         <line x1="55" y1="24" x2="55" y2="265" stroke="#3a4060" stroke-width="1.5"/>
         <line x1="55" y1="265" x2="580" y2="265" stroke="#3a4060" stroke-width="1.5"/>
-        <text x="28" y="145" font-size="12" fill="#5a607a" text-anchor="middle" font-family="Manrope,sans-serif" transform="rotate(-90,28,145)">Price (P)</text>
+        <text x="28" y="155" font-size="12" fill="#5a607a" text-anchor="middle" font-family="Manrope,sans-serif" transform="rotate(-90,28,155)">Price (P)</text>
         <text x="572" y="280" font-size="12" fill="#5a607a" font-family="Manrope,sans-serif">Q</text>
+
+        <!-- Supply S0 (blue) -->
         <line x1="70" y1="255" x2="440" y2="52" stroke="#4f7cff" stroke-width="2"/>
-        <text x="447" y="50" font-size="12" fill="#4f7cff" font-family="DM Mono,monospace">S₀</text>
+        <text x="444" y="50" font-size="12" fill="#4f7cff" font-family="DM Mono,monospace">S₀</text>
+
+        <!-- Demand = MPB (red) -->
         <line x1="70" y1="70" x2="480" y2="253" stroke="#ff5b5b" stroke-width="2"/>
-        <text x="485" y="258" font-size="12" fill="#ff5b5b" font-family="DM Mono,monospace">D₀=MPB</text>
+        <text x="483" y="257" font-size="12" fill="#ff5b5b" font-family="DM Mono,monospace">D₀=MPB</text>
+
+        <!-- MSB (green dashed) — right-shift of MPB -->
         <line x1="145" y1="70" x2="548" y2="245" stroke="#3ecf8e" stroke-width="2" stroke-dasharray="7 3"/>
-        <text x="520" y="235" font-size="12" fill="#3ecf8e" font-family="DM Mono,monospace">MSB</text>
-        <line x1="263" y1="156" x2="263" y2="265" stroke="#8d92a8" stroke-width="1" stroke-dasharray="4 3"/>
-        <text x="258" y="281" font-size="11" fill="#8d92a8" text-anchor="middle" font-family="DM Mono,monospace">Q₀</text>
-        <line x1="370" y1="143" x2="370" y2="265" stroke="#3ecf8e" stroke-width="1" stroke-dasharray="4 3"/>
-        <text x="370" y="281" font-size="11" fill="#3ecf8e" text-anchor="middle" font-family="DM Mono,monospace">Q_soc</text>
-        <polygon points="263,156 370,143 263,200" fill="rgba(245,166,35,0.2)" stroke="rgba(245,166,35,0.5)" stroke-width="0.8"/>
-        <text x="286" y="183" font-size="11" fill="#f5a623" font-family="Manrope,sans-serif" font-weight="600">DWL</text>
-        <line x1="55" y1="156" x2="263" y2="156" stroke="#3a4060" stroke-width="0.5" stroke-dasharray="3 3"/>
-        <text x="46" y="159" font-size="11" fill="#5a607a" text-anchor="end" font-family="DM Mono,monospace">P₀</text>
-        <text x="316" y="298" font-size="11" fill="#3ecf8e" text-anchor="middle" font-family="Manrope,sans-serif">Q₀ &lt; Q_soc → market underproduces</text>
+        <text x="519" y="240" font-size="12" fill="#3ecf8e" font-family="DM Mono,monospace">MSB</text>
+
+        <!-- DWL triangle — vertices pinned to exact intersections:
+             A(256,153): S0∩MPB = market equilibrium
+             B(291,134): S0∩MSB = social optimum
+             C(256,118): MSB at x=Q0 (directly above A on MSB curve) -->
+        <polygon points="256,153 291,134 256,118"
+                 fill="rgba(245,166,35,0.25)" stroke="#f5a623" stroke-width="1.2"/>
+        <text x="300" y="140" font-size="11" fill="#f5a623" font-family="Manrope,sans-serif" font-weight="600">DWL</text>
+
+        <!-- Dots at key intersection points -->
+        <circle cx="256" cy="153" r="3.5" fill="#8d92a8"/>
+        <circle cx="291" cy="134" r="3.5" fill="#3ecf8e"/>
+
+        <!-- Vertical dashed drop lines to x-axis -->
+        <line x1="256" y1="153" x2="256" y2="265" stroke="#8d92a8" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="291" y1="134" x2="291" y2="265" stroke="#3ecf8e" stroke-width="1" stroke-dasharray="4 3"/>
+
+        <!-- Horizontal P0 dashed to y-axis -->
+        <line x1="55" y1="153" x2="256" y2="153" stroke="#3a4060" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+        <!-- Axis labels -->
+        <text x="256" y="280" font-size="11" fill="#8d92a8" text-anchor="middle" font-family="DM Mono,monospace">Q₀</text>
+        <text x="291" y="280" font-size="11" fill="#3ecf8e" text-anchor="middle" font-family="DM Mono,monospace">Q*</text>
+        <text x="48" y="157" font-size="11" fill="#5a607a" text-anchor="end" font-family="DM Mono,monospace">P₀</text>
+
+        <!-- Caption -->
+        <text x="310" y="298" font-size="11" fill="#3ecf8e" text-anchor="middle" font-family="Manrope,sans-serif">Q₀ &lt; Q* → market underproduces relative to social optimum</text>
       </svg>
     </div>
 
@@ -493,36 +531,79 @@ body{
 
     <div class="graph-wrap">
       <div class="graph-label">Negative Externality — Overproduction &amp; DWL Triangle</div>
-      <svg width="100%" viewBox="0 0 620 300" role="img">
+      <!--
+        All intersection points computed algebraically from line endpoints:
+          S0=MPC : (70,252)→(468,52)   slope=-0.5025
+          MSC    : (70,202)→(370,50)   slope=-0.5067  (parallel left-shift of S0)
+          D0     : (70,60) →(505,258)  slope=+0.4552
+          Q0  = S0∩D0  → (270, 151)   market equilibrium
+          Qsoc= MSC∩D0 → (218, 127)   social optimum
+          S0 at Qsoc   → y=178         bottom vertex of DWL
+        DWL triangle: A(218,127) B(270,151) C(218,178)
+          A = social optimum: MSC∩D0
+          B = market equilibrium: S0∩D0
+          C = S0 value at Qsoc quantity (below A — the "should-cost" without pollution)
+      -->
+      <svg width="100%" viewBox="0 0 620 308" role="img">
         <title>Negative Externality Graph</title>
         <defs>
           <marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
             <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </marker>
         </defs>
+
+        <!-- Axes -->
         <line x1="55" y1="24" x2="55" y2="265" stroke="#3a4060" stroke-width="1.5"/>
         <line x1="55" y1="265" x2="580" y2="265" stroke="#3a4060" stroke-width="1.5"/>
-        <text x="28" y="145" font-size="12" fill="#5a607a" text-anchor="middle" font-family="Manrope,sans-serif" transform="rotate(-90,28,145)">Price (P)</text>
+        <text x="28" y="155" font-size="12" fill="#5a607a" text-anchor="middle" font-family="Manrope,sans-serif" transform="rotate(-90,28,155)">Price (P)</text>
         <text x="572" y="280" font-size="12" fill="#5a607a" font-family="Manrope,sans-serif">Q</text>
+
+        <!-- S0 = MPC (blue) -->
         <line x1="70" y1="252" x2="468" y2="52" stroke="#4f7cff" stroke-width="2"/>
-        <text x="473" y="50" font-size="12" fill="#4f7cff" font-family="DM Mono,monospace">S₀=MPC</text>
+        <text x="471" y="50" font-size="12" fill="#4f7cff" font-family="DM Mono,monospace">S₀=MPC</text>
+
+        <!-- MSC (red dashed) — parallel left-shift of S0, higher cost at every Q -->
         <line x1="70" y1="202" x2="370" y2="50" stroke="#ff5b5b" stroke-width="2" stroke-dasharray="7 3"/>
-        <text x="375" y="48" font-size="12" fill="#ff5b5b" font-family="DM Mono,monospace">MSC</text>
-        <text x="350" y="36" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">(MPC + pollution cost)</text>
+        <text x="373" y="48" font-size="12" fill="#ff5b5b" font-family="DM Mono,monospace">MSC</text>
+        <text x="373" y="36" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">(MPC + pollution cost)</text>
+
+        <!-- Demand D0 (amber) -->
         <line x1="70" y1="60" x2="505" y2="258" stroke="#f5a623" stroke-width="2"/>
-        <text x="510" y="260" font-size="12" fill="#f5a623" font-family="DM Mono,monospace">D₀</text>
-        <line x1="310" y1="152" x2="310" y2="265" stroke="#4f7cff" stroke-width="1" stroke-dasharray="4 3"/>
-        <text x="306" y="281" font-size="11" fill="#4f7cff" text-anchor="middle" font-family="DM Mono,monospace">Q₀</text>
-        <line x1="200" y1="144" x2="200" y2="265" stroke="#ff5b5b" stroke-width="1" stroke-dasharray="4 3"/>
-        <text x="200" y="281" font-size="11" fill="#ff5b5b" text-anchor="middle" font-family="DM Mono,monospace">Q_soc</text>
-        <polygon points="200,144 310,152 200,200" fill="rgba(255,91,91,0.18)" stroke="rgba(255,91,91,0.5)" stroke-width="0.8"/>
-        <text x="226" y="178" font-size="11" fill="#ff5b5b" font-family="Manrope,sans-serif" font-weight="600">DWL</text>
-        <line x1="55" y1="152" x2="310" y2="152" stroke="#3a4060" stroke-width="0.5" stroke-dasharray="3 3"/>
-        <text x="46" y="155" font-size="11" fill="#5a607a" text-anchor="end" font-family="DM Mono,monospace">P₀</text>
-        <line x1="340" y1="100" x2="340" y2="142" stroke="#ff5b5b" stroke-width="1.2" marker-end="url(#a4)" marker-start="url(#a4)"/>
-        <text x="356" y="121" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">Pollution</text>
-        <text x="356" y="133" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">cost gap</text>
-        <text x="255" y="298" font-size="11" fill="#ff5b5b" text-anchor="middle" font-family="Manrope,sans-serif">Q₀ &gt; Q_soc → market overproduces</text>
+        <text x="508" y="260" font-size="12" fill="#f5a623" font-family="DM Mono,monospace">D₀</text>
+
+        <!-- DWL triangle — vertices pinned to exact intersections:
+             A(218,127): MSC∩D0 = social optimum
+             B(270,151): S0∩D0  = market equilibrium
+             C(218,178): S0 at Qsoc quantity (what MPC would charge at that qty) -->
+        <polygon points="218,127 270,151 218,178"
+                 fill="rgba(255,91,91,0.22)" stroke="#ff5b5b" stroke-width="1.2"/>
+        <text x="245" y="158" font-size="11" fill="#ff5b5b" font-family="Manrope,sans-serif" font-weight="600">DWL</text>
+
+        <!-- Dots at key intersection points -->
+        <circle cx="270" cy="151" r="3.5" fill="#4f7cff"/>
+        <circle cx="218" cy="127" r="3.5" fill="#ff5b5b"/>
+
+        <!-- Vertical dashed drop lines to x-axis -->
+        <line x1="218" y1="127" x2="218" y2="265" stroke="#ff5b5b" stroke-width="1" stroke-dasharray="4 3"/>
+        <line x1="270" y1="151" x2="270" y2="265" stroke="#4f7cff" stroke-width="1" stroke-dasharray="4 3"/>
+
+        <!-- Horizontal P0 dashed to y-axis -->
+        <line x1="55" y1="151" x2="270" y2="151" stroke="#3a4060" stroke-width="0.8" stroke-dasharray="3 3"/>
+
+        <!-- Pollution cost gap bracket: vertical between S0 and MSC at x=410 -->
+        <line x1="410" y1="30" x2="410" y2="81"
+              stroke="#ff5b5b" stroke-width="1.2"
+              marker-end="url(#a4)" marker-start="url(#a4)"/>
+        <text x="424" y="50" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">Pollution</text>
+        <text x="424" y="63" font-size="10" fill="#ff8585" font-family="Manrope,sans-serif">cost gap</text>
+
+        <!-- Axis labels -->
+        <text x="218" y="280" font-size="11" fill="#ff5b5b" text-anchor="middle" font-family="DM Mono,monospace">Q*</text>
+        <text x="270" y="280" font-size="11" fill="#4f7cff" text-anchor="middle" font-family="DM Mono,monospace">Q₀</text>
+        <text x="48" y="155" font-size="11" fill="#5a607a" text-anchor="end" font-family="DM Mono,monospace">P₀</text>
+
+        <!-- Caption -->
+        <text x="260" y="298" font-size="11" fill="#ff5b5b" text-anchor="middle" font-family="Manrope,sans-serif">Q₀ &gt; Q* → market overproduces relative to social optimum</text>
       </svg>
     </div>
 
